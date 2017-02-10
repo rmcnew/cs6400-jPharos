@@ -1,0 +1,77 @@
+<!--
+  ~ Copyright (c) 2017 Richard Scott McNew.
+  ~
+  ~ This file is part of jPharos.
+  ~
+  ~     jPharos is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     jPharos is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with jPharos.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project name="jPharos" default="dist" basedir=".">
+    <description>jPharos Ray Tracer</description>
+
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+    <property name="dist" location="dist"/>
+    <property name="releaseVersion" value="0"/>
+
+    <target name="init">
+        <parallel>
+            <mkdir dir="${build}"/>
+            <mkdir dir="${dist}"/>
+        </parallel>
+    </target>
+
+    <target name="compile" depends="init" description="compile the source">
+        <javac srcdir="${src}" destdir="${build}">
+            <classpath>
+                <fileset dir="lib">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile" description="generate the jar">
+        <echo message="Creating the jar archive.  This can take a while . . ."/>
+        <jar jarfile="${dist}/jPharos.jar" basedir="${build}" index="true">
+            <manifest>
+                <attribute name="Main-Class" value="com.starrypenguin.jpharos.main.jPharos"/>
+            </manifest>
+            <restrict>
+                <archives>
+                    <zips>
+                        <fileset dir="lib" includes="*.jar"/>
+                    </zips>
+                </archives>
+            </restrict>
+        </jar>
+        <echo message="Finished creating the jar archive."/>
+    </target>
+
+    <target name="dist" depends="jar" description="create distribution files">
+        <parallel>
+            <copy todir="${dist}" failonerror="true" file="LICENSE"/>
+        </parallel>
+        <zip destfile="jPharos-${releaseVersion}.zip">
+            <fileset dir="${dist}"/>
+        </zip>
+    </target>
+
+    <target name="clean" description="clean up">
+        <parallel>
+            <delete dir="${build}"/>
+            <delete dir="${dist}"/>
+        </parallel>
+    </target>
+</project>
