@@ -2,24 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66b7d971-ce67-40db-b397-aec56a20712b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jPharos.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/cameras/Camera.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/cameras/Film.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/cameras/Lens.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/core/Body.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/core/Light.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/core/Ray.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/core/Scene.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Transformation.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Vector.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/main/jPharos.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/parallel/jPharosExecutor.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/shapes/Shape.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/shapes/Sphere.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/shapes/Triangle.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Normal.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point.java" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Vector.java" afterPath="$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Vector.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -38,15 +23,22 @@
       <file leaf-file-name="Point.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="64" lean-forward="false" selection-start-line="5" selection-start-column="64" selection-end-line="5" selection-end-column="64" />
-              <folding />
+            <state relative-caret-position="540">
+              <caret line="77" column="52" lean-forward="false" selection-start-line="77" selection-start-column="52" selection-end-line="77" selection-end-column="52" />
+              <folding>
+                <element signature="e#3625#3626#0" expanded="true" />
+                <element signature="e#3718#3719#0" expanded="true" />
+                <element signature="e#3748#3749#0" expanded="true" />
+                <element signature="e#3838#3839#0" expanded="true" />
+                <element signature="e#3874#3875#0" expanded="true" />
+                <element signature="e#3961#3962#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Vector.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Vector.java">
+      <file leaf-file-name="Normal.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Normal.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="135">
               <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
@@ -55,12 +47,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="jPharosExecutor.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/parallel/jPharosExecutor.java">
+      <file leaf-file-name="Vector.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Vector.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="28" lean-forward="false" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
-              <folding />
+            <state relative-caret-position="345">
+              <caret line="23" column="8" lean-forward="false" selection-start-line="23" selection-start-column="8" selection-end-line="23" selection-end-column="8" />
+              <folding>
+                <element signature="e#584#585#0" expanded="true" />
+                <element signature="e#649#650#0" expanded="true" />
+                <element signature="e#682#683#0" expanded="true" />
+                <element signature="e#776#777#0" expanded="true" />
+                <element signature="e#1061#1062#0" expanded="true" />
+                <element signature="e#1121#1122#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -99,16 +98,17 @@
         <option value="$PROJECT_DIR$/src/com/starrypenguin/jpharos/cameras/Film.java" />
         <option value="$PROJECT_DIR$/src/com/starrypenguin/jpharos/core/Light.java" />
         <option value="$PROJECT_DIR$/src/com/starrypenguin/jpharos/core/Ray.java" />
-        <option value="$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point.java" />
         <option value="$PROJECT_DIR$/src/com/starrypenguin/jpharos/core/Scene.java" />
+        <option value="$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Vector.java" />
+        <option value="$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="4" />
-    <option name="y" value="23" />
+    <option name="y" value="22" />
     <option name="width" value="1436" />
-    <option name="height" value="877" />
+    <option name="height" value="878" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -128,6 +128,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -306,9 +307,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -455,7 +455,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="4" y="23" width="1436" height="877" extended-state="6" />
+    <frame x="4" y="22" width="1436" height="878" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -492,13 +492,28 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="64" lean-forward="false" selection-start-line="5" selection-start-column="64" selection-end-line="5" selection-end-column="64" />
+          <folding>
+            <element signature="e#3625#3626#0" expanded="true" />
+            <element signature="e#3718#3719#0" expanded="true" />
+            <element signature="e#3748#3749#0" expanded="true" />
+            <element signature="e#3838#3839#0" expanded="true" />
+            <element signature="e#3874#3875#0" expanded="true" />
+            <element signature="e#3961#3962#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Vector.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
-          <caret line="9" column="18" lean-forward="false" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
+          <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point3D.java">
+    <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/parallel/jPharosExecutor.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -506,6 +521,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="18" lean-forward="false" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
+          <folding>
+            <element signature="e#3625#3626#0" expanded="true" />
+            <element signature="e#3718#3719#0" expanded="true" />
+            <element signature="e#3748#3749#0" expanded="true" />
+            <element signature="e#3838#3839#0" expanded="true" />
+            <element signature="e#3874#3875#0" expanded="true" />
+            <element signature="e#3961#3962#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point3D.java" />
     <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/core/Scene.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -594,14 +625,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="20" lean-forward="false" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point3D.java" />
     <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/core/Ray.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -666,14 +690,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="64" lean-forward="false" selection-start-line="5" selection-start-column="64" selection-end-line="5" selection-end-column="64" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/core/Scene.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -682,18 +698,48 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Vector.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/parallel/jPharosExecutor.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="9" column="28" lean-forward="false" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Vector.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" column="8" lean-forward="false" selection-start-line="23" selection-start-column="8" selection-end-line="23" selection-end-column="8" />
+          <folding>
+            <element signature="e#584#585#0" expanded="true" />
+            <element signature="e#649#650#0" expanded="true" />
+            <element signature="e#682#683#0" expanded="true" />
+            <element signature="e#776#777#0" expanded="true" />
+            <element signature="e#1061#1062#0" expanded="true" />
+            <element signature="e#1121#1122#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Point.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="77" column="52" lean-forward="false" selection-start-line="77" selection-start-column="52" selection-end-line="77" selection-end-column="52" />
+          <folding>
+            <element signature="e#3625#3626#0" expanded="true" />
+            <element signature="e#3718#3719#0" expanded="true" />
+            <element signature="e#3748#3749#0" expanded="true" />
+            <element signature="e#3838#3839#0" expanded="true" />
+            <element signature="e#3874#3875#0" expanded="true" />
+            <element signature="e#3961#3962#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/starrypenguin/jpharos/geometry/Normal.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
           <folding />
         </state>
       </provider>
