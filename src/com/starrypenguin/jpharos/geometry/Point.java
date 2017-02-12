@@ -1,5 +1,13 @@
 package com.starrypenguin.jpharos.geometry;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+
 /**
  * Point
  * <p/>
@@ -7,11 +15,20 @@ package com.starrypenguin.jpharos.geometry;
  * <p/>
  * Author: Richard Scott McNew
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="class")
 public class Point {
+    final private static ObjectMapper objectMapper = new ObjectMapper();
     // value class; immutable and cannot be changed after being created
-    final public double x, y, z;
+    final public double x;
+    final public double y;
+    final public double z;
 
-    public Point(double x, double y, double z) {
+// TODO:
+// *** Add Jackson JSON binding annotations ***
+// *** Add unit tests for JSON serialization / deserialization ***
+
+    @JsonCreator
+    public Point(@JsonProperty("x") double x, @JsonProperty("y") double y, @JsonProperty("z") double z) {
         if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z)) {
             throw new IllegalArgumentException("Point coordinates cannot be Not a Number!");
         }
@@ -128,9 +145,57 @@ public class Point {
         return new Point(point.index(x), point.index(y), point.index(z) );
     }
 
-// *** Implement  .equals, .hashCode, and .toString methods ***
-// *** Add Jackson JSON binding annotations ***
-// *** Add .toJSON that uses JSON binding to generate serialized JSON form ***
-// *** Add static Point.fromJSON method to create Point from serialized JSON form ***
-// *** Add unit tests for JSON serialization / deserialization ***
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Point point = (Point) o;
+
+        if (Double.compare(point.x, x) != 0) return false;
+        if (Double.compare(point.y, y) != 0) return false;
+        return Double.compare(point.z, z) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(x);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(y);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(z);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
+
+    public static String toJSON(Point point) {
+        String retVal = "";
+        try {
+            retVal = objectMapper.writeValueAsString(point);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return retVal;
+    }
+
+    public static Point fromJSON(String strPoint) {
+        Point retVal = null;
+        try {
+            retVal = objectMapper.readValue(strPoint, Point.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return retVal;
+    }
 }
