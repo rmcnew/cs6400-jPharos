@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="jPharos_Scope" pattern="(src:com.starrypenguin.jpharos.cameras..*||src:com.starrypenguin.jpharos.core..*||src:com.starrypenguin.jpharos.geometry..*||src:com.starrypenguin.jpharos.main..*||src:com.starrypenguin.jpharos.parallel..*||src:com.starrypenguin.jpharos.shapes..*||test:com.starrypenguin.jpharos.geometry..*)&amp;&amp;!file[jPharos]:lib/*&amp;&amp;!file[jPharos]:lib//*" />
+</component>

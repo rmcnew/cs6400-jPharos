@@ -1,3 +1,21 @@
+/*
+ * jPharos is a simple Java-based Ray Tracer.
+ * Copyright (c) 2017.   Richard Scott McNew
+ *
+ * jPharos is free software: you can redistribute it and / or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.starrypenguin.jpharos.geometry;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -5,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.starrypenguin.jpharos.util.Shared;
 
 import java.io.IOException;
 
@@ -12,8 +31,6 @@ import java.io.IOException;
  * Point
  * <p/>
  * Points are value classes that represent a location in 3D space
- * <p/>
- * Author: Richard Scott McNew
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="class")
 public class Point {
@@ -23,63 +40,43 @@ public class Point {
     final public double y;
     final public double z;
 
-// TODO:
-// *** Add Jackson JSON binding annotations ***
-// *** Add unit tests for JSON serialization / deserialization ***
-
     @JsonCreator
     public Point(@JsonProperty("x") double x, @JsonProperty("y") double y, @JsonProperty("z") double z) {
-        if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z)) {
-            throw new IllegalArgumentException("Point coordinates cannot be Not a Number!");
-        }
+        Shared.notNaN3D(x, y, z, "Point coordinates must be valid numbers");
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
     public Point plus(Point point) {
-        if (point == null) {
-            throw new IllegalArgumentException("point cannot be null!");
-        }
+        Shared.notNull(point, "point cannot be null!");
         return new Point(this.x + point.x, this.y + point.y, this.z + point.z);
     }
 
     public Point plus(Vector vector) {
-        if (vector == null) {
-            throw new IllegalArgumentException("vector cannot be null!");
-        }
+        Shared.notNull(vector, "vector cannot be null!");
         return new Point(this.x + vector.x, this.y + vector.y, this.z + vector.z);
     }
 
     public Point minus(Vector vector) {
-        if (vector == null) {
-            throw new IllegalArgumentException("vector cannot be null!");
-        }
+        Shared.notNull(vector, "vector cannot be null!");
         return new Point(this.x - vector.x, this.y - vector.y, this.z - vector.z);
     }
 
     public Point times(double scalar) {
-        if (Double.isNaN(scalar)) {
-            throw new IllegalArgumentException("scalar cannot be Not a Number!");
-        }
+        Shared.notNaN(scalar, "scalar cannot be Not a Number!");
         return new Point(this.x * scalar, this.y * scalar, this.z * scalar);
     }
 
     public static double distanceSquared(Point pA, Point pB) {
-        if (pA == null) {
-            throw new IllegalArgumentException("Point pA cannot be null!");
-        } else if (pB == null) {
-            throw new IllegalArgumentException("Point pB cannot be null!");
-        }
+        Shared.notNull(pA, "Point pA cannot be null!");
+        Shared.notNull(pB, "Point pB cannot be null!");
         return  (Math.pow((pB.x - pA.x), 2.0) + Math.pow((pB.y - pA.y), 2.0) + Math.pow((pB.z - pA.z), 2.0) );
     }
 
     public static double distance(Point pA, Point pB) {
-        if (pA == null) {
-            throw new IllegalArgumentException("Point pA cannot be null!");
-        } else if (pB == null) {
-            throw new IllegalArgumentException("Point pB cannot be null!");
-        }
+        Shared.notNull(pA, "Point pA cannot be null!");
+        Shared.notNull(pB, "Point pB cannot be null!");
         return Math.sqrt( Point.distanceSquared(pA, pB) );
     }
 
@@ -96,20 +93,14 @@ public class Point {
     }
 
     public static Point max(Point pA, Point pB) {
-        if (pA == null) {
-            throw new IllegalArgumentException("Point pA cannot be null!");
-        } else if (pB == null) {
-            throw new IllegalArgumentException("Point pB cannot be null!");
-        }
+        Shared.notNull(pA, "Point pA cannot be null!");
+        Shared.notNull(pB, "Point pB cannot be null!");
         return new Point(Math.max(pA.x, pB.x), Math.max(pA.y, pB.y), Math.max(pA.z, pB.z) );
     }
 
     public static Point min(Point pA, Point pB) {
-        if (pA == null) {
-            throw new IllegalArgumentException("Point pA cannot be null!");
-        } else if (pB == null) {
-            throw new IllegalArgumentException("Point pB cannot be null!");
-        }
+        Shared.notNull(pA, "Point pA cannot be null!");
+        Shared.notNull(pB, "Point pB cannot be null!");
         return new Point(Math.min(pA.x, pB.x), Math.min(pA.y, pB.y), Math.min(pA.z, pB.z) );
     }
 

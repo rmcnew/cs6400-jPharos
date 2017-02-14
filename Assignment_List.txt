@@ -1,0 +1,39 @@
+Spheres and Triangles
+
+Due Feb 22 by 11:59pm
+
+Points 100
+
+Create a simple ray tracer.  This will be the basis for future assignments.
+You need only support spheres and triangles as shapes.
+
+One ray per pixel - This will be relaxed in later assignments
+
+No acceleration structures yet - test each shape for intersections
+
+No scene file - you will be able to hard code a scene every assignment.
+
+Only point light sources - this will be relaxed in later assignments
+
+Only use lambertian shading - this will change in future assignments
+
+Turn in an image that shows a sphere above and casting a shadow on a plane (made of two or more triangles)
+that was produced by your ray tracer.
+
+
+
+================================================
+
+BVH and Meshes
+
+Due Mar 1 by 11:59pm
+
+Points 100
+
+Extend your ray tracer to be able to read large triangular meshes from a file as part of a scene.
+
+Support the PLY format.
+
+Also add a BVH acceleration structure with the surface area heuristic.
+
+Turn in an image of a model containing at least 1 M triangles.

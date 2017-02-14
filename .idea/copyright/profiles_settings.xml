@@ -1,0 +1,7 @@
+<component name="CopyrightManager">
+  <settings default="jPharos_Copyright">
+    <module2copyright>
+      <element module="jPharos_Scope" copyright="jPharos_Copyright" />
+    </module2copyright>
+  </settings>
+</component>

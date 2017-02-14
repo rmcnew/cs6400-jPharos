@@ -16,17 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.starrypenguin.jpharos.cameras;
+package com.starrypenguin.jpharos.main;
 
 /**
- * Camera
+ * CommandLineParser
  * <p/>
- * A Camera represents the place and direction of observation for the scene;
- * Cameras can have Lens which change how light rays enter / exit the camera;
- * Cameras have Film which determine how image data is captured
+ * The command line parser reads in command line options and parses them
  */
-public abstract class Camera {
-
-    private Lens lens;
-    private Film film;
+public class CommandLineParser {
 }
