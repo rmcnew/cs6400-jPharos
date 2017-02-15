@@ -30,7 +30,16 @@ import java.util.List;
  */
 public class Scene {
 
+    // Scene is a Singleton object
     private Camera camera;
     private List<Light> lights;
     private List<Body> bodies;
+
+    private static Scene scene = new Scene();
+
+    private Scene() {}  // private constructor to enforce Singleton use
+
+    public static Scene getScene() {
+        return scene;
+    }
 }

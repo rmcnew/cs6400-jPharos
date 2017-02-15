@@ -18,6 +18,7 @@
 
 package com.starrypenguin.jpharos.core;
 
+import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.materials.Material;
 import com.starrypenguin.jpharos.shapes.Shape;
 
@@ -30,4 +31,20 @@ public class Body {
 
     private Shape shape;
     private Material material;
+
+    public boolean ImpactsP(Ray ray) {
+        return shape.ImpactsP(ray);
+    }
+
+    public RayImpact Impacts(Ray ray) {
+        return shape.Impacts(ray);
+    }
+
+    public BoundingBox getBoundingBox() {
+        return shape.getBoundingBox();
+    }
+
+    public double surfaceArea() {
+        return shape.surfaceArea();
+    }
 }

@@ -21,9 +21,9 @@ package com.starrypenguin.jpharos.cameras;
 /**
  * Lens
  * <p/>
- * description
- * <p/>
- * Author: Richard Scott McNew
+ * Changes the directions of Rays entering / exiting the Camera before hitting the Film
  */
 public class Lens {
+
+    private double focalLength;
 }

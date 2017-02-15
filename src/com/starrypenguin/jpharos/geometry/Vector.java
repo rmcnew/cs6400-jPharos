@@ -78,6 +78,11 @@ public class Vector {
         return new Vector(this.x * scalar, this.y * scalar, this.z * scalar);
     }
 
+    public Vector normalized() {
+        double mag = this.magnitude();
+        return new Vector(this.x / mag, this.y / mag, this.z/mag);
+    }
+
     public double dot(Vector vector) {
         if (vector == null) {
             throw new IllegalArgumentException("vector cannot be null!");

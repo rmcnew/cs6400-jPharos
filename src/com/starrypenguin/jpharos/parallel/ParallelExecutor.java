@@ -18,12 +18,17 @@
 
 package com.starrypenguin.jpharos.parallel;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * ParallelExecutor
  * <p/>
- * description
- * <p/>
- * Author: Richard Scott McNew
+ * Manages parallel execution of ray tracing and rendering tasks
  */
 public class ParallelExecutor {
+
+    final private static ExecutorService executor = Executors.newWorkStealingPool();
+
+    
 }

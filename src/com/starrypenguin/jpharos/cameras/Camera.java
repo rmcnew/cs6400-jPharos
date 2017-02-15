@@ -18,15 +18,35 @@
 
 package com.starrypenguin.jpharos.cameras;
 
+import com.starrypenguin.jpharos.geometry.Point;
+import com.starrypenguin.jpharos.geometry.Vector;
+
 /**
  * Camera
  * <p/>
  * A Camera represents the place and direction of observation for the scene;
- * Cameras can have Lens which change how light rays enter / exit the camera;
+ * Cameras have a Lens which can change how light rays enter / exit the camera;
  * Cameras have Film which determine how image data is captured
  */
 public abstract class Camera {
 
     private Lens lens;
     private Film film;
+    private Point location;
+    private Vector lookAt;
+    private Vector up;
+
+    /*
+     * Rendering:
+     * filmCenter = location + lookAt;
+     * v = cross(lookAt, up);
+     *
+     *
+     * for each xPixel in Film.xPixels {
+     *     for each yPixel in Film.yPixels {
+     *          get Point for Film pixel location based on current grid location and pixel size
+     *          cast a ray from Film pixel location to lens
+     *          create a RayImpact to record what the Ray hit (or did not hit)
+     *
+     */
 }

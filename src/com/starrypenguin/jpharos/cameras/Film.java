@@ -21,9 +21,20 @@ package com.starrypenguin.jpharos.cameras;
 /**
  * Film
  * <p/>
- * description
- * <p/>
- * Author: Richard Scott McNew
+ * Represents the film in the camera
  */
 public class Film {
+
+    double pixelSize;  // pixels are square with side length of pixelSize
+    int xPixels, yPixels; // film size in pixels
+
+    // film center = camera location + lookAt * focalLength
+
+
+    /**
+     * Write the finished film out to disk
+     */
+    public void develop() {
+
+    }
 }

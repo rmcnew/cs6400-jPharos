@@ -29,10 +29,6 @@ public class jPharos {
     1.  Read and validate any command line parameters:  "jpharos sceneDescriptionFile.json"
     Default output file is named the same as the input filename, but different extension
     -o outputFileName   :  uses "outputFileName" instead of default
-    -v verbose mode : print out verbose output
-    -n threadsToUse : use the number of threads indicated up to a maximum number of cores available + 2;
-    e.g. if user specifies 20 threads, but only 4 CPU cores detected, use a maximum of (CPU_Core_Count +2) = 6 threads
-    and print a warning message;  default to $CPU_Core_Count threads
     -r numberOfRaysToCast : number of rays to cast per pixel;  default to ???
 
     2.  Open and parse the sceneDescriptionFile.json:

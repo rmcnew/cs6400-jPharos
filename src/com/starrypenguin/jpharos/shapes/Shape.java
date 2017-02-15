@@ -18,6 +18,12 @@
 
 package com.starrypenguin.jpharos.shapes;
 
+import com.starrypenguin.jpharos.core.Ray;
+import com.starrypenguin.jpharos.core.RayImpact;
+import com.starrypenguin.jpharos.geometry.BoundingBox;
+import com.starrypenguin.jpharos.geometry.Point;
+import com.starrypenguin.jpharos.util.Shared;
+
 /**
  * Shape
  * <p/>
@@ -25,4 +31,19 @@ package com.starrypenguin.jpharos.shapes;
  * if, where, and when light interacts with a Body
  */
 public abstract class Shape {
+
+    public final Point location;
+
+    public Shape(Point location) {
+        Shared.notNull(location, "location cannot be null!");
+        this.location = location;
+    }
+
+    public abstract boolean ImpactsP(Ray ray);
+
+    public abstract RayImpact Impacts(Ray ray);
+
+    public abstract BoundingBox getBoundingBox();
+
+    public abstract double surfaceArea();
 }
