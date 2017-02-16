@@ -18,10 +18,46 @@
 
 package com.starrypenguin.jpharos.shapes;
 
+import com.starrypenguin.jpharos.core.Ray;
+import com.starrypenguin.jpharos.core.RayImpact;
+import com.starrypenguin.jpharos.geometry.BoundingBox;
+import com.starrypenguin.jpharos.geometry.Point;
+import com.starrypenguin.jpharos.util.Shared;
+
 /**
  * Sphere
  * <p/>
  * Shape that represents a sphere
  */
 public class Sphere extends Shape {
+
+    public final double radius;
+
+    public Sphere(Point location, double radius) {
+        super(location);
+        Shared.notNaN(radius, "radius cannot be Not A Number!");
+        this.radius = radius;
+    }
+
+    @Override
+    public boolean ImpactsP(Ray ray) {
+        return false;
+    }
+
+    @Override
+    public RayImpact Impacts(Ray ray) {
+        return null;
+    }
+
+    @Override
+    public BoundingBox getBoundingBox() {
+        Point max = new Point(location.x + radius, location.y + radius, location.z + radius);
+        Point min = new Point(location.x - radius, location.y - radius, location.z - radius);
+        return new BoundingBox(max, min);
+    }
+
+    @Override
+    public double surfaceArea() {
+        return 4.0 * Math.PI * radius * radius;
+    }
 }

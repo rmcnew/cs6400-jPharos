@@ -33,8 +33,8 @@ import java.io.IOException;
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="class")
 public class Vector {
-    final private static ObjectMapper objectMapper = new ObjectMapper();
     // value class; immutable and cannot be changed after being created
+    final private static ObjectMapper objectMapper = new ObjectMapper();
     final public double x;
     final public double y;
     final public double z;

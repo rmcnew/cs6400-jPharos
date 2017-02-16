@@ -18,6 +18,10 @@
 
 package com.starrypenguin.jpharos.cameras;
 
+import com.starrypenguin.jpharos.util.Shared;
+
+import java.awt.*;
+
 /**
  * Film
  * <p/>
@@ -25,11 +29,23 @@ package com.starrypenguin.jpharos.cameras;
  */
 public class Film {
 
-    double pixelSize;  // pixels are square with side length of pixelSize
-    int xPixels, yPixels; // film size in pixels
+    final public double pixelSize;       // pixels are square with side length of pixelSize
+    final public int filmWidthInPixels;  // film size in pixels
+    final public int filmHeightInPixels;
+    final public int raysPerPixel;       // number of rays used for each pixel
+    final public Color[][] filmGrid;     // used to capture results
 
-    // film center = camera location + lookAt * focalLength
-
+    public Film(double pixelSize, int filmWidthInPixels, int filmHeightInPixels, int raysPerPixel) {
+        Shared.notNaNAndPositive(pixelSize, "pixelSize must be positive!");
+        Shared.positive(filmWidthInPixels, "filmWidthInPixels must be positive!");
+        Shared.positive(filmHeightInPixels, "filmHeightInPixels must be positive!");
+        Shared.positive(raysPerPixel, "raysPerPixel must be positive!");
+        this.pixelSize = pixelSize;
+        this.filmWidthInPixels = filmWidthInPixels;
+        this.filmHeightInPixels = filmHeightInPixels;
+        this.raysPerPixel = raysPerPixel;
+        this.filmGrid = new Color[filmWidthInPixels][filmHeightInPixels];
+    }
 
     /**
      * Write the finished film out to disk

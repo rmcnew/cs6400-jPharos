@@ -21,6 +21,7 @@ package com.starrypenguin.jpharos.core;
 import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.materials.Material;
 import com.starrypenguin.jpharos.shapes.Shape;
+import com.starrypenguin.jpharos.util.Shared;
 
 /**
  * Body
@@ -28,9 +29,16 @@ import com.starrypenguin.jpharos.shapes.Shape;
  * A Shape of a given Material that is somewhere in a Scene
  */
 public class Body {
+    // value class; immutable and cannot be changed after being created
+    public final Shape shape;
+    public final Material material;
 
-    private Shape shape;
-    private Material material;
+    public Body(Shape shape,  Material material) {
+        Shared.notNull(shape, "shape cannot be null!");
+        Shared.notNull(material, "material cannot be null!");
+        this.shape = shape;
+        this.material = material;
+    }
 
     public boolean ImpactsP(Ray ray) {
         return shape.ImpactsP(ray);

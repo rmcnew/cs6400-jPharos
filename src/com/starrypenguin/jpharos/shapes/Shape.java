@@ -31,7 +31,7 @@ import com.starrypenguin.jpharos.util.Shared;
  * if, where, and when light interacts with a Body
  */
 public abstract class Shape {
-
+    // value class; immutable and cannot be changed after being created
     public final Point location;
 
     public Shape(Point location) {

@@ -20,8 +20,9 @@ package com.starrypenguin.jpharos.core;
 
 import com.starrypenguin.jpharos.cameras.Camera;
 import com.starrypenguin.jpharos.lights.Light;
+import com.starrypenguin.jpharos.util.Shared;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Scene
@@ -31,15 +32,19 @@ import java.util.List;
 public class Scene {
 
     // Scene is a Singleton object
-    private Camera camera;
-    private List<Light> lights;
-    private List<Body> bodies;
+    final public Camera camera;
+    final public Set<Light> lights;
+    final public Set<Body> bodies;
 
-    private static Scene scene = new Scene();
+    public static Scene scene;
 
-    private Scene() {}  // private constructor to enforce Singleton use
-
-    public static Scene getScene() {
-        return scene;
+    public Scene(Camera camera, Set<Light> lights,  Set<Body> bodies) {
+        Shared.notNull(camera, "camera cannot be null!");
+        Shared.notNullAndNotEmpty(lights, "lights cannot be null or empty!");
+        Shared.notNullAndNotEmpty(bodies, "bodies cannot be null or empty!");
+        this.camera = camera;
+        this.lights = lights;
+        this.bodies = bodies;
     }
+
 }

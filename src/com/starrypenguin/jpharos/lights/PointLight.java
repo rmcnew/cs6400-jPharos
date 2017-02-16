@@ -19,19 +19,15 @@
 package com.starrypenguin.jpharos.lights;
 
 import com.starrypenguin.jpharos.geometry.Point;
-import com.starrypenguin.jpharos.util.Shared;
 
 /**
- * Light
+ * PointLight
  * <p/>
- * A light source with subclasses for different kinds of lights
+ * A Point light source
  */
-public abstract class Light {
+public class PointLight extends Light {
 
-    final public Point location;
-
-    public Light(Point location) {
-        Shared.notNull(location, "location cannot be null!");
-        this.location = location;
+    public PointLight(Point location) {
+        super(location);
     }
 }

@@ -16,14 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.starrypenguin.jpharos.cameras;
+package com.starrypenguin.jpharos.lenses;
 
 /**
  * Lens
  * <p/>
  * Changes the directions of Rays entering / exiting the Camera before hitting the Film
  */
-public class Lens {
 
-    private double focalLength;
+import com.starrypenguin.jpharos.util.Shared;
+
+public abstract class Lens {
+
+    final public double focalLength;
+
+    public Lens(double focalLength) {
+        Shared.notNaN(focalLength, "focualLength cannot be Not A Number!");
+        this.focalLength = focalLength;
+    }
 }

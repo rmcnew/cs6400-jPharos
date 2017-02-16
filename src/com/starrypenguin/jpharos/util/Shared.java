@@ -18,6 +18,8 @@
 
 package com.starrypenguin.jpharos.util;
 
+import java.util.Collection;
+
 /**
  * Shared
  * <p/>
@@ -45,6 +47,12 @@ public class Shared {
         }
     }
 
+    public static void notNaNAndPositive(double value, String errorMessage) {
+        if (Double.isNaN(value) || value <= 0) {
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
     // ensure value is not NaN;  ensure  min <= value <= max
     public static void notNaNAndInclusiveRangeCheck(double value, double min, double max, String errorMessage) {
         if (Double.isNaN(value) || (value < min) || (value > max) ) {
@@ -68,6 +76,18 @@ public class Shared {
         }
         if (Double.isNaN(z)) {
             throw new IllegalArgumentException("Parameter z cannot be Not a Number!  " + errorMessage);
+        }
+    }
+
+    public static void notNullAndNotEmpty(Collection collection, String errorMessage) {
+        if ((collection == null) || (collection.isEmpty())) {
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
+    public static void positive(int value, String errorMessage) {
+        if (value <= 0) {
+            throw new IllegalArgumentException(errorMessage);
         }
     }
 }

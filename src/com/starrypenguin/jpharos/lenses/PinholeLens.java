@@ -16,22 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.starrypenguin.jpharos.lights;
-
-import com.starrypenguin.jpharos.geometry.Point;
-import com.starrypenguin.jpharos.util.Shared;
+package com.starrypenguin.jpharos.lenses;
 
 /**
- * Light
+ * PinholeLens
  * <p/>
- * A light source with subclasses for different kinds of lights
+ * The Pinhole Lens is a pass-through lens that represents a pinhole opening
  */
-public abstract class Light {
+public class PinholeLens extends Lens {
 
-    final public Point location;
-
-    public Light(Point location) {
-        Shared.notNull(location, "location cannot be null!");
-        this.location = location;
+    public PinholeLens(double focalLength) {
+        super(focalLength);
     }
 }

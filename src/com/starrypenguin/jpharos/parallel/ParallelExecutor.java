@@ -18,8 +18,8 @@
 
 package com.starrypenguin.jpharos.parallel;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * ParallelExecutor
@@ -30,5 +30,35 @@ public class ParallelExecutor {
 
     final private static ExecutorService executor = Executors.newWorkStealingPool();
 
-    
+    public static void shutdown() {
+        executor.shutdown();
+    }
+
+    public static List<Runnable> shutdownNow() {
+        return executor.shutdownNow();
+    }
+
+    public static boolean isShutdown() {
+        return executor.isShutdown();
+    }
+
+    public static boolean isTerminated() {
+        return executor.isTerminated();
+    }
+
+    public static boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+        return executor.awaitTermination(timeout, unit);
+    }
+
+    public static <T> Future<T> submit(Callable<T> task) {
+        return executor.submit(task);
+    }
+
+    public static Future<?> submit(Runnable task) {
+        return executor.submit(task);
+    }
+
+    public static void execute(Runnable command) {
+        executor.execute(command);
+    }
 }

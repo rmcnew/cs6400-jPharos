@@ -18,10 +18,45 @@
 
 package com.starrypenguin.jpharos.shapes;
 
+import com.starrypenguin.jpharos.core.Ray;
+import com.starrypenguin.jpharos.core.RayImpact;
+import com.starrypenguin.jpharos.geometry.BoundingBox;
+import com.starrypenguin.jpharos.geometry.Normal;
+import com.starrypenguin.jpharos.geometry.Point;
+import com.starrypenguin.jpharos.util.Shared;
+
 /**
  * Plane
  * <p/>
  * A flat, geometric plane
  */
-public class Plane {
+public class Plane extends Shape {
+
+    public final Normal normal;
+
+    public Plane(Point location, Normal normal) {
+        super(location);
+        Shared.notNull(normal, "normal cannot be null!");
+        this.normal = normal;
+    }
+
+    @Override
+    public boolean ImpactsP(Ray ray) {
+        return false;
+    }
+
+    @Override
+    public RayImpact Impacts(Ray ray) {
+        return null;
+    }
+
+    @Override
+    public BoundingBox getBoundingBox() {
+        return null;
+    }
+
+    @Override
+    public double surfaceArea() {
+        return 0;
+    }
 }

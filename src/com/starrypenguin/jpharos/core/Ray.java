@@ -42,6 +42,10 @@ public class Ray {
         this.timeMax = timeMax;
     }
 
+    public Ray(Point origin, Vector direction) {
+        this(origin, direction, Double.MAX_VALUE);
+    }
+
     public Point atTime(double time) {
         return this.origin.plus(direction.scale(time));
     }

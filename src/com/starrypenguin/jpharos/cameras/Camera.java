@@ -18,8 +18,11 @@
 
 package com.starrypenguin.jpharos.cameras;
 
+import com.starrypenguin.jpharos.core.Ray;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.geometry.Vector;
+import com.starrypenguin.jpharos.lenses.Lens;
+import com.starrypenguin.jpharos.util.Shared;
 
 /**
  * Camera
@@ -28,14 +31,29 @@ import com.starrypenguin.jpharos.geometry.Vector;
  * Cameras have a Lens which can change how light rays enter / exit the camera;
  * Cameras have Film which determine how image data is captured
  */
-public abstract class Camera {
+public class Camera {
 
-    private Lens lens;
-    private Film film;
-    private Point location;
-    private Vector lookAt;
-    private Vector up;
+    public final Film film;
+    public final Lens lens;
+    public final Point cameraLocation;
+    public final Vector lookAt;
+    public final Vector up;
 
+    public Camera(Film film, Lens lens, Point location, Vector lookAt, Vector up) {
+        Shared.notNull(film, "film cannot be null!");
+        Shared.notNull(lens, "lens cannot be null!");
+        Shared.notNull(location, "location cannot be null!");
+        Shared.notNull(lookAt, "lookAt cannot be null!");
+        Shared.notNull(up, "up cannot be null!");
+
+        this.film = film;
+        this.lens = lens;
+        this.cameraLocation = location;
+        this.lookAt = lookAt;
+        this.up = up;
+    }
+
+    public void render() {
     /*
      * Rendering:
      * filmCenter = location + lookAt;
@@ -49,4 +67,22 @@ public abstract class Camera {
      *          create a RayImpact to record what the Ray hit (or did not hit)
      *
      */
+
+        Point filmCenter = cameraLocation.plus(lookAt);
+        Vector right = lookAt.cross(up).normalized();
+        Vector left = right.inverse();
+        Vector normalizedUp = up.normalized();
+        double xOffset = film.pixelSize * film.filmWidthInPixels / 2;
+        double yOffset = film.pixelSize * film.filmHeightInPixels / 2;
+        Point topLeft = new Point(filmCenter.x - xOffset, filmCenter.y + yOffset, filmCenter.z);
+        for (int xIndex = 0; xIndex < film.filmWidthInPixels; xIndex++) {
+            for (int yIndex = 0; yIndex < film.filmHeightInPixels; yIndex++) {
+                Point pixelLocation = new Point(topLeft.x + xIndex * film.pixelSize, topLeft.y - yIndex * film.pixelSize, filmCenter.z);
+                Vector rayDirection = new Vector(cameraLocation, pixelLocation);
+                Ray currentRay = new Ray(cameraLocation, rayDirection);
+                // see what the ray hits
+            }
+        }
+    }
+
 }

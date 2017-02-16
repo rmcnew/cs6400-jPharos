@@ -30,8 +30,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="class")
 public class Normal {
+    // value class; immutable and cannot be changed after being created
     final private static ObjectMapper objectMapper = new ObjectMapper();
-
     public final double x;
     public final double y;
     public final double z;
