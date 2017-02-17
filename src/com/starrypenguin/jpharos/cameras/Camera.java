@@ -54,20 +54,6 @@ public class Camera {
     }
 
     public void render() {
-    /*
-     * Rendering:
-     * filmCenter = location + lookAt;
-     * v = cross(lookAt, up);
-     *
-     *
-     * for each xPixel in Film.xPixels {
-     *     for each yPixel in Film.yPixels {
-     *          get Point for Film pixel location based on current grid location and pixel size
-     *          cast a ray from Film pixel location to lens
-     *          create a RayImpact to record what the Ray hit (or did not hit)
-     *
-     */
-
         Point filmCenter = cameraLocation.plus(lookAt);
         Vector right = lookAt.cross(up).normalized();
         Vector left = right.inverse();
@@ -81,6 +67,12 @@ public class Camera {
                 Vector rayDirection = new Vector(cameraLocation, pixelLocation);
                 Ray currentRay = new Ray(cameraLocation, rayDirection);
                 // see what the ray hits
+
+
+                // for each shape in the scene
+                    // does the ray hit the shape?
+                    // if so, calculate lighting and color and populate RayImpact
+                    // otherwise, create black RayImpact
             }
         }
     }
