@@ -18,10 +18,11 @@
 
 package com.starrypenguin.jpharos.shapes;
 
+import com.starrypenguin.jpharos.core.Intersection;
 import com.starrypenguin.jpharos.core.Ray;
-import com.starrypenguin.jpharos.core.RayImpact;
 import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.geometry.Point;
+import com.starrypenguin.jpharos.materials.Material;
 import com.starrypenguin.jpharos.util.Shared;
 
 /**
@@ -39,9 +40,9 @@ public abstract class Shape {
         this.location = location;
     }
 
-    public abstract boolean ImpactsP(Ray ray);
+    public abstract boolean IntersectsP(Ray ray);
 
-    public abstract RayImpact Impacts(Ray ray);
+    public abstract Intersection Intersects(Ray ray, Material material);
 
     public abstract BoundingBox getBoundingBox();
 

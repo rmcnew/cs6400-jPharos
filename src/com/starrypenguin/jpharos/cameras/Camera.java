@@ -18,7 +18,9 @@
 
 package com.starrypenguin.jpharos.cameras;
 
+import com.starrypenguin.jpharos.core.Intersection;
 import com.starrypenguin.jpharos.core.Ray;
+import com.starrypenguin.jpharos.core.Scene;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.geometry.Vector;
 import com.starrypenguin.jpharos.lenses.Lens;
@@ -53,7 +55,7 @@ public class Camera {
         this.up = up;
     }
 
-    public void render() {
+    public void render(Scene scene) {
     /*
      * Rendering:
      * filmCenter = location + lookAt;
@@ -64,7 +66,7 @@ public class Camera {
      *     for each yPixel in Film.yPixels {
      *          get Point for Film pixel location based on current grid location and pixel size
      *          cast a ray from Film pixel location to lens
-     *          create a RayImpact to record what the Ray hit (or did not hit)
+     *          create a Intersection to record what the Ray hit (or did not hit)
      *
      */
 
@@ -81,8 +83,13 @@ public class Camera {
                 Vector rayDirection = new Vector(cameraLocation, pixelLocation);
                 Ray currentRay = new Ray(cameraLocation, rayDirection);
                 // see what the ray hits
+                Intersection maybeIntersection = scene.castRay(currentRay);
+                if (maybeIntersection != null) {
+                    film.capture(xIndex, yIndex, maybeIntersection.calculateLambertian());
+                }
             }
         }
+        film.develop();
     }
 
 }

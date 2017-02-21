@@ -90,6 +90,13 @@ public class Vector {
         return (this.x * vector.x) + (this.y * vector.y) + (this.z * vector.z);
     }
 
+    public double dot(Normal normal) {
+        if (normal == null) {
+            throw new IllegalArgumentException("normal cannot be null!");
+        }
+        return (this.x * normal.x) + (this.y * normal.y) + (this.z * normal.z);
+    }
+
     public boolean isOrthogonalTo(Vector vector) {
         return (this.dot(vector) == 0);
     }

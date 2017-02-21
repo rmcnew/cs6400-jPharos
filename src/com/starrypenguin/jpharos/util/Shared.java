@@ -18,7 +18,9 @@
 
 package com.starrypenguin.jpharos.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Shared
@@ -79,6 +81,20 @@ public class Shared {
         }
     }
 
+    // ensure  min <= value <= max
+    public static void inclusiveRangeCheck(int value, int min, int max, String errorMessage) {
+       if ( (min > value) || (value > max) ) {
+           throw new IllegalArgumentException(errorMessage);
+       }
+    }
+
+    // ensure  min < value < max
+    public static void exclusiveRangeCheck(int value, int min, int max, String errorMessage) {
+        if ( (min >= value) || (value >= max) ) {
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
     public static void notNullAndNotEmpty(Collection collection, String errorMessage) {
         if ((collection == null) || (collection.isEmpty())) {
             throw new IllegalArgumentException(errorMessage);
@@ -89,5 +105,55 @@ public class Shared {
         if (value <= 0) {
             throw new IllegalArgumentException(errorMessage);
         }
+    }
+
+    /**
+     * Use the quadratic equation to solve a second-degree polynomial:  ax^2 + bx + c = 0
+     * @param a the coefficient for the squared term: ax^2
+     * @param b the coefficient for the linear term: bx
+     * @param c the coefficient for the constant term: c
+     * @return a sorted list of roots in order least to greatest, if any; the list may be empty (no real roots), or have one or two roots
+     */
+    public static List<Double> findQuadraticRoots(double a, double b, double c) {
+        notNaN(a, "Parameter a cannot be Not a Number!");
+        notNaN(b, "Parameter b cannot be Not a Number!");
+        notNaN(c, "Parameter c cannot be Not a Number!");
+
+        List<Double> results = new ArrayList<>();
+        // if a is zero and b is not zero, then just solve for bx + c = 0  ==>  x = -c / b
+        if ( (Double.compare(a, 0.0) == 0) && (Double.compare(b, 0.0) != 0) ) {
+            results.add(-c / b);
+        // if a is not zero and b is zero, then just solve for ax^2 + c = 0  ==>  x = +/- sqrt(-c / a) iff -c / a  is positive
+        } else if ( (Double.compare(a, 0.0) != 0) && (Double.compare(b, 0.0) == 0) ) {
+            double minusCdivA = -c / a;
+            if (Double.compare(minusCdivA, 0.0) < 0) {
+                // -c / a is less than zero, so no real roots; return empty results list
+            } else {
+                double sqrtMinusCdivA = Math.sqrt(minusCdivA);
+                double negSqrtMinusCdivA = -sqrtMinusCdivA;
+                results.add(Math.min(sqrtMinusCdivA, negSqrtMinusCdivA));
+                results.add(Math.max(sqrtMinusCdivA, negSqrtMinusCdivA));
+            }
+        // a and b are both not zero; use the full quadratic formula:  x = (-b +/- sqrt(b^2 - 4ac)) / 2a
+        } else {
+            // first check sign of discriminant:
+            //    a negative discriminant means no real roots;
+            //    a discriminant with value 0 means one real root;
+            //    a positive discriminant means two real roots
+            double discriminant = (b * b) - (4.0 * a * c);
+            if (Double.compare(discriminant, 0.0) < 0) {
+                // the discriminant is negative; return empty results list
+            } else if (Double.compare(discriminant, 0.0) == 0) {
+                // there is only one real root
+                double root = -b / (2.0 * a);
+                results.add(root);
+            } else {
+                double root1 = (-b + Math.sqrt(discriminant)) / (2.0 * a);
+                double root2 = (-b - Math.sqrt(discriminant)) / (2.0 * a);
+                results.add(Math.min(root1, root2));
+                results.add(Math.max(root1, root2));
+            }
+        }
+        return results;
     }
 }

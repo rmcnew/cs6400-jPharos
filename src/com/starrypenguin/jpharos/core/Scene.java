@@ -47,4 +47,14 @@ public class Scene {
         this.bodies = bodies;
     }
 
+    public Intersection castRay(Ray ray) {
+        for (Body body : bodies) {
+            Intersection maybeIntersection = body.Intersects(ray);
+            if (maybeIntersection != null) {
+                return maybeIntersection;
+            }
+        }
+        return null;
+    }
+
 }

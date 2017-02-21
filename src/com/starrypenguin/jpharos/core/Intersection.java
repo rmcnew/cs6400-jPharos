@@ -18,28 +18,47 @@
 
 package com.starrypenguin.jpharos.core;
 
+import com.starrypenguin.jpharos.geometry.Normal;
 import com.starrypenguin.jpharos.util.Shared;
 
 import java.awt.*;
 
 /**
- * RayImpact
+ * Intersection
  * <p/>
  * Represents the data from when a Ray hits a Body
  */
-public class RayImpact {
+public class Intersection {
 
     // at what time along the Ray did the Impact occur?
     public final double impactTime;
     public final Ray ray;
+    public final Normal surfaceNormal;
     public final Color color;
 
-    public RayImpact(Ray ray,  double impactTime, Color color) {
+    public Intersection(Ray ray, double impactTime, Normal surfaceNormal, Color color) {
         Shared.notNull(ray, "ray cannot be null!");
         Shared.notNaN(impactTime, "impactTime cannot be Not A Number!");
+        Shared.notNull(surfaceNormal, "surfaceNormal cannot be null!");
         Shared.notNull(color, "color cannot be null!");
         this.ray = ray;
         this.impactTime = impactTime;
+        this.surfaceNormal = surfaceNormal;
         this.color = color;
+    }
+
+    /**
+     * Calculate the Lambertian lighting
+     * @return Color with darkness values adjusted
+     */
+    public Color calculateLambertian() {
+        double rawLambert = Math.max(ray.direction.dot(surfaceNormal), 0.0);
+        double maxValue = ray.direction.magnitude() * surfaceNormal.magnitude();
+        double scaledLambert = rawLambert / maxValue;
+        float factor = (float) (1.0 - scaledLambert);
+        float red = (float) (this.color.getRed() / 255.0) * factor;
+        float green = (float) (this.color.getGreen() / 255.0) * factor;
+        float blue = (float) (this.color.getBlue() / 255.0) * factor;
+        return new Color(red, green, blue);
     }
 }

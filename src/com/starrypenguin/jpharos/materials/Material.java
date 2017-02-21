@@ -18,10 +18,21 @@
 
 package com.starrypenguin.jpharos.materials;
 
+import com.starrypenguin.jpharos.util.Shared;
+
+import java.awt.*;
+
 /**
  * Material
  * <p/>
  * The material composition of a Body that determines what happens when light interacts with a Body
  */
 public class Material {
+
+    public final Color color;
+
+    public Material(Color color) {
+        Shared.notNull(color, "Parameter color cannot be null!");
+        this.color = color;
+    }
 }

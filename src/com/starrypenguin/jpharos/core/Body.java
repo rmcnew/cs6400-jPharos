@@ -40,12 +40,12 @@ public class Body {
         this.material = material;
     }
 
-    public boolean ImpactsP(Ray ray) {
-        return shape.ImpactsP(ray);
+    public boolean IntersectsP(Ray ray) {
+        return shape.IntersectsP(ray);
     }
 
-    public RayImpact Impacts(Ray ray) {
-        return shape.Impacts(ray);
+    public Intersection Intersects(Ray ray) {
+        return shape.Intersects(ray, material);
     }
 
     public BoundingBox getBoundingBox() {

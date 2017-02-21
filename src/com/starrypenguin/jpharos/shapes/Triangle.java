@@ -18,10 +18,120 @@
 
 package com.starrypenguin.jpharos.shapes;
 
+import com.starrypenguin.jpharos.core.Intersection;
+import com.starrypenguin.jpharos.core.Ray;
+import com.starrypenguin.jpharos.geometry.BoundingBox;
+import com.starrypenguin.jpharos.geometry.Normal;
+import com.starrypenguin.jpharos.geometry.Point;
+import com.starrypenguin.jpharos.geometry.Vector;
+import com.starrypenguin.jpharos.materials.Material;
+import com.starrypenguin.jpharos.util.Shared;
+
 /**
  * Triangle
  * <p/>
  * Shape that represents a triangle
  */
 public class Triangle extends Shape {
+
+    public final Point v1;
+    public final Point v2;
+    public final Point v3;
+
+    public Triangle(Point v1, Point v2, Point v3) {
+        super(calculateTriangleCentroid(v1, v2, v3));
+        this.v1 = v1;
+        this.v2 = v2;
+        this.v3 = v3;
+    }
+
+    @Override
+    public boolean IntersectsP(Ray ray) {
+        return false;
+    }
+
+    @Override
+    public Intersection Intersects(Ray ray, Material material) {
+        return null;
+    }
+
+    @Override
+    public BoundingBox getBoundingBox() {
+        return null;
+    }
+
+    private Normal getSurfaceNormal() {
+        Vector vec1 = new Vector(v1, v2);
+        Vector vec2 = new Vector(v1, v3);
+        return Normal.fromVector(vec1.cross(vec2));
+    }
+
+    /**
+     * Use Heron's Formula to calculate the triangle's area:
+     *   A = sqrt( s(s-a)(s-b)(s-c) )
+     * where s is the semiperimeter given by:
+     *   s = (a + b + c) / 2
+     * and a, b, and c are the lengths of the triangle's sides
+     *
+     * Reference:  https://en.wikipedia.org/wiki/Heron%27s_formula
+     *
+     * @return double for the triangle's area
+     */
+    @Override
+    public double surfaceArea() {
+        double a = Point.distance(v1, v2);
+        double b = Point.distance(v2, v3);
+        double c = Point.distance(v3, v1);
+
+        double s = (a + b + c) / 2.0;
+        return Math.sqrt( s * (s-a) * (s-b) * (s-c) );
+    }
+
+    /**
+     * Ensure that the provided Points represent valid vertices for a triangle
+     * Specifically:
+     *   all Points are valid Points (not null, no NaNs)
+     *   each vertex is unique (not equal to one of the other two vertices)
+     * @param v1 Point for the first triangle vertex
+     * @param v2 Point for the second triangle vertex
+     * @param v3 Point for the third triangle vertex
+     */
+    private static void trianglePointsValid(Point v1, Point v2, Point v3) {
+        Shared.notNull(v1, "Parameter v1 cannot be null!");
+        Shared.notNull(v2, "Parameter v2 cannot be null!");
+        Shared.notNull(v3, "Parameter v3 cannot be null!");
+        if (v1.equals(v2)) {
+            throw new IllegalArgumentException("Invalid triangle!  v1 equals v2");
+        }
+        if (v1.equals(v3)) {
+            throw new IllegalArgumentException("Invalid triangle!  v1 equals v3");
+        }
+        if (v2.equals(v3)) {
+            throw new IllegalArgumentException("Invalid triangle!  v2 equals v3");
+        }
+    }
+
+    /**
+     * Calculate the triangle's centroid given the vertices
+     * Given the coordinates of the three vertices of a triangle ABC, the centroid O coordinates are given by:
+     *    O_x = (A_x + B_x + C_x) / 3
+     *    O_y = (A_y + B_y + C_y) / 3
+     *    O_z = (A_z + B_z + C_z) / 3
+     *
+     * Reference:  http://www.mathopenref.com/coordcentroid.html
+     * 
+     * @param v1 Point for the first triangle vertex
+     * @param v2 Point for the second triangle vertex
+     * @param v3 Point for the third triangle vertex
+     * @return Point for the triangle's centroid
+     */
+    private static Point calculateTriangleCentroid(Point v1, Point v2, Point v3) {
+        // first make sure triangle is sane
+        trianglePointsValid(v1, v2, v3);
+        // now determine the centroid coordinates
+        double x = (v1.x + v2.x + v3.x) / 3.0;
+        double y = (v1.y + v2.y + v3.y) / 3.0;
+        double z = (v1.z + v2.z + v3.z) / 3.0;
+        return new Point(x, y, z);
+    }
 }

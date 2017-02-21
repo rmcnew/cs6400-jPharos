@@ -51,4 +51,7 @@ public class jPharos {
                     Put RayCastTask on ThreadPool
 */
 
+    // For now, hard-code the Scene
+
+
 }

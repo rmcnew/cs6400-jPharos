@@ -116,25 +116,6 @@ public class Point {
         return new Point(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z) );
     }
 
-    private double index(int i) {
-        if ( (i < 0) || ( i > 2) ) {
-            throw new IllegalArgumentException("index must be 0, 1, or 2");
-        }
-        if (i == 0) {
-            return this.x;
-        } else if (i == 1) {
-            return this.y;
-        } else {
-            return this.z;
-        }
-    }
-
-    public static Point permute(Point point, int x, int y, int z) {
-        if (point == null) {
-            throw new IllegalArgumentException("point cannot be null!");
-        }
-        return new Point(point.index(x), point.index(y), point.index(z) );
-    }
 
     @Override
     public boolean equals(Object o) {

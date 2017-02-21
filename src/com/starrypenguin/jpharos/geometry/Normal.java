@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.starrypenguin.jpharos.util.Shared;
 
 /**
  * Normal
@@ -44,6 +45,15 @@ public class Normal {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public Normal (Point from, Point to) {
+        this(to.x - from.x, to.y - from.y, to.z - from.z);
+    }
+
+    public static Normal fromVector(Vector vector) {
+        Shared.notNull(vector, "Parameter vector cannot be null!");
+        return new Normal(vector.x, vector.y, vector.z);
     }
 
     public Normal plus(Normal normal) {

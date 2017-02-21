@@ -33,7 +33,7 @@ public class Film {
     final public int filmWidthInPixels;  // film size in pixels
     final public int filmHeightInPixels;
     final public int raysPerPixel;       // number of rays used for each pixel
-    final public Color[][] filmGrid;     // used to capture results
+    final public Color[][] colorGrid;     // used to capture results
 
     public Film(double pixelSize, int filmWidthInPixels, int filmHeightInPixels, int raysPerPixel) {
         Shared.notNaNAndPositive(pixelSize, "pixelSize must be positive!");
@@ -44,13 +44,20 @@ public class Film {
         this.filmWidthInPixels = filmWidthInPixels;
         this.filmHeightInPixels = filmHeightInPixels;
         this.raysPerPixel = raysPerPixel;
-        this.filmGrid = new Color[filmWidthInPixels][filmHeightInPixels];
+        this.colorGrid = new Color[filmWidthInPixels][filmHeightInPixels];
+    }
+
+    public void capture(int widthIndex, int heightIndex, Color color) {
+        Shared.inclusiveRangeCheck(widthIndex, 0, filmWidthInPixels - 1, "widthIndex parameter is out of range!");
+        Shared.inclusiveRangeCheck(heightIndex, 0, filmHeightInPixels - 1, "heightIndex parameter is out of range!");
+        Shared.notNull(color, "color Parameter cannot be null!");
+        this.colorGrid[widthIndex][heightIndex] = color;
     }
 
     /**
      * Write the finished film out to disk
      */
     public void develop() {
-
+        // Implement writing image file to disk
     }
 }
