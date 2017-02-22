@@ -18,13 +18,13 @@
 
 package com.starrypenguin.jpharos.shapes;
 
+import com.starrypenguin.jpharos.core.Body;
 import com.starrypenguin.jpharos.core.Intersection;
 import com.starrypenguin.jpharos.core.Ray;
 import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.geometry.Normal;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.geometry.Vector;
-import com.starrypenguin.jpharos.materials.Material;
 import com.starrypenguin.jpharos.util.Shared;
 
 /**
@@ -104,13 +104,13 @@ public class Triangle extends Shape {
     }
 
     @Override
-    public Intersection Intersects(Ray ray, Material material) {
+    public Intersection Intersects(Ray ray, Body body) {
         Intersection intersection = null;
         Double intersectionTime = determineIntersection(ray);
         if (intersectionTime != null) {
             Point intersectionPoint = ray.atTime(intersectionTime);
-            intersection = new Intersection(ray, intersectionTime, getSurfaceNormal(), intersectionPoint, material.color);
-            System.out.println("Intersected with plane triangle: " + intersection);
+            intersection = new Intersection(ray, intersectionTime, getSurfaceNormal(), intersectionPoint, body);
+            //System.out.println("Intersected with triangle: " + intersection);
         }
         return intersection;
     }

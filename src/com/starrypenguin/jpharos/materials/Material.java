@@ -35,4 +35,11 @@ public class Material {
         Shared.notNull(color, "Parameter color cannot be null!");
         this.color = color;
     }
+
+    @Override
+    public String toString() {
+        return "Material{" +
+                "color=" + color +
+                '}';
+    }
 }

@@ -45,7 +45,7 @@ final public class Body {
     }
 
     public Intersection Intersects(Ray ray) {
-        return shape.Intersects(ray, material);
+        return shape.Intersects(ray, this);
     }
 
     public BoundingBox getBoundingBox() {
@@ -54,5 +54,31 @@ final public class Body {
 
     public double surfaceArea() {
         return shape.surfaceArea();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Body body = (Body) o;
+
+        if (!shape.equals(body.shape)) return false;
+        return material.equals(body.material);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = shape.hashCode();
+        result = 31 * result + material.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Body{" +
+                "shape=" + shape +
+                ", material=" + material +
+                '}';
     }
 }

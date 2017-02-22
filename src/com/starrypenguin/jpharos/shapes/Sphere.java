@@ -18,12 +18,12 @@
 
 package com.starrypenguin.jpharos.shapes;
 
+import com.starrypenguin.jpharos.core.Body;
 import com.starrypenguin.jpharos.core.Intersection;
 import com.starrypenguin.jpharos.core.Ray;
 import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.geometry.Normal;
 import com.starrypenguin.jpharos.geometry.Point;
-import com.starrypenguin.jpharos.materials.Material;
 import com.starrypenguin.jpharos.util.Shared;
 
 import java.util.List;
@@ -86,7 +86,7 @@ final public class Sphere extends Shape {
      }
 
     @Override
-    public Intersection Intersects(Ray ray, Material material) {
+    public Intersection Intersects(Ray ray, Body body) {
         List<Double> intersectionTimes = getIntersectionTimes(ray);
         Intersection intersection = null;
         if (intersectionTimes.isEmpty()) {
@@ -96,7 +96,7 @@ final public class Sphere extends Shape {
             double intersectionTime = intersectionTimes.get(0);
             Point intersectionPoint = ray.atTime(intersectionTime);
             Normal surfaceNormal = new Normal(location, intersectionPoint);
-            intersection = new Intersection(ray, intersectionTime, surfaceNormal, intersectionPoint, material.color);
+            intersection = new Intersection(ray, intersectionTime, surfaceNormal, intersectionPoint, body);
         }
         return intersection;
     }
@@ -111,5 +111,28 @@ final public class Sphere extends Shape {
     @Override
     public double surfaceArea() {
         return 4.0 * Math.PI * radius * radius;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Sphere sphere = (Sphere) o;
+
+        return Double.compare(sphere.radius, radius) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        long temp = Double.doubleToLongBits(radius);
+        return (int) (temp ^ (temp >>> 32));
+    }
+
+    @Override
+    public String toString() {
+        return "Sphere{" +
+                "radius=" + radius +
+                "} " + super.toString();
     }
 }

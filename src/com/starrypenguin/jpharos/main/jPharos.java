@@ -79,7 +79,7 @@ static {
         Set<Body> bodies = new HashSet<>();
         // Sphere
         Point sphereLocation = new Point(0, 0, 50);
-        Sphere sphere = new Sphere(sphereLocation, 20);
+        Sphere sphere = new Sphere(sphereLocation, 40);
         Material redStuff = new Material(Color.RED);
         Body sphereBody = new Body(sphere, redStuff);
         bodies.add(sphereBody);
@@ -98,15 +98,15 @@ static {
         bodies.add(triangle2Body);
 
         // Lights
-        Light pointLight = new PointLight(new Point(0, 0, 140));
+        Light pointLight = new PointLight(new Point(-20, 0, 120));
         Set<Light> lights = new HashSet<>();
         lights.add(pointLight);
 
         // Camera
-        Point cameraLocation = new Point(70, 0, 40);
+        Point cameraLocation = new Point(60, 0, 25);
         Vector up = new Vector(0, 0, 1);
         Vector lookAt = new Vector(-1, 0, 0);
-        Lens lens = new PinholeLens(95);
+        Lens lens = new PinholeLens(60);
         Film film = new Film(1, 300, 300, 1);
         camera = new Camera(film, lens, cameraLocation, lookAt, up);
 

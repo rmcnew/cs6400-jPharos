@@ -95,9 +95,9 @@ final public class Camera {
                     rayHitCount++;
                     //System.out.println("Camera:  Ray hit!  Intersection details: " + maybeIntersection);
                     //film.capture(leftRightIndex, upDownIndex, maybeIntersection.color);
-                    film.capture(leftRightIndex, upDownIndex, maybeIntersection.calculateLambertian());
+                    film.capture(leftRightIndex, upDownIndex, maybeIntersection.calculateLambertianAndShadow());
                 } else {
-                    film.capture(leftRightIndex, upDownIndex, Color.BLACK);
+                    film.capture(leftRightIndex, upDownIndex, Color.DARK_GRAY);
                 }
             }
         }
