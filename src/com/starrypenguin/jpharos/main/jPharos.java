@@ -78,7 +78,7 @@ static {
         // Bodies
         Set<Body> bodies = new HashSet<>();
         // Sphere
-        Point sphereLocation = new Point(0, 0, 50);
+        Point sphereLocation = new Point(0, 0, 70);
         Sphere sphere = new Sphere(sphereLocation, 40);
         Material redStuff = new Material(Color.RED);
         Body sphereBody = new Body(sphere, redStuff);
