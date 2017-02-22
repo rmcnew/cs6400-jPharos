@@ -33,7 +33,7 @@ import java.io.IOException;
  * Points are value classes that represent a location in 3D space
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="class")
-public class Point {
+final public class Point {
     final private static ObjectMapper objectMapper = new ObjectMapper();
     // value class; immutable and cannot be changed after being created
     final public double x;

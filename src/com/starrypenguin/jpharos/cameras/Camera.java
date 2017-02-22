@@ -26,6 +26,8 @@ import com.starrypenguin.jpharos.geometry.Vector;
 import com.starrypenguin.jpharos.lenses.Lens;
 import com.starrypenguin.jpharos.util.Shared;
 
+import java.awt.*;
+
 /**
  * Camera
  * <p/>
@@ -33,7 +35,7 @@ import com.starrypenguin.jpharos.util.Shared;
  * Cameras have a Lens which can change how light rays enter / exit the camera;
  * Cameras have Film which determine how image data is captured
  */
-public class Camera {
+final public class Camera {
 
     public final Film film;
     public final Lens lens;
@@ -55,7 +57,7 @@ public class Camera {
         this.up = up;
     }
 
-    public void render(Scene scene) {
+    public void render(Scene scene, String outFilename) {
     /*
      * Rendering:
      * filmCenter = location + lookAt;
@@ -86,10 +88,12 @@ public class Camera {
                 Intersection maybeIntersection = scene.castRay(currentRay);
                 if (maybeIntersection != null) {
                     film.capture(xIndex, yIndex, maybeIntersection.calculateLambertian());
+                } else {
+                    film.capture(xIndex, yIndex, Color.BLACK);
                 }
             }
         }
-        film.develop();
+        film.develop(outFilename);
     }
 
 }

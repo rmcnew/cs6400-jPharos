@@ -28,7 +28,7 @@ import java.awt.*;
  * <p/>
  * Represents the data from when a Ray hits a Body
  */
-public class Intersection {
+final public class Intersection {
 
     // at what time along the Ray did the Impact occur?
     public final double impactTime;

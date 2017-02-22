@@ -27,7 +27,16 @@ import java.util.List;
  * <p/>
  * Shared constants and general utility functions
  */
-public class Shared {
+final public class Shared {
+
+    // constants
+    final public class GraphicsFileFormat {
+        public static final String ASCII_BW_PBM_MAGIC_NUMBER = "P1";
+        public static final String ASCII_GRAYSCALE_PGM_MAGIC_NUMBER = "P2";
+        public static final String ASCII_COLOR_PPM_MAGIC_NUMBER = "P3";
+        // Reference:  https://en.wikipedia.org/wiki/Netpbm_format
+    }
+    // methods
 
     public static boolean nullOrEmpty(String str) {
         return (str == null) || str.isEmpty();

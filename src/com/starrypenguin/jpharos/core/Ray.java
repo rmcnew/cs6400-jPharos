@@ -27,7 +27,7 @@ import com.starrypenguin.jpharos.util.Shared;
  * <p/>
  * The ray class represents a ray of light
  */
-public class Ray {
+final public class Ray {
 
     public final Point origin;
     public final Vector direction;

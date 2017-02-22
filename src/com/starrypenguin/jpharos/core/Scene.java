@@ -29,7 +29,7 @@ import java.util.Set;
  * <p/>
  * The overall container of with objects needed to render a scene
  */
-public class Scene {
+final public class Scene {
 
     // Scene is a Singleton object
     final public Camera camera;

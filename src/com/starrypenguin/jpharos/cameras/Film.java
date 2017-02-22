@@ -27,13 +27,15 @@ import java.awt.*;
  * <p/>
  * Represents the film in the camera
  */
-public class Film {
+final public class Film {
 
     final public double pixelSize;       // pixels are square with side length of pixelSize
     final public int filmWidthInPixels;  // film size in pixels
     final public int filmHeightInPixels;
     final public int raysPerPixel;       // number of rays used for each pixel
     final public Color[][] colorGrid;     // used to capture results
+    final private StringBuilder stringBuilder = new StringBuilder();
+    final private String COLOR_DEPTH = "255";
 
     public Film(double pixelSize, int filmWidthInPixels, int filmHeightInPixels, int raysPerPixel) {
         Shared.notNaNAndPositive(pixelSize, "pixelSize must be positive!");
@@ -54,10 +56,27 @@ public class Film {
         this.colorGrid[widthIndex][heightIndex] = color;
     }
 
+    private void appendLine(String str) {
+        stringBuilder.append(str);
+        stringBuilder.append("\n");
+    }
+
+    private String colorToStr(Color color) {
+        return color.getRed() + " " + color.getGreen() + color.getBlue();
+    }
+
     /**
      * Write the finished film out to disk
      */
-    public void develop() {
-        // Implement writing image file to disk
+    public void develop(String outFilename) {
+        appendLine(Shared.GraphicsFileFormat.ASCII_COLOR_PPM_MAGIC_NUMBER);
+        appendLine(filmWidthInPixels + " " + filmHeightInPixels);
+        appendLine(COLOR_DEPTH);
+        for (int heightIndex = 0; heightIndex < filmHeightInPixels; heightIndex++) {
+            for (int widthIndex = 0; widthIndex < filmWidthInPixels; widthIndex++) {
+                stringBuilder.append(colorToStr(colorGrid[widthIndex][heightIndex]));
+            }
+            stringBuilder.append("\n");
+        }
     }
 }

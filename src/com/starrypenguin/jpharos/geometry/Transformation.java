@@ -23,5 +23,5 @@ package com.starrypenguin.jpharos.geometry;
  * <p/>
  * An operation that changes 3D geometric entities in a particular way;  Transformations are represented by matrices
  */
-public class Transformation {
+final public class Transformation {
 }

@@ -32,7 +32,7 @@ import java.io.IOException;
  * Represents a mathematical vector entity that has a direction and magnitude
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="class")
-public class Vector {
+final public class Vector {
     // value class; immutable and cannot be changed after being created
     final private static ObjectMapper objectMapper = new ObjectMapper();
     final public double x;

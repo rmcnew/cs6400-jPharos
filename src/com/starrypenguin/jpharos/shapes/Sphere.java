@@ -33,7 +33,7 @@ import java.util.List;
  * <p/>
  * Shape that represents a sphere
  */
-public class Sphere extends Shape {
+final public class Sphere extends Shape {
 
     public final double radius;
 

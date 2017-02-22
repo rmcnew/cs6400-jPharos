@@ -30,7 +30,7 @@ import com.starrypenguin.jpharos.util.Shared;
  * Represents a surface normal vector
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="class")
-public class Normal {
+final public class Normal {
     // value class; immutable and cannot be changed after being created
     final private static ObjectMapper objectMapper = new ObjectMapper();
     public final double x;
