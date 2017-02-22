@@ -21,6 +21,8 @@ package com.starrypenguin.jpharos.cameras;
 import com.starrypenguin.jpharos.util.Shared;
 
 import java.awt.*;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Film
@@ -34,7 +36,6 @@ final public class Film {
     final public int filmHeightInPixels;
     final public int raysPerPixel;       // number of rays used for each pixel
     final public Color[][] colorGrid;     // used to capture results
-    final private StringBuilder stringBuilder = new StringBuilder();
     final private String COLOR_DEPTH = "255";
 
     public Film(double pixelSize, int filmWidthInPixels, int filmHeightInPixels, int raysPerPixel) {
@@ -46,37 +47,40 @@ final public class Film {
         this.filmWidthInPixels = filmWidthInPixels;
         this.filmHeightInPixels = filmHeightInPixels;
         this.raysPerPixel = raysPerPixel;
-        this.colorGrid = new Color[filmWidthInPixels][filmHeightInPixels];
+        this.colorGrid = new Color[filmHeightInPixels][filmWidthInPixels];
     }
 
-    public void capture(int widthIndex, int heightIndex, Color color) {
+    public void capture(int heightIndex, int widthIndex, Color color) {
         Shared.inclusiveRangeCheck(widthIndex, 0, filmWidthInPixels - 1, "widthIndex parameter is out of range!");
         Shared.inclusiveRangeCheck(heightIndex, 0, filmHeightInPixels - 1, "heightIndex parameter is out of range!");
         Shared.notNull(color, "color Parameter cannot be null!");
-        this.colorGrid[widthIndex][heightIndex] = color;
-    }
-
-    private void appendLine(String str) {
-        stringBuilder.append(str);
-        stringBuilder.append("\n");
+        this.colorGrid[heightIndex][widthIndex] = color;
     }
 
     private String colorToStr(Color color) {
-        return color.getRed() + " " + color.getGreen() + color.getBlue();
+        return color.getRed() + " " + color.getGreen() + " " + color.getBlue() + " ";
     }
 
     /**
      * Write the finished film out to disk
      */
     public void develop(String outFilename) {
-        appendLine(Shared.GraphicsFileFormat.ASCII_COLOR_PPM_MAGIC_NUMBER);
-        appendLine(filmWidthInPixels + " " + filmHeightInPixels);
-        appendLine(COLOR_DEPTH);
+        try (FileWriter fileWriter = new FileWriter(outFilename)) {
+        fileWriter.write(Shared.GraphicsFileFormat.ASCII_COLOR_PPM_MAGIC_NUMBER + "\n");
+        fileWriter.write(filmWidthInPixels + " " + filmHeightInPixels + "\n");
+        fileWriter.write(COLOR_DEPTH + "\n");
         for (int heightIndex = 0; heightIndex < filmHeightInPixels; heightIndex++) {
             for (int widthIndex = 0; widthIndex < filmWidthInPixels; widthIndex++) {
-                stringBuilder.append(colorToStr(colorGrid[widthIndex][heightIndex]));
+                fileWriter.write(colorToStr(colorGrid[widthIndex][heightIndex]));
             }
-            stringBuilder.append("\n");
+            fileWriter.write("\n");
+            fileWriter.flush();
+        }
+        fileWriter.write("\n");
+        fileWriter.flush();
+        fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

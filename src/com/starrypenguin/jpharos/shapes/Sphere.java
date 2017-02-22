@@ -81,6 +81,7 @@ final public class Sphere extends Shape {
          double a = (d_x * d_x) + (d_y * d_y) + (d_z * d_z);
          double b = 2 * ( (d_x * o_x) + (d_y * o_y) + (d_z * o_z) );
          double c = (o_x * o_x) + (o_y * o_y) + (o_z * o_z) - (radius * radius);
+         //System.out.println("Finding quadratic roots for a=" + a + ", b=" + b + ",c=" + c);
          return Shared.findQuadraticRoots(a, b, c);
      }
 
@@ -95,7 +96,7 @@ final public class Sphere extends Shape {
             double intersectionTime = intersectionTimes.get(0);
             Point intersectionPoint = ray.atTime(intersectionTime);
             Normal surfaceNormal = new Normal(location, intersectionPoint);
-            intersection = new Intersection(ray, intersectionTime, surfaceNormal, material.color);
+            intersection = new Intersection(ray, intersectionTime, surfaceNormal, intersectionPoint, material.color);
         }
         return intersection;
     }

@@ -19,9 +19,11 @@
 package com.starrypenguin.jpharos.core;
 
 import com.starrypenguin.jpharos.geometry.Normal;
+import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.util.Shared;
 
 import java.awt.*;
+
 
 /**
  * Intersection
@@ -30,20 +32,22 @@ import java.awt.*;
  */
 final public class Intersection {
 
-    // at what time along the Ray did the Impact occur?
-    public final double impactTime;
+    public final double intersectionTime;
     public final Ray ray;
     public final Normal surfaceNormal;
+    public final Point intersectionPoint;
     public final Color color;
 
-    public Intersection(Ray ray, double impactTime, Normal surfaceNormal, Color color) {
+    public Intersection(Ray ray, double intersectionTime, Normal surfaceNormal, Point intersectionPoint, Color color) {
         Shared.notNull(ray, "ray cannot be null!");
-        Shared.notNaN(impactTime, "impactTime cannot be Not A Number!");
+        Shared.notNaN(intersectionTime, "intersectionTime cannot be Not A Number!");
         Shared.notNull(surfaceNormal, "surfaceNormal cannot be null!");
+        Shared.notNull(intersectionPoint, "intersectionPoint cannot be null!");
         Shared.notNull(color, "color cannot be null!");
         this.ray = ray;
-        this.impactTime = impactTime;
+        this.intersectionTime = intersectionTime;
         this.surfaceNormal = surfaceNormal;
+        this.intersectionPoint = intersectionPoint;
         this.color = color;
     }
 
@@ -60,5 +64,16 @@ final public class Intersection {
         float green = (float) (this.color.getGreen() / 255.0) * factor;
         float blue = (float) (this.color.getBlue() / 255.0) * factor;
         return new Color(red, green, blue);
+    }
+
+    @Override
+    public String toString() {
+        return "Intersection{" +
+                "intersectionTime=" + intersectionTime +
+                ", ray=" + ray +
+                ", surfaceNormal=" + surfaceNormal +
+                ", intersectionPoint=" + intersectionPoint +
+                ", color=" + color +
+                '}';
     }
 }

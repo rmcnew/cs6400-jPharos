@@ -78,17 +78,17 @@ static {
         // Bodies
         Set<Body> bodies = new HashSet<>();
         // Sphere
-        Point sphereLocation = new Point(0, 0, 20);
-        Sphere sphere = new Sphere(sphereLocation, 5);
+        Point sphereLocation = new Point(0, 0, 50);
+        Sphere sphere = new Sphere(sphereLocation, 20);
         Material redStuff = new Material(Color.RED);
         Body sphereBody = new Body(sphere, redStuff);
         bodies.add(sphereBody);
 
         //Triangles to make a plane
-        Point quadrant1 = new Point(15, 10, 0);
-        Point quadrant2 = new Point(-15, 10, 0);
-        Point quadrant3 = new Point(-15, -10, 0);
-        Point quadrant4 = new Point(15, -10, 0);
+        Point quadrant1 = new Point(150, 100, 0);
+        Point quadrant2 = new Point(-150, 100, 0);
+        Point quadrant3 = new Point(-150, -100, 0);
+        Point quadrant4 = new Point(150, -100, 0);
         Triangle triangle1 = new Triangle(quadrant4, quadrant1, quadrant3);
         Triangle triangle2 = new Triangle(quadrant1, quadrant2, quadrant3);
         Material whiteStuff = new Material(Color.WHITE);
@@ -98,15 +98,15 @@ static {
         bodies.add(triangle2Body);
 
         // Lights
-        Light pointLight = new PointLight(new Point(0, 0, 40));
+        Light pointLight = new PointLight(new Point(0, 0, 140));
         Set<Light> lights = new HashSet<>();
         lights.add(pointLight);
 
         // Camera
-        Point cameraLocation = new Point(30, 0, 30);
+        Point cameraLocation = new Point(70, 0, 40);
         Vector up = new Vector(0, 0, 1);
-        Vector lookAt = new Vector(cameraLocation, sphereLocation).normalized();
-        Lens lens = new PinholeLens(5);
+        Vector lookAt = new Vector(-1, 0, 0);
+        Lens lens = new PinholeLens(95);
         Film film = new Film(1, 300, 300, 1);
         camera = new Camera(film, lens, cameraLocation, lookAt, up);
 
@@ -116,8 +116,8 @@ static {
 
     public static void main(String[] args) {
         String outFilename = "out.ppm";
-        if (!args[1].isEmpty()) {
-            outFilename = args[1];
+        if (args.length > 0 && !args[0].isEmpty()) {
+            outFilename = args[0];
         }
         camera.render(scene, outFilename);
     }

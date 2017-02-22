@@ -45,14 +45,74 @@ public class Triangle extends Shape {
         this.v3 = v3;
     }
 
+    private final static double EPSILON = 0.000001;
+    /**
+     * Use the Möller–Trumbore intersection algorithm to quickly determine
+     * if the ray intersects the triangle
+     *
+     * Reference:  https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+     * @param ray the Ray to test for intersection
+     * @return Double with the time that the intersection occurs or null if there is no intersection
+     */
+    private Double determineIntersection(Ray ray) {
+        Double intersectionTime = null;
+        Vector edge1, edge2, P, Q, T;
+        double det, invDet, u, v, t;
+
+        // Find vectors for two edges sharing V1
+        edge1 = new Vector(v1, v2);
+        edge2 = new Vector(v1, v3);
+        // Begin calculating determinant - also used to calculate u parameter
+        P = ray.direction.cross(edge2);
+        // if determinant is near zero, ray lies in plane of triangle or ray is parallel to plane of triangle
+        det = edge1.dot(P);
+        if (det > -EPSILON && det < EPSILON) {
+            return intersectionTime;
+        }
+
+        invDet = 1.0 / det;
+        // Calculate distance from V1 to ray origin
+        T = new Vector(v1, ray.origin);
+        // Calculate u parameter and test bound
+        u = T.dot(P) * invDet;
+        //The intersection lies outside of the triangle
+        if (u < 0.0 || u > 1.0) {
+            return intersectionTime;
+        }
+
+        //Prepare to test v parameter
+        Q = T.cross(edge1);
+        //Calculate V parameter and test bound
+        v = ray.direction.dot(Q) * invDet;
+        //The intersection lies outside of the triangle
+        if (v < 0.0 || (u+v) > 1.0) {
+            return intersectionTime;
+        }
+
+        t = edge2.dot(Q)*invDet;
+
+        if (t > EPSILON) {
+            intersectionTime = t;
+            return intersectionTime;
+        }
+        return intersectionTime;
+    }
+
     @Override
     public boolean IntersectsP(Ray ray) {
-        return false;
+        return determineIntersection(ray) != null;
     }
 
     @Override
     public Intersection Intersects(Ray ray, Material material) {
-        return null;
+        Intersection intersection = null;
+        Double intersectionTime = determineIntersection(ray);
+        if (intersectionTime != null) {
+            Point intersectionPoint = ray.atTime(intersectionTime);
+            intersection = new Intersection(ray, intersectionTime, getSurfaceNormal(), intersectionPoint, material.color);
+            System.out.println("Intersected with plane triangle: " + intersection);
+        }
+        return intersection;
     }
 
     @Override

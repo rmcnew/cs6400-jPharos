@@ -71,29 +71,38 @@ final public class Camera {
      *          create a Intersection to record what the Ray hit (or did not hit)
      *
      */
-
-        Point filmCenter = cameraLocation.plus(lookAt);
+        int rayCastCount = 0;
+        int rayHitCount = 0;
+        Point filmCenter = cameraLocation.plus(lookAt.normalized().scale(lens.focalLength));
         Vector right = lookAt.cross(up).normalized();
         Vector left = right.inverse();
         Vector normalizedUp = up.normalized();
-        double xOffset = film.pixelSize * film.filmWidthInPixels / 2;
-        double yOffset = film.pixelSize * film.filmHeightInPixels / 2;
-        Point topLeft = new Point(filmCenter.x - xOffset, filmCenter.y + yOffset, filmCenter.z);
-        for (int xIndex = 0; xIndex < film.filmWidthInPixels; xIndex++) {
-            for (int yIndex = 0; yIndex < film.filmHeightInPixels; yIndex++) {
-                Point pixelLocation = new Point(topLeft.x + xIndex * film.pixelSize, topLeft.y - yIndex * film.pixelSize, filmCenter.z);
+        Vector down = normalizedUp.inverse();
+        double leftRightOffset = film.pixelSize * film.filmWidthInPixels / 2;
+        double upDownOffset = film.pixelSize * film.filmHeightInPixels / 2;
+        Point topLeft = filmCenter.plus(normalizedUp.scale(upDownOffset)).plus(left.scale(leftRightOffset));
+
+        for (int upDownIndex = 0; upDownIndex < film.filmHeightInPixels; upDownIndex++) {
+            for (int leftRightIndex = 0; leftRightIndex < film.filmWidthInPixels; leftRightIndex++) {
+                Point pixelLocation = topLeft.plus(right.scale(film.pixelSize * leftRightIndex)).plus(down.scale(film.pixelSize*upDownIndex));
                 Vector rayDirection = new Vector(cameraLocation, pixelLocation);
                 Ray currentRay = new Ray(cameraLocation, rayDirection);
+                rayCastCount++;
+                //System.out.println("Casting ray: " + currentRay);
                 // see what the ray hits
                 Intersection maybeIntersection = scene.castRay(currentRay);
                 if (maybeIntersection != null) {
-                    film.capture(xIndex, yIndex, maybeIntersection.calculateLambertian());
+                    rayHitCount++;
+                    //System.out.println("Camera:  Ray hit!  Intersection details: " + maybeIntersection);
+                    //film.capture(leftRightIndex, upDownIndex, maybeIntersection.color);
+                    film.capture(leftRightIndex, upDownIndex, maybeIntersection.calculateLambertian());
                 } else {
-                    film.capture(xIndex, yIndex, Color.BLACK);
+                    film.capture(leftRightIndex, upDownIndex, Color.BLACK);
                 }
             }
         }
         film.develop(outFilename);
+        System.out.println("Total rays cast: " + rayCastCount + ", total rays hit: " + rayHitCount);
     }
 
 }

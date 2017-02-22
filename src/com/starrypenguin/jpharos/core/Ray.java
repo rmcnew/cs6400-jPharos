@@ -31,15 +31,13 @@ final public class Ray {
 
     public final Point origin;
     public final Vector direction;
-    public final double timeMax;
 
     public Ray(Point origin, Vector direction, double timeMax) {
         Shared.notNull(origin, "origin cannot be null!");
         Shared.notNull(direction, "direction cannot be null!");
-        Shared.notNaNAndInclusiveRangeCheck(timeMax, 0.0, Double.POSITIVE_INFINITY, "timeMax must be in range 0 to positive Infinity!");
         this.origin = origin;
         this.direction = direction;
-        this.timeMax = timeMax;
+
     }
 
     public Ray(Point origin, Vector direction) {
@@ -48,5 +46,13 @@ final public class Ray {
 
     public Point atTime(double time) {
         return this.origin.plus(direction.scale(time));
+    }
+
+    @Override
+    public String toString() {
+        return "Ray{" +
+                "origin=" + origin +
+                ", direction=" + direction +
+                '}';
     }
 }

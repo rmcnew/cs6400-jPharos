@@ -109,4 +109,13 @@ final public class Normal {
     public Normal inverse() {
         return new Normal(-this.x, -this.y, -this.z);
     }
+
+    @Override
+    public String toString() {
+        return "Normal{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
 }
