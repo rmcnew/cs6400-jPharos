@@ -117,7 +117,9 @@ public class Triangle extends Shape {
 
     @Override
     public BoundingBox getBoundingBox() {
-        return null;
+        Point max = Point.max(Point.max(v1, v2), v3);
+        Point min = Point.min(Point.min(v1, v2), v3);
+        return new BoundingBox(max, min);
     }
 
     private Normal getSurfaceNormal() {

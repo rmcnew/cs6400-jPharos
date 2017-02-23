@@ -43,4 +43,30 @@ public class BoundingBox {
         Point min = new Point(Math.min(this.min.x, boundingBox.min.x), Math.min(this.min.y, boundingBox.min.y), Math.min(this.min.z, boundingBox.min.z));
         return new BoundingBox(max, min);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BoundingBox that = (BoundingBox) o;
+
+        if (!max.equals(that.max)) return false;
+        return min.equals(that.min);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = max.hashCode();
+        result = 31 * result + min.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "BoundingBox{" +
+                "max=" + max +
+                ", min=" + min +
+                '}';
+    }
 }
