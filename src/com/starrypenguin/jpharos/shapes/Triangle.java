@@ -34,6 +34,7 @@ import com.starrypenguin.jpharos.util.Shared;
  */
 public class Triangle extends Shape {
 
+    private final static double EPSILON = 0.000001;
     public final Point v1;
     public final Point v2;
     public final Point v3;
@@ -45,7 +46,55 @@ public class Triangle extends Shape {
         this.v3 = v3;
     }
 
-    private final static double EPSILON = 0.000001;
+    /**
+     * Ensure that the provided Points represent valid vertices for a triangle
+     * Specifically:
+     * all Points are valid Points (not null, no NaNs)
+     * each vertex is unique (not equal to one of the other two vertices)
+     *
+     * @param v1 Point for the first triangle vertex
+     * @param v2 Point for the second triangle vertex
+     * @param v3 Point for the third triangle vertex
+     */
+    private static void trianglePointsValid(Point v1, Point v2, Point v3) {
+        Shared.notNull(v1, "Parameter v1 cannot be null!");
+        Shared.notNull(v2, "Parameter v2 cannot be null!");
+        Shared.notNull(v3, "Parameter v3 cannot be null!");
+        if (v1.equals(v2)) {
+            throw new IllegalArgumentException("Invalid triangle!  v1 equals v2");
+        }
+        if (v1.equals(v3)) {
+            throw new IllegalArgumentException("Invalid triangle!  v1 equals v3");
+        }
+        if (v2.equals(v3)) {
+            throw new IllegalArgumentException("Invalid triangle!  v2 equals v3");
+        }
+    }
+
+    /**
+     * Calculate the triangle's centroid given the vertices
+     * Given the coordinates of the three vertices of a triangle ABC, the centroid O coordinates are given by:
+     * O_x = (A_x + B_x + C_x) / 3
+     * O_y = (A_y + B_y + C_y) / 3
+     * O_z = (A_z + B_z + C_z) / 3
+     * <p>
+     * Reference:  http://www.mathopenref.com/coordcentroid.html
+     *
+     * @param v1 Point for the first triangle vertex
+     * @param v2 Point for the second triangle vertex
+     * @param v3 Point for the third triangle vertex
+     * @return Point for the triangle's centroid
+     */
+    private static Point calculateTriangleCentroid(Point v1, Point v2, Point v3) {
+        // first make sure triangle is sane
+        trianglePointsValid(v1, v2, v3);
+        // now determine the centroid coordinates
+        double x = (v1.x + v2.x + v3.x) / 3.0;
+        double y = (v1.y + v2.y + v3.y) / 3.0;
+        double z = (v1.z + v2.z + v3.z) / 3.0;
+        return new Point(x, y, z);
+    }
+
     /**
      * Use the Möller–Trumbore intersection algorithm to quickly determine
      * if the ray intersects the triangle
@@ -149,51 +198,32 @@ public class Triangle extends Shape {
         return Math.sqrt( s * (s-a) * (s-b) * (s-c) );
     }
 
-    /**
-     * Ensure that the provided Points represent valid vertices for a triangle
-     * Specifically:
-     *   all Points are valid Points (not null, no NaNs)
-     *   each vertex is unique (not equal to one of the other two vertices)
-     * @param v1 Point for the first triangle vertex
-     * @param v2 Point for the second triangle vertex
-     * @param v3 Point for the third triangle vertex
-     */
-    private static void trianglePointsValid(Point v1, Point v2, Point v3) {
-        Shared.notNull(v1, "Parameter v1 cannot be null!");
-        Shared.notNull(v2, "Parameter v2 cannot be null!");
-        Shared.notNull(v3, "Parameter v3 cannot be null!");
-        if (v1.equals(v2)) {
-            throw new IllegalArgumentException("Invalid triangle!  v1 equals v2");
-        }
-        if (v1.equals(v3)) {
-            throw new IllegalArgumentException("Invalid triangle!  v1 equals v3");
-        }
-        if (v2.equals(v3)) {
-            throw new IllegalArgumentException("Invalid triangle!  v2 equals v3");
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Triangle triangle = (Triangle) o;
+
+        if (!v1.equals(triangle.v1)) return false;
+        if (!v2.equals(triangle.v2)) return false;
+        return v3.equals(triangle.v3);
     }
 
-    /**
-     * Calculate the triangle's centroid given the vertices
-     * Given the coordinates of the three vertices of a triangle ABC, the centroid O coordinates are given by:
-     *    O_x = (A_x + B_x + C_x) / 3
-     *    O_y = (A_y + B_y + C_y) / 3
-     *    O_z = (A_z + B_z + C_z) / 3
-     *
-     * Reference:  http://www.mathopenref.com/coordcentroid.html
-     * 
-     * @param v1 Point for the first triangle vertex
-     * @param v2 Point for the second triangle vertex
-     * @param v3 Point for the third triangle vertex
-     * @return Point for the triangle's centroid
-     */
-    private static Point calculateTriangleCentroid(Point v1, Point v2, Point v3) {
-        // first make sure triangle is sane
-        trianglePointsValid(v1, v2, v3);
-        // now determine the centroid coordinates
-        double x = (v1.x + v2.x + v3.x) / 3.0;
-        double y = (v1.y + v2.y + v3.y) / 3.0;
-        double z = (v1.z + v2.z + v3.z) / 3.0;
-        return new Point(x, y, z);
+    @Override
+    public int hashCode() {
+        int result = v1.hashCode();
+        result = 31 * result + v2.hashCode();
+        result = 31 * result + v3.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Triangle{" +
+                "v1=" + v1 +
+                ", v2=" + v2 +
+                ", v3=" + v3 +
+                "} " + super.toString();
     }
 }

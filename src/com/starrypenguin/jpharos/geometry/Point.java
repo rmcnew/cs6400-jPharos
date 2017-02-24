@@ -48,26 +48,6 @@ final public class Point {
         this.z = z;
     }
 
-    public Point plus(Point point) {
-        Shared.notNull(point, "point cannot be null!");
-        return new Point(this.x + point.x, this.y + point.y, this.z + point.z);
-    }
-
-    public Point plus(Vector vector) {
-        Shared.notNull(vector, "vector cannot be null!");
-        return new Point(this.x + vector.x, this.y + vector.y, this.z + vector.z);
-    }
-
-    public Point minus(Vector vector) {
-        Shared.notNull(vector, "vector cannot be null!");
-        return new Point(this.x - vector.x, this.y - vector.y, this.z - vector.z);
-    }
-
-    public Point times(double scalar) {
-        Shared.notNaN(scalar, "scalar cannot be Not a Number!");
-        return new Point(this.x * scalar, this.y * scalar, this.z * scalar);
-    }
-
     public static double distanceSquared(Point pA, Point pB) {
         Shared.notNull(pA, "Point pA cannot be null!");
         Shared.notNull(pB, "Point pB cannot be null!");
@@ -104,6 +84,58 @@ final public class Point {
         return new Point(Math.min(pA.x, pB.x), Math.min(pA.y, pB.y), Math.min(pA.z, pB.z) );
     }
 
+    public static int coordHashCode(double x, double y, double z) {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(x);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(y);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(z);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    public static String toJSON(Point point) {
+        String retVal = "";
+        try {
+            retVal = objectMapper.writeValueAsString(point);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return retVal;
+    }
+
+    public static Point fromJSON(String strPoint) {
+        Point retVal = null;
+        try {
+            retVal = objectMapper.readValue(strPoint, Point.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return retVal;
+    }
+
+    public Point plus(Point point) {
+        Shared.notNull(point, "point cannot be null!");
+        return new Point(this.x + point.x, this.y + point.y, this.z + point.z);
+    }
+
+    public Point plus(Vector vector) {
+        Shared.notNull(vector, "vector cannot be null!");
+        return new Point(this.x + vector.x, this.y + vector.y, this.z + vector.z);
+    }
+
+    public Point minus(Vector vector) {
+        Shared.notNull(vector, "vector cannot be null!");
+        return new Point(this.x - vector.x, this.y - vector.y, this.z - vector.z);
+    }
+
+    public Point times(double scalar) {
+        Shared.notNaN(scalar, "scalar cannot be Not a Number!");
+        return new Point(this.x * scalar, this.y * scalar, this.z * scalar);
+    }
+
     public Point floor() {
         return new Point(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z) );
     }
@@ -115,7 +147,6 @@ final public class Point {
     public Point absoluteValue() {
         return new Point(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z) );
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -149,25 +180,5 @@ final public class Point {
                 ", y=" + y +
                 ", z=" + z +
                 '}';
-    }
-
-    public static String toJSON(Point point) {
-        String retVal = "";
-        try {
-            retVal = objectMapper.writeValueAsString(point);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return retVal;
-    }
-
-    public static Point fromJSON(String strPoint) {
-        Point retVal = null;
-        try {
-            retVal = objectMapper.readValue(strPoint, Point.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return retVal;
     }
 }
