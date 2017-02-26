@@ -18,6 +18,8 @@
 
 package com.starrypenguin.jpharos.shapes;
 
+import com.starrypenguin.jpharos.geometry.Point;
+
 /**
  * TriangleMeshBuilder
  * <p/>
@@ -25,5 +27,21 @@ package com.starrypenguin.jpharos.shapes;
  */
 public class TriangleMeshBuilder {
 
+    TriangleMeshVertices vertices = new TriangleMeshVertices();
 
+    public TriangleMeshBuilder addTriangle(Point v1arg, Point v2arg, Point v3arg) {
+        vertices.addTriangle(v1arg, v2arg, v3arg);
+        return this;
+    }
+
+    public TriangleMesh build() {
+        Point center = calculateCentroid();
+        return new TriangleMesh(center, vertices);
+    }
+
+    private Point calculateCentroid() {
+        Point centroid = null;
+        // calculate the cetroid of the triangular mesh
+        return centroid;
+    }
 }
