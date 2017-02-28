@@ -18,6 +18,7 @@
 
 package com.starrypenguin.jpharos.shapes;
 
+import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.util.Shared;
 
@@ -34,6 +35,8 @@ public class TriangleMeshVertices {
 
     private Map<Integer, Point> vertices = new HashMap<>();
     private Set<Triangle> triangles = new LinkedHashSet<>();
+    private BoundingBox boundingBox = new BoundingBox();
+    private double surfaceArea = 0.0;
 
     public TriangleMeshVertices() {
     }
@@ -68,7 +71,10 @@ public class TriangleMeshVertices {
             vertices.put(v3argHash, v3arg); // add this vertex so we can use it later
         }
         // Create and add the new triangle
-        triangles.add(new Triangle(v1, v2, v3));
+        Triangle triangleToAdd = new Triangle(v1, v2, v3);
+        triangles.add(triangleToAdd);
+        boundingBox = boundingBox.union(triangleToAdd.getBoundingBox());
+        surfaceArea += triangleToAdd.surfaceArea();
     }
 
     public int size() {
@@ -101,5 +107,17 @@ public class TriangleMeshVertices {
 
     public void forEach(Consumer<? super Triangle> action) {
         triangles.forEach(action);
+    }
+
+    public BoundingBox getBoundingBox() {
+        return this.boundingBox;
+    }
+
+    public Point getCenterPoint() {
+        return this.boundingBox.getCenterPoint();
+    }
+
+    public double getSurfaceArea() {
+        return surfaceArea;
     }
 }

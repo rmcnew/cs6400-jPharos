@@ -35,13 +35,11 @@ public class TriangleMeshBuilder {
     }
 
     public TriangleMesh build() {
-        Point center = calculateCentroid();
+        if (vertices.isEmpty()) {
+            throw new IllegalStateException("Cannot create a TriangleMesh from empty TriangleMeshVertices!");
+        }
+        Point center = vertices.getCenterPoint();
         return new TriangleMesh(center, vertices);
     }
 
-    private Point calculateCentroid() {
-        Point centroid = null;
-        // calculate the cetroid of the triangular mesh
-        return centroid;
-    }
 }

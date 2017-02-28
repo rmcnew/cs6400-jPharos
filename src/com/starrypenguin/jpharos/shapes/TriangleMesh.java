@@ -25,6 +25,10 @@ import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.util.Shared;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
  * TriangleMesh
  * <p/>
@@ -43,21 +47,30 @@ public class TriangleMesh extends Shape {
 
     @Override
     public boolean IntersectsP(Ray ray) {
-        return false;
+        return vertices.parallelStream().anyMatch(triangle -> triangle.IntersectsP(ray));
+    }
+
+    private List<Intersection> getIntersections(Ray ray, Body body) {
+        return vertices.parallelStream().map(triangle -> triangle.Intersects(ray, body)).filter(Objects::nonNull).sorted().collect(Collectors.toList());
     }
 
     @Override
     public Intersection Intersects(Ray ray, Body body) {
-        return null;
+        Intersection retVal = null;
+        List<Intersection> intersections = getIntersections(ray, body);
+        if (!intersections.isEmpty()) {
+            retVal = intersections.get(0);
+        }
+        return retVal;
     }
 
     @Override
     public BoundingBox getBoundingBox() {
-        return null;
+        return vertices.getBoundingBox();
     }
 
     @Override
     public double surfaceArea() {
-        return 0;
+        return vertices.getSurfaceArea();
     }
 }

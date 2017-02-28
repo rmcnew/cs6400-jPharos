@@ -30,6 +30,11 @@ public class BoundingBox {
     public final Point max;  // the point with the highest x, y, and z values calculated from the supplied corner Points
     public final Point min;  // the point with the lowest x, y, and z values calculated from the supplied corner Points
 
+    public BoundingBox() {
+        this.min = new Point(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+        this.max = new Point(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE);
+    }
+
     public BoundingBox(Point pA, Point pB) {
         Shared.notNull(pA, "pA cannot be null!");
         Shared.notNull(pB, "pB cannot be null!");
@@ -42,6 +47,10 @@ public class BoundingBox {
         Point max = new Point(Math.max(this.max.x, boundingBox.max.x), Math.max(this.max.y, boundingBox.max.y), Math.max(this.max.z, boundingBox.max.z));
         Point min = new Point(Math.min(this.min.x, boundingBox.min.x), Math.min(this.min.y, boundingBox.min.y), Math.min(this.min.z, boundingBox.min.z));
         return new BoundingBox(max, min);
+    }
+
+    public Point getCenterPoint() {
+        return new Point((this.min.x + this.max.x)/2.0, (this.min.y + this.max.y)/2.0, (this.min.z + this.max.z)/2.0);
     }
 
     @Override

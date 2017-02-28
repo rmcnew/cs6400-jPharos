@@ -33,7 +33,7 @@ import java.awt.*;
  * <p/>
  * Represents the data from when a Ray hits a Body
  */
-final public class Intersection {
+final public class Intersection implements Comparable<Intersection> {
 
     public final double intersectionTime;
     public final Ray ray;
@@ -78,5 +78,8 @@ final public class Intersection {
         return new Color(red, green, blue);
     }
 
-
+    @Override
+    public int compareTo(Intersection intersection) {
+        return Double.compare(this.intersectionTime, intersection.intersectionTime);
+    }
 }
