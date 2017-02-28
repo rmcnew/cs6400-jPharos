@@ -78,7 +78,7 @@ public class TriangleMeshReader {
                         break;
 
                     default:
-                        
+
                         break;
                 }
                 elementReader = plyReader.nextElementReader();
