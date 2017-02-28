@@ -18,6 +18,7 @@
 
 package com.starrypenguin.jpharos.util;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,13 +39,18 @@ final public class Shared {
     }
     // methods
 
-    public static boolean nullOrEmpty(String str) {
-        return (str == null) || str.isEmpty();
+    public static void notNullAndNotEmpty(String str, String errorMessage) {
+        if (str == null || str.isEmpty()) {
+            throw new IllegalArgumentException(errorMessage);
+        }
     }
 
-    public static boolean notNullAndNotEmpty(String str) {
-        return (str != null) && (!str.isEmpty());
+    public static void notNullExistsAndReadable(File file, String errorMessage) {
+        if (file == null || !file.exists() || !file.canRead()) {
+            throw new IllegalArgumentException(errorMessage);
+        }
     }
+
 
     public static void notNull(Object obj, String errorMessage) {
         if (obj == null) {
@@ -66,14 +72,14 @@ final public class Shared {
 
     // ensure value is not NaN;  ensure  min <= value <= max
     public static void notNaNAndInclusiveRangeCheck(double value, double min, double max, String errorMessage) {
-        if (Double.isNaN(value) || (value < min) || (value > max) ) {
+        if (Double.isNaN(value) || (value < min) || (value > max)) {
             throw new IllegalArgumentException(errorMessage);
         }
     }
 
     // ensure value is not NaN;  ensure  min < value < max
     public static void notNaNAndExclusiveRangeCheck(double value, double min, double max, String errorMessage) {
-        if (Double.isNaN(value) || (value <= min) || (value >= max) ) {
+        if (Double.isNaN(value) || (value <= min) || (value >= max)) {
             throw new IllegalArgumentException(errorMessage);
         }
     }
@@ -92,14 +98,14 @@ final public class Shared {
 
     // ensure  min <= value <= max
     public static void inclusiveRangeCheck(int value, int min, int max, String errorMessage) {
-       if ( (min > value) || (value > max) ) {
-           throw new IllegalArgumentException(errorMessage);
-       }
+        if ((min > value) || (value > max)) {
+            throw new IllegalArgumentException(errorMessage);
+        }
     }
 
     // ensure  min < value < max
     public static void exclusiveRangeCheck(int value, int min, int max, String errorMessage) {
-        if ( (min >= value) || (value >= max) ) {
+        if ((min >= value) || (value >= max)) {
             throw new IllegalArgumentException(errorMessage);
         }
     }
@@ -118,6 +124,7 @@ final public class Shared {
 
     /**
      * Use the quadratic equation to solve a second-degree polynomial:  ax^2 + bx + c = 0
+     *
      * @param a the coefficient for the squared term: ax^2
      * @param b the coefficient for the linear term: bx
      * @param c the coefficient for the constant term: c
@@ -130,10 +137,10 @@ final public class Shared {
 
         List<Double> results = new ArrayList<>();
         // if a is zero and b is not zero, then just solve for bx + c = 0  ==>  x = -c / b
-        if ( (Double.compare(a, 0.0) == 0) && (Double.compare(b, 0.0) != 0) ) {
+        if ((Double.compare(a, 0.0) == 0) && (Double.compare(b, 0.0) != 0)) {
             results.add(-c / b);
-        // if a is not zero and b is zero, then just solve for ax^2 + c = 0  ==>  x = +/- sqrt(-c / a) iff -c / a  is positive
-        } else if ( (Double.compare(a, 0.0) != 0) && (Double.compare(b, 0.0) == 0) ) {
+            // if a is not zero and b is zero, then just solve for ax^2 + c = 0  ==>  x = +/- sqrt(-c / a) iff -c / a  is positive
+        } else if ((Double.compare(a, 0.0) != 0) && (Double.compare(b, 0.0) == 0)) {
             double minusCdivA = -c / a;
             if (Double.compare(minusCdivA, 0.0) < 0) {
                 // -c / a is less than zero, so no real roots; return empty results list
@@ -143,7 +150,7 @@ final public class Shared {
                 results.add(Math.min(sqrtMinusCdivA, negSqrtMinusCdivA));
                 results.add(Math.max(sqrtMinusCdivA, negSqrtMinusCdivA));
             }
-        // a and b are both not zero; use the full quadratic formula:  x = (-b +/- sqrt(b^2 - 4ac)) / 2a
+            // a and b are both not zero; use the full quadratic formula:  x = (-b +/- sqrt(b^2 - 4ac)) / 2a
         } else {
             // first check sign of discriminant:
             //    a negative discriminant means no real roots;

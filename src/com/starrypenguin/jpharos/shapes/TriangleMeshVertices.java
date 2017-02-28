@@ -21,6 +21,7 @@ package com.starrypenguin.jpharos.shapes;
 import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.util.Shared;
+import org.apache.commons.collections4.map.LinkedMap;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -33,12 +34,31 @@ import java.util.stream.Stream;
  */
 public class TriangleMeshVertices {
 
-    private Map<Integer, Point> vertices = new HashMap<>();
+    private Map<Integer, Point> vertices = new LinkedMap<>();
     private Set<Triangle> triangles = new LinkedHashSet<>();
     private BoundingBox boundingBox = new BoundingBox();
     private double surfaceArea = 0.0;
 
     public TriangleMeshVertices() {
+    }
+
+    public Point addVertex(Point vertex) {
+        Shared.notNull(vertex, "Parameter vertex cannot be null!");
+        int vertexHash = vertex.hashCode();
+        Point retVal;
+        if (vertices.containsKey(vertexHash)) {
+            retVal = vertices.get(vertexHash); // we already have this vertex, reuse it
+        } else {
+            retVal = vertex;
+            vertices.put(vertexHash, vertex); // add this vertex so we can use it later
+        }
+        return retVal;
+    }
+
+    private void addTriangle(Triangle triangleToAdd) {
+        triangles.add(triangleToAdd);
+        boundingBox = boundingBox.union(triangleToAdd.getBoundingBox());
+        surfaceArea += triangleToAdd.surfaceArea();
     }
 
     public void addTriangle(Point v1arg, Point v2arg, Point v3arg) {
@@ -47,34 +67,23 @@ public class TriangleMeshVertices {
         Shared.notNull(v3arg, "Parameter v3arg cannot be null!");
         Point v1, v2, v3;
         // check v1 for reuse
-        int v1argHash = v1arg.hashCode();
-        if (vertices.containsKey(v1argHash)) {
-            v1 = vertices.get(v1argHash); // we already have this vertex, reuse it   
-        } else {
-            v1 = v1arg;
-            vertices.put(v1argHash, v1arg); // add this vertex so we can use it later
-        }
+        v1 = addVertex(v1arg);
         // check v2 for reuse
-        int v2argHash = v2arg.hashCode();
-        if (vertices.containsKey(v2argHash)) {
-            v2 = vertices.get(v2argHash); // we already have this vertex, reuse it   
-        } else {
-            v2 = v2arg;
-            vertices.put(v2argHash, v2arg); // add this vertex so we can use it later
-        }
+        v2 = addVertex(v2arg);
         // check v3 for reuse
-        int v3argHash = v3arg.hashCode();
-        if (vertices.containsKey(v3argHash)) {
-            v3 = vertices.get(v3argHash); // we already have this vertex, reuse it   
-        } else {
-            v3 = v3arg;
-            vertices.put(v3argHash, v3arg); // add this vertex so we can use it later
-        }
+        v3 = addVertex(v3arg);
         // Create and add the new triangle
         Triangle triangleToAdd = new Triangle(v1, v2, v3);
-        triangles.add(triangleToAdd);
-        boundingBox = boundingBox.union(triangleToAdd.getBoundingBox());
-        surfaceArea += triangleToAdd.surfaceArea();
+        addTriangle(triangleToAdd);
+    }
+
+    public void addTriangleByVertexIndex(int vertexIndex1, int vertexIndex2, int vertexIndex3) {
+        int vertexMaxIndex = vertices.size() - 1;
+        Shared.inclusiveRangeCheck(vertexIndex1, 0, vertexMaxIndex, String.format("Parameter vertexIndex1 must be between 0 and %d", vertexMaxIndex));
+        Shared.inclusiveRangeCheck(vertexIndex2, 0, vertexMaxIndex, String.format("Parameter vertexIndex2 must be between 0 and %d", vertexMaxIndex));
+        Shared.inclusiveRangeCheck(vertexIndex3, 0, vertexMaxIndex, String.format("Parameter vertexIndex3 must be between 0 and %d", vertexMaxIndex));
+        Triangle triangleToAdd = new Triangle(vertices.get(vertexIndex1), vertices.get(vertexIndex2), vertices.get(vertexIndex3));
+        addTriangle(triangleToAdd);
     }
 
     public int size() {

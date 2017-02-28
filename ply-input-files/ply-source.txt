@@ -1,0 +1,7 @@
+The PLY files in this directory are from the Stanford 3D Scanning Repository, KSCAN3D, and jburkardt's PLY Files page.
+
+https://graphics.stanford.edu/data/3Dscanrep/
+
+http://www.kscan3d.com/gallery/
+
+https://people.sc.fsu.edu/~jburkardt/data/ply/ply.html
