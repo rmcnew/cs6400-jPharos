@@ -18,13 +18,11 @@
 
 package com.starrypenguin.jpharos.util;
 
+import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.shapes.TriangleMesh;
 import com.starrypenguin.jpharos.shapes.TriangleMeshBuilder;
 import org.smurn.jply.*;
-import org.smurn.jply.util.NormalMode;
-import org.smurn.jply.util.NormalizingPlyReader;
-import org.smurn.jply.util.TesselationMode;
-import org.smurn.jply.util.TextureMode;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,13 +34,45 @@ import java.io.IOException;
  */
 public class TriangleMeshReader {
 
-    public static void addVertexType(ElementReader elementReader, TriangleMeshBuilder triangleMeshBuilder) {
+    private static String VERTEX_INDICES = "vertex_indices";
+    private static String VERTEX_INDEX = "vertex_index";
+
+    private static void addVertexType(ElementReader elementReader, TriangleMeshBuilder triangleMeshBuilder) {
         try {
             Element element = elementReader.readElement();
-            if (element != null) {
+            while (element != null) {
                 double x = element.getDouble("x");
                 double y = element.getDouble("y");
                 double z = element.getDouble("z");
+                System.out.println(String.format("Adding Triangle Mesh vertex: x=%f, y=%f, z=%f", x, y, z));
+                triangleMeshBuilder.addVertex(new Point(x, y, z));
+                element = elementReader.readElement();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void addFaceType(ElementReader elementReader, TriangleMeshBuilder  triangleMeshBuilder) {
+        try {
+            Element element = elementReader.readElement();
+            while (element != null) {
+                int[] vertexIndices = null;
+                if (element.getIntList(VERTEX_INDICES) != null) {
+                    vertexIndices = element.getIntList(VERTEX_INDICES);
+                } else if (element.getIntList(VERTEX_INDEX) != null) {
+                    vertexIndices = element.getIntList(VERTEX_INDEX);
+                }
+                if (vertexIndices != null && vertexIndices.length == 3) {
+                    int vertexIndex1 = vertexIndices[0];
+                    int vertexIndex2 = vertexIndices[1];
+                    int vertexIndex3 = vertexIndices[2];
+                    System.out.println(String.format("Adding Triangle Mesh face: v1_index=%d, v2_index=%d, v3_index=%d", vertexIndex1, vertexIndex2, vertexIndex3));
+                    triangleMeshBuilder.addTriangleByVertexIndex(vertexIndex1, vertexIndex2, vertexIndex3);
+                } else {
+                    throw new IllegalArgumentException("Unknown PLY triangle face property or strange number of indices used!");
+                }
+                element = elementReader.readElement();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,7 +86,7 @@ public class TriangleMeshReader {
 
         PlyReader plyReader = null;
         try {
-            plyReader = new NormalizingPlyReader(new PlyReaderFile(file), TesselationMode.TRIANGLES, NormalMode.PASS_THROUGH, TextureMode.PASS_THROUGH);
+            plyReader = new PlyReaderFile(file);
             ElementReader elementReader = plyReader.nextElementReader();
             while (elementReader != null) {
                 ElementType elementType = elementReader.getElementType();
@@ -66,21 +96,22 @@ public class TriangleMeshReader {
                         break;
 
                     case "face":
-
+                        addFaceType(elementReader, triangleMeshBuilder);
                         break;
 
                     case "edge":
-
-                        break;
+                        throw new NotImplementedException();
+                        //break;
 
                     case "material":
-
-                        break;
+                        throw new NotImplementedException();
+                        //break;
 
                     default:
-
-                        break;
+                        throw new UnsupportedOperationException("Unknown PLY element type: " + elementType.getName() +
+                                                                "jPharos does not know how to handle this PLY element type!");
                 }
+                elementReader.close();
                 elementReader = plyReader.nextElementReader();
             }
 

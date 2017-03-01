@@ -82,7 +82,7 @@ public class TriangleMeshVertices {
         Shared.inclusiveRangeCheck(vertexIndex1, 0, vertexMaxIndex, String.format("Parameter vertexIndex1 must be between 0 and %d", vertexMaxIndex));
         Shared.inclusiveRangeCheck(vertexIndex2, 0, vertexMaxIndex, String.format("Parameter vertexIndex2 must be between 0 and %d", vertexMaxIndex));
         Shared.inclusiveRangeCheck(vertexIndex3, 0, vertexMaxIndex, String.format("Parameter vertexIndex3 must be between 0 and %d", vertexMaxIndex));
-        Triangle triangleToAdd = new Triangle(vertices.get(vertexIndex1), vertices.get(vertexIndex2), vertices.get(vertexIndex3));
+        Triangle triangleToAdd = new Triangle(vertices.get(vertices.get(vertexIndex1)), vertices.get(vertices.get(vertexIndex2)), vertices.get(vertices.get(vertexIndex3)));
         addTriangle(triangleToAdd);
     }
 

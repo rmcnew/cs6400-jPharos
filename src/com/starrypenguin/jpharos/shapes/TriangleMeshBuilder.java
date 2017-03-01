@@ -27,11 +27,19 @@ import com.starrypenguin.jpharos.geometry.Point;
  */
 public class TriangleMeshBuilder {
 
-    TriangleMeshVertices vertices = new TriangleMeshVertices();
+    private TriangleMeshVertices vertices = new TriangleMeshVertices();
 
     public TriangleMeshBuilder addTriangle(Point v1arg, Point v2arg, Point v3arg) {
         vertices.addTriangle(v1arg, v2arg, v3arg);
         return this;
+    }
+
+    public Point addVertex(Point vertex) {
+        return vertices.addVertex(vertex);
+    }
+
+    public void addTriangleByVertexIndex(int vertexIndex1, int vertexIndex2, int vertexIndex3) {
+        vertices.addTriangleByVertexIndex(vertexIndex1, vertexIndex2, vertexIndex3);
     }
 
     public TriangleMesh build() {

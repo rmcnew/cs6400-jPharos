@@ -29,60 +29,46 @@ import com.starrypenguin.jpharos.lenses.PinholeLens;
 import com.starrypenguin.jpharos.lights.Light;
 import com.starrypenguin.jpharos.lights.PointLight;
 import com.starrypenguin.jpharos.materials.Material;
-import com.starrypenguin.jpharos.shapes.TriangleMesh;
-import com.starrypenguin.jpharos.util.TriangleMeshReader;
+import com.starrypenguin.jpharos.shapes.Sphere;
+import com.starrypenguin.jpharos.shapes.Triangle;
 
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * jPharos
+ * Spheres And Triangles
  * <p/>
- * Main class for jPharos start-up
+ * Main class for Spheres and Triangles assignemnt
  */
-final public class jPharos {
-/*  TODO:
-    == jPharos start-up ==
-    1.  Read and validate any command line parameters:  "jpharos sceneDescriptionFile.json"
-    Default output file is named the same as the input filename, but different extension
-    -o outputFileName   :  uses "outputFileName" instead of default
-    -r numberOfRaysToCast : number of rays to cast per pixel;  default to ???
+final public class SpheresAndTriangles {
 
-    2.  Open and parse the sceneDescriptionFile.json:
-    Verify file exists and we have permissions to open it
-    Open file
-    Slurp file contents with Jackson to produce Scene object
-    Halt and fail noisly if any error occurs
-
-    3.  Run Bounding Volume division algorithm to populate acceleration structure
-
-    4.  Start up tracer engine:
-    Determine number of CPU Cores available
-    Create fixedThreadPool ExecutorService with $threadsToUse threads
-    "Overseer" thread checks queue length and puts more tasks on the queue
-
-    5.  Main Render loop:
-
-    For each pixel in the output film:
-            For j in $numberOfRaysToCast:
-                    Put RayCastTask on ThreadPool
-*/
-
-
-    // For now, hard-code the Scene
+    // Per the assignment instructions, hard-code the Scene
     public static Scene scene;
     public static Camera camera;
 
-    static {
+static {
         // Bodies
         Set<Body> bodies = new HashSet<>();
+        // Sphere
+        Point sphereLocation = new Point(0, 0, 70);
+        Sphere sphere = new Sphere(sphereLocation, 40);
+        Material redStuff = new Material(Color.RED);
+        Body sphereBody = new Body(sphere, redStuff);
+        bodies.add(sphereBody);
 
-        // read in shape from PLY file
-        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/sphere.ply");
-        Material greenMaterial = new Material(Color.GREEN);
-        Body meshBody = new Body(triangleMesh, greenMaterial);
-        bodies.add(meshBody);
+        //Triangles to make a plane
+        Point quadrant1 = new Point(150, 100, 0);
+        Point quadrant2 = new Point(-150, 100, 0);
+        Point quadrant3 = new Point(-150, -100, 0);
+        Point quadrant4 = new Point(150, -100, 0);
+        Triangle triangle1 = new Triangle(quadrant4, quadrant1, quadrant3);
+        Triangle triangle2 = new Triangle(quadrant1, quadrant2, quadrant3);
+        Material whiteStuff = new Material(Color.WHITE);
+        Body triangle1Body = new Body(triangle1, whiteStuff);
+        Body triangle2Body = new Body(triangle2, whiteStuff);
+        bodies.add(triangle1Body);
+        bodies.add(triangle2Body);
 
         // Lights
         Light pointLight = new PointLight(new Point(-20, 0, 120));
@@ -102,7 +88,7 @@ final public class jPharos {
     }
 
     public static void main(String[] args) {
-        String outFilename = "out.ppm";
+        String outFilename = "sphere.ppm";
         if (args.length > 0 && !args[0].isEmpty()) {
             outFilename = args[0];
         }
