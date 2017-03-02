@@ -95,20 +95,5 @@ public class VectorTest {
         Vector v2 = v1.inverse();
         assertTrue(v2.equals(new Vector(-4, -7, -10)));
     }
-
-    @Test
-    public void toJSONTest() {
-        Vector v1 = new Vector(1, 2, 3);
-        System.out.println(Vector.toJSON(v1));
-    }
-
-    @Test
-    public void fromJSONTest() {
-        Vector v2 = new Vector(2, 4, 6);
-        String v2String = Vector.toJSON(v2);
-        System.out.println(v2String);
-        Vector v2b = Vector.fromJSON(v2String);
-        assertTrue(v2.equals(v2b));
-
-    }
+    
 }

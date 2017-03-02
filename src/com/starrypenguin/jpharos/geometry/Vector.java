@@ -18,29 +18,18 @@
 
 package com.starrypenguin.jpharos.geometry;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
-
 /**
  * Vector
  * <p/>
  * Represents a mathematical vector entity that has a direction and magnitude
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="class")
 final public class Vector {
     // value class; immutable and cannot be changed after being created
-    final private static ObjectMapper objectMapper = new ObjectMapper();
     final public double x;
     final public double y;
     final public double z;
 
-    @JsonCreator
-    public Vector(@JsonProperty("x") double x, @JsonProperty("y") double y, @JsonProperty("z") double z) {
+    public Vector(double x, double y, double z) {
         if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z)) {
             throw new IllegalArgumentException("Vector coordinates cannot be Not a Number!");
         }
@@ -147,24 +136,5 @@ final public class Vector {
                 ", z=" + z +
                 '}';
     }
-
-    public static String toJSON(Vector vector) {
-        String retVal = "";
-        try {
-            retVal = objectMapper.writeValueAsString(vector);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return retVal;
-    }
-
-    public static Vector fromJSON(String strVector) {
-        Vector retVal = null;
-        try {
-            retVal = objectMapper.readValue(strVector, Vector.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return retVal;
-    }
+    
 }

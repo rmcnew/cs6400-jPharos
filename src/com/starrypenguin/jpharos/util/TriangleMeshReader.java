@@ -44,7 +44,7 @@ public class TriangleMeshReader {
                 double x = element.getDouble("x");
                 double y = element.getDouble("y");
                 double z = element.getDouble("z");
-                System.out.println(String.format("Adding Triangle Mesh vertex: x=%f, y=%f, z=%f", x, y, z));
+                //System.out.println(String.format("Adding Triangle Mesh vertex: x=%f, y=%f, z=%f", x, y, z));
                 triangleMeshBuilder.addVertex(new Point(x, y, z));
                 element = elementReader.readElement();
             }
@@ -67,7 +67,7 @@ public class TriangleMeshReader {
                     int vertexIndex1 = vertexIndices[0];
                     int vertexIndex2 = vertexIndices[1];
                     int vertexIndex3 = vertexIndices[2];
-                    System.out.println(String.format("Adding Triangle Mesh face: v1_index=%d, v2_index=%d, v3_index=%d", vertexIndex1, vertexIndex2, vertexIndex3));
+                    //System.out.println(String.format("Adding Triangle Mesh face: v1_index=%d, v2_index=%d, v3_index=%d", vertexIndex1, vertexIndex2, vertexIndex3));
                     triangleMeshBuilder.addTriangleByVertexIndex(vertexIndex1, vertexIndex2, vertexIndex3);
                 } else {
                     throw new IllegalArgumentException("Unknown PLY triangle face property or strange number of indices used!");

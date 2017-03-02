@@ -18,30 +18,20 @@
 
 package com.starrypenguin.jpharos.geometry;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.starrypenguin.jpharos.util.Shared;
-
-import java.io.IOException;
 
 /**
  * Point
  * <p/>
  * Points are value classes that represent a location in 3D space
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="class")
 final public class Point {
-    final private static ObjectMapper objectMapper = new ObjectMapper();
     // value class; immutable and cannot be changed after being created
     final public double x;
     final public double y;
     final public double z;
 
-    @JsonCreator
-    public Point(@JsonProperty("x") double x, @JsonProperty("y") double y, @JsonProperty("z") double z) {
+    public Point(double x, double y, double z) {
         Shared.notNaN3D(x, y, z, "Point coordinates must be valid numbers");
         this.x = x;
         this.y = y;
@@ -95,26 +85,7 @@ final public class Point {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
-
-    public static String toJSON(Point point) {
-        String retVal = "";
-        try {
-            retVal = objectMapper.writeValueAsString(point);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return retVal;
-    }
-
-    public static Point fromJSON(String strPoint) {
-        Point retVal = null;
-        try {
-            retVal = objectMapper.readValue(strPoint, Point.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return retVal;
-    }
+    
 
     public Point plus(Point point) {
         Shared.notNull(point, "point cannot be null!");

@@ -34,8 +34,8 @@ public class TriangleMeshBuilder {
         return this;
     }
 
-    public Point addVertex(Point vertex) {
-        return vertices.addVertex(vertex);
+    public void addVertex(Point vertex) {
+        vertices.addVertex(vertex);
     }
 
     public void addTriangleByVertexIndex(int vertexIndex1, int vertexIndex2, int vertexIndex3) {

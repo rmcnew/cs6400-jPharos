@@ -18,10 +18,6 @@
 
 package com.starrypenguin.jpharos.geometry;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.starrypenguin.jpharos.util.Shared;
 
 /**
@@ -29,16 +25,13 @@ import com.starrypenguin.jpharos.util.Shared;
  * <p/>
  * Represents a surface normal vector
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="class")
 final public class Normal {
     // value class; immutable and cannot be changed after being created
-    final private static ObjectMapper objectMapper = new ObjectMapper();
     public final double x;
     public final double y;
     public final double z;
 
-    @JsonCreator
-    public Normal(@JsonProperty("x") double x, @JsonProperty("y") double y, @JsonProperty("z") double z) {
+    public Normal(double x, double y, double z) {
         if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z)) {
             throw new IllegalArgumentException("Normal coordinates cannot be Not a Number!");
         }

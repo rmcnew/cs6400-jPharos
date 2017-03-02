@@ -28,21 +28,7 @@ import static org.junit.Assert.assertTrue;
  * Tests for Point class
  */
 public class PointTest {
-
-    @Test
-    public void toJSONTest() {
-        Point p1 = new Point(1, 2, 3);
-        System.out.println(Point.toJSON(p1));
-    }
-
-    @Test
-    public void fromJSONTest() {
-        Point p2 = new Point(2, 4, 6);
-        String p2String = Point.toJSON(p2);
-        System.out.println(p2String);
-        Point p2b = Point.fromJSON(p2String);
-        assertTrue(p2.equals(p2b));
-    }
+    
 
     @Test
     public void plusPointTest() {

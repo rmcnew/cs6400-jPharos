@@ -21,7 +21,6 @@ package com.starrypenguin.jpharos.shapes;
 import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.util.Shared;
-import org.apache.commons.collections4.map.LinkedMap;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -34,7 +33,7 @@ import java.util.stream.Stream;
  */
 public class TriangleMeshVertices {
 
-    private Map<Integer, Point> vertices = new LinkedMap<>();
+    private ArrayList<Point> verticesList = new ArrayList<>();
     private Set<Triangle> triangles = new LinkedHashSet<>();
     private BoundingBox boundingBox = new BoundingBox();
     private double surfaceArea = 0.0;
@@ -42,17 +41,9 @@ public class TriangleMeshVertices {
     public TriangleMeshVertices() {
     }
 
-    public Point addVertex(Point vertex) {
+    public void addVertex(Point vertex) {
         Shared.notNull(vertex, "Parameter vertex cannot be null!");
-        int vertexHash = vertex.hashCode();
-        Point retVal;
-        if (vertices.containsKey(vertexHash)) {
-            retVal = vertices.get(vertexHash); // we already have this vertex, reuse it
-        } else {
-            retVal = vertex;
-            vertices.put(vertexHash, vertex); // add this vertex so we can use it later
-        }
-        return retVal;
+        verticesList.add(vertex);
     }
 
     private void addTriangle(Triangle triangleToAdd) {
@@ -65,24 +56,21 @@ public class TriangleMeshVertices {
         Shared.notNull(v1arg, "Parameter v1arg cannot be null!");
         Shared.notNull(v2arg, "Parameter v2arg cannot be null!");
         Shared.notNull(v3arg, "Parameter v3arg cannot be null!");
-        Point v1, v2, v3;
-        // check v1 for reuse
-        v1 = addVertex(v1arg);
-        // check v2 for reuse
-        v2 = addVertex(v2arg);
-        // check v3 for reuse
-        v3 = addVertex(v3arg);
+        addVertex(v1arg);
+        addVertex(v2arg);
+        addVertex(v3arg);
         // Create and add the new triangle
-        Triangle triangleToAdd = new Triangle(v1, v2, v3);
+        Triangle triangleToAdd = new Triangle(v1arg, v2arg, v3arg);
         addTriangle(triangleToAdd);
     }
 
     public void addTriangleByVertexIndex(int vertexIndex1, int vertexIndex2, int vertexIndex3) {
-        int vertexMaxIndex = vertices.size() - 1;
+        //System.out.println(String.format("addTriangleByVertexIndex: vI1=%d, vI2=%d, vI3=%d", vertexIndex1, vertexIndex2, vertexIndex3));
+        int vertexMaxIndex = verticesList.size() - 1;
         Shared.inclusiveRangeCheck(vertexIndex1, 0, vertexMaxIndex, String.format("Parameter vertexIndex1 must be between 0 and %d", vertexMaxIndex));
         Shared.inclusiveRangeCheck(vertexIndex2, 0, vertexMaxIndex, String.format("Parameter vertexIndex2 must be between 0 and %d", vertexMaxIndex));
         Shared.inclusiveRangeCheck(vertexIndex3, 0, vertexMaxIndex, String.format("Parameter vertexIndex3 must be between 0 and %d", vertexMaxIndex));
-        Triangle triangleToAdd = new Triangle(vertices.get(vertices.get(vertexIndex1)), vertices.get(vertices.get(vertexIndex2)), vertices.get(vertices.get(vertexIndex3)));
+        Triangle triangleToAdd = new Triangle(verticesList.get(vertexIndex1), verticesList.get(vertexIndex2), verticesList.get(vertexIndex3));
         addTriangle(triangleToAdd);
     }
 

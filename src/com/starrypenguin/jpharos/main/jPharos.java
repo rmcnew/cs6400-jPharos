@@ -79,21 +79,22 @@ final public class jPharos {
         Set<Body> bodies = new HashSet<>();
 
         // read in shape from PLY file
-        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/sphere.ply");
-        Material greenMaterial = new Material(Color.GREEN);
+        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/teapot.ply");
+        Material greenMaterial = new Material(Color.RED);
         Body meshBody = new Body(triangleMesh, greenMaterial);
         bodies.add(meshBody);
 
         // Lights
-        Light pointLight = new PointLight(new Point(-20, 0, 120));
+        Light pointLight = new PointLight(new Point(-1, 0, 7));
         Set<Light> lights = new HashSet<>();
         lights.add(pointLight);
 
         // Camera
-        Point cameraLocation = new Point(60, 0, 25);
+        Point cameraLocation = new Point(0, 4, 4);
+        Point target = new Point(0, 0, 0);
         Vector up = new Vector(0, 0, 1);
-        Vector lookAt = new Vector(-1, 0, 0);
-        Lens lens = new PinholeLens(60);
+        Vector lookAt = new Vector(cameraLocation, target).normalized();
+        Lens lens = new PinholeLens(220);
         Film film = new Film(1, 300, 300, 1);
         camera = new Camera(film, lens, cameraLocation, lookAt, up);
 
