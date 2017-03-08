@@ -19,6 +19,7 @@
 package com.starrypenguin.jpharos.parallel;
 
 import com.starrypenguin.jpharos.cameras.Film;
+import com.starrypenguin.jpharos.main.jPharos;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -41,7 +42,7 @@ public class ParallelExecutor {
     }
 
     public void finishExecuting() {
-        while (taskCount.get() != 0L) {
+        while ((taskCount.get() > 0L) && (!jPharos.instance.camera.film.readyToDevelop())) {
             try {
                 Thread.sleep(WAIT_TIME);
                 System.out.print(".");

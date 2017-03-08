@@ -70,6 +70,17 @@ final public class Film {
         this.capture(developedPixel.filmCoordinate, developedPixel.color);
     }
 
+    public boolean readyToDevelop() {
+        for (int heightIndex = 0; heightIndex < filmHeightInPixels; heightIndex++) {
+            for (int widthIndex = 0; widthIndex < filmWidthInPixels; widthIndex++) {
+                if (colorGrid[heightIndex][widthIndex] == null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private String colorToStr(Color color) {
         return color.getRed() + " " + color.getGreen() + " " + color.getBlue() + " ";
     }

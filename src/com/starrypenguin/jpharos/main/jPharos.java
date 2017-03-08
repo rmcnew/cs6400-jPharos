@@ -29,12 +29,13 @@ import com.starrypenguin.jpharos.lights.Light;
 import com.starrypenguin.jpharos.lights.PointLight;
 import com.starrypenguin.jpharos.materials.Material;
 import com.starrypenguin.jpharos.parallel.ParallelExecutor;
+import com.starrypenguin.jpharos.shapes.Sphere;
+import com.starrypenguin.jpharos.shapes.Triangle;
 import com.starrypenguin.jpharos.shapes.TriangleMesh;
 import com.starrypenguin.jpharos.util.TriangleMeshReader;
 
 import java.awt.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -74,13 +75,68 @@ final public class jPharos {
 
     // For now, hard-code the Scene
     public static final long WAIT_TIME = 2500; // milliseconds
-    public static Scene scene;
-    public static Camera camera;
-    public static ParallelExecutor executor = new ParallelExecutor();
-    public static AtomicInteger raysCast = new AtomicInteger(0);
-    public static AtomicInteger raysHit = new AtomicInteger(0);
+    final public static jPharos instance = new jPharos();
+    public Scene scene;
+    public Camera camera;
+    public ParallelExecutor executor = new ParallelExecutor();
+    public AtomicInteger raysCast = new AtomicInteger(0);
+    public AtomicInteger raysHit = new AtomicInteger(0);
 
-    static {
+    private jPharos() {
+    }
+
+    public static void main(String[] args) {
+        String outFilename = "out.ppm";
+        if (args.length > 0 && !args[0].isEmpty()) {
+            outFilename = args[0];
+        }
+        // instance.prepareSphereAndTrianglesScene();
+        instance.prepareSceneWithTriangleMesh();
+        instance.render(outFilename);
+
+    }
+
+    private void prepareSphereAndTrianglesScene() {
+        // Bodies
+        Set<Body> bodies = new HashSet<>();
+        // Sphere
+        Point sphereLocation = new Point(0, 0, 70);
+        Sphere sphere = new Sphere(sphereLocation, 40);
+        Material redStuff = new Material(Color.RED);
+        Body sphereBody = new Body(sphere, redStuff);
+        bodies.add(sphereBody);
+
+        //Triangles to make a plane
+        Point quadrant1 = new Point(150, 100, 0);
+        Point quadrant2 = new Point(-150, 100, 0);
+        Point quadrant3 = new Point(-150, -100, 0);
+        Point quadrant4 = new Point(150, -100, 0);
+        Triangle triangle1 = new Triangle(quadrant4, quadrant1, quadrant3);
+        Triangle triangle2 = new Triangle(quadrant1, quadrant2, quadrant3);
+        Material whiteStuff = new Material(Color.WHITE);
+        Body triangle1Body = new Body(triangle1, whiteStuff);
+        Body triangle2Body = new Body(triangle2, whiteStuff);
+        bodies.add(triangle1Body);
+        bodies.add(triangle2Body);
+
+        // Lights
+        Light pointLight = new PointLight(new Point(-20, 0, 120));
+        Set<Light> lights = new HashSet<>();
+        lights.add(pointLight);
+
+        // Camera
+        Point cameraLocation = new Point(60, 0, 25);
+        Vector up = new Vector(0, 0, 1);
+        Vector lookAt = new Vector(-1, 0, 0);
+        Lens lens = new PinholeLens(60);
+        Film film = new Film(1, 300, 300, 1);
+        camera = new Camera(film, lens, cameraLocation, lookAt, up);
+
+        // Put it all in the scene
+        scene = new Scene(camera, lights, bodies);
+    }
+
+    private void prepareSceneWithTriangleMesh() {
         // Bodies
         Set<Body> bodies = new HashSet<>();
 
@@ -108,35 +164,31 @@ final public class jPharos {
         scene = new Scene(camera, lights, bodies);
     }
 
-    public static void main(String[] args) {
-        String outFilename = "out.ppm";
-        if (args.length > 0 && !args[0].isEmpty()) {
-            outFilename = args[0];
-        }
-        List<Ray> rays = camera.generateRays();
+    public void render(String outFilename) {
+        java.util.List<Ray> rays = instance.camera.generateRays();
         for (Ray ray : rays) {
-            executor.submit(new CastRay(ray));
+            instance.executor.submit(new CastRay(ray));
         }
 
         try {
             // wait a moment for the queue to prime
             Thread.sleep(WAIT_TIME);
 
-            while (!executor.isEmpty()) {
-                executor.execute(new DevelopPixel(executor.poll()));
+            while (!instance.executor.isEmpty()) {
+                instance.executor.execute(new DevelopPixel(instance.executor.poll()));
             }
             // wait a moment for the executor to run
             Thread.sleep(WAIT_TIME);
-            executor.finishExecuting();
+            instance.executor.finishExecuting();
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         // write out the image
-        camera.develop(outFilename);
+        instance.camera.develop(outFilename);
 
-        System.out.println("Total rays cast: " + raysCast.get() + ", total rays hit: " + raysHit.get());
+        System.out.println("Total rays cast: " + instance.raysCast.get() + ", total rays hit: " + instance.raysHit.get());
     }
 
 }

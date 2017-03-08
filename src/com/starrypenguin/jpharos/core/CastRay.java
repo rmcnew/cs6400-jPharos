@@ -27,7 +27,6 @@ import com.starrypenguin.jpharos.util.Shared;
 import java.awt.*;
 import java.util.concurrent.Callable;
 
-import static com.starrypenguin.jpharos.main.jPharos.scene;
 
 /**
  * CastRay
@@ -41,7 +40,7 @@ public class CastRay implements Callable<Film.DevelopedPixel> {
     public CastRay(Ray ray) {
         Shared.notNull(ray, "Parameter ray cannot be null!");
         this.ray = ray;
-        jPharos.executor.taskCount.incrementAndGet();
+        jPharos.instance.executor.taskCount.incrementAndGet();
     }
 
     @Override
@@ -50,21 +49,21 @@ public class CastRay implements Callable<Film.DevelopedPixel> {
         // see what the ray hits
         Intersection maybeIntersection = this.castRay(this.ray);
         if (maybeIntersection != null) {
-            retVal = jPharos.camera.film.newDevelopedPixel(ray.filmCoordinate, calculateLambertianAndShadow(maybeIntersection));
+            retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, calculateLambertianAndShadow(maybeIntersection));
         } else {
-            retVal = jPharos.camera.film.newDevelopedPixel(ray.filmCoordinate, Color.BLACK);
+            retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, Color.BLACK);
         }
         //System.out.println("CastRay generated DevelopedPixel=" + retVal);
-        jPharos.executor.taskCount.decrementAndGet();
+        jPharos.instance.executor.taskCount.decrementAndGet();
         return retVal;
     }
 
     public Intersection castRay(Ray ray) {
-        jPharos.raysCast.incrementAndGet();
-        for (Body body : scene.bodies) {
+        jPharos.instance.raysCast.incrementAndGet();
+        for (Body body : jPharos.instance.scene.bodies) {
             Intersection maybeIntersection = body.Intersects(ray);
             if (maybeIntersection != null) {
-                jPharos.raysHit.incrementAndGet();
+                jPharos.instance.raysHit.incrementAndGet();
                 return maybeIntersection;
             }
         }
@@ -78,7 +77,7 @@ public class CastRay implements Callable<Film.DevelopedPixel> {
      */
     private Color calculateLambertianAndShadow(Intersection intersection) {
         // see if this intersection point is in the shadows:  can we cast rays to a light source?
-        for (Light light : scene.lights) {
+        for (Light light : jPharos.instance.scene.lights) {
             Vector directionToLight = new Vector(intersection.intersectionPoint, light.location);
             Ray towardLight = new Ray(intersection.intersectionPoint, directionToLight);
             Intersection maybeIntersection = castRay(towardLight);
