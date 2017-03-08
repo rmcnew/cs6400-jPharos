@@ -50,11 +50,24 @@ final public class Film {
         this.colorGrid = new Color[filmHeightInPixels][filmWidthInPixels];
     }
 
-    public void capture(int heightIndex, int widthIndex, Color color) {
-        Shared.inclusiveRangeCheck(widthIndex, 0, filmWidthInPixels - 1, "widthIndex parameter is out of range!");
-        Shared.inclusiveRangeCheck(heightIndex, 0, filmHeightInPixels - 1, "heightIndex parameter is out of range!");
-        Shared.notNull(color, "color Parameter cannot be null!");
-        this.colorGrid[heightIndex][widthIndex] = color;
+    public FilmCoordinate newFilmCoordinate(int heightIndex, int widthIndex) {
+        return new FilmCoordinate(heightIndex, widthIndex);
+    }
+
+    public DevelopedPixel newDevelopedPixel(FilmCoordinate filmCoordinate, Color color) {
+        return new DevelopedPixel(filmCoordinate, color);
+    }
+
+    public void capture(FilmCoordinate filmCoordinate, Color color) {
+        Shared.notNull(filmCoordinate, "Parameter filmCoordinate cannot be null!");
+        Shared.notNull(color, "Parameter color cannot be null!");
+        this.colorGrid[filmCoordinate.heightIndex][filmCoordinate.widthIndex] = color;
+        //System.out.println(String.format("Captured pixel at heightIndex=%d, widthIndex=%d as color=%s", filmCoordinate.heightIndex, filmCoordinate.widthIndex, color));
+    }
+
+    public void capture(DevelopedPixel developedPixel) {
+        Shared.notNull(developedPixel, "Parameter developedPixel cannot be null!");
+        this.capture(developedPixel.filmCoordinate, developedPixel.color);
     }
 
     private String colorToStr(Color color) {
@@ -71,7 +84,13 @@ final public class Film {
         fileWriter.write(COLOR_DEPTH + "\n");
         for (int heightIndex = 0; heightIndex < filmHeightInPixels; heightIndex++) {
             for (int widthIndex = 0; widthIndex < filmWidthInPixels; widthIndex++) {
-                fileWriter.write(colorToStr(colorGrid[widthIndex][heightIndex]));
+                if (colorGrid[heightIndex][widthIndex] != null) {
+                    fileWriter.write(colorToStr(colorGrid[heightIndex][widthIndex]));
+                } else {
+                    String errorMessage = String.format("colorGrid is null at heightIndex=%d, widthIndex=%d", heightIndex, widthIndex);
+                    System.err.println(errorMessage);
+                    throw new IllegalStateException(errorMessage);
+                }
             }
             fileWriter.write("\n");
             fileWriter.flush();
@@ -81,6 +100,85 @@ final public class Film {
         fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    final public class DevelopedPixel {
+
+        final public FilmCoordinate filmCoordinate;
+        final public Color color;
+
+        public DevelopedPixel(FilmCoordinate filmCoordinate, Color color) {
+            Shared.notNull(filmCoordinate, "Parameter filmCoordinate cannot be null!");
+            Shared.notNull(color, "Parameter color cannot be null!");
+            this.filmCoordinate = filmCoordinate;
+            this.color = color;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            DevelopedPixel that = (DevelopedPixel) o;
+
+            if (!filmCoordinate.equals(that.filmCoordinate)) return false;
+            return color.equals(that.color);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = filmCoordinate.hashCode();
+            result = 31 * result + color.hashCode();
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "DevelopedPixel{" +
+                    "filmCoordinate=" + filmCoordinate +
+                    ", color=" + color +
+                    '}';
+        }
+    }
+
+    // represent a coordinate on the film as a single object to improve error checking and prevent accidental swapping of width and height indices
+    final public class FilmCoordinate {
+
+        final public int heightIndex;
+        final public int widthIndex;
+
+        public FilmCoordinate(int heightIndex, int widthIndex) {
+            Shared.inclusiveRangeCheck(heightIndex, 0, filmHeightInPixels - 1, "FilmCoordinate heightIndex must be between 0 and " + (filmHeightInPixels - 1));
+            Shared.inclusiveRangeCheck(widthIndex, 0, filmWidthInPixels - 1, "FilmCoordinate widthIndex must be between 0 and " + (filmWidthInPixels - 1));
+            this.heightIndex = heightIndex;
+            this.widthIndex = widthIndex;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            FilmCoordinate that = (FilmCoordinate) o;
+
+            if (heightIndex != that.heightIndex) return false;
+            return widthIndex == that.widthIndex;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = heightIndex;
+            result = 31 * result + widthIndex;
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "FilmCoordinate{" +
+                    "heightIndex=" + heightIndex +
+                    ", widthIndex=" + widthIndex +
+                    '}';
         }
     }
 }

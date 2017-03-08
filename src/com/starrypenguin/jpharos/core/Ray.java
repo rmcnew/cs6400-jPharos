@@ -18,6 +18,7 @@
 
 package com.starrypenguin.jpharos.core;
 
+import com.starrypenguin.jpharos.cameras.Film;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.geometry.Vector;
 import com.starrypenguin.jpharos.util.Shared;
@@ -31,17 +32,19 @@ final public class Ray {
 
     public final Point origin;
     public final Vector direction;
+    public final Film.FilmCoordinate filmCoordinate;
 
-    public Ray(Point origin, Vector direction, double timeMax) {
+    public Ray(Point origin, Vector direction, Film.FilmCoordinate filmCoordinate) {
         Shared.notNull(origin, "origin cannot be null!");
         Shared.notNull(direction, "direction cannot be null!");
+        // filmCoordinate can be null if the Ray does not originate at the camera
         this.origin = origin;
         this.direction = direction;
-
+        this.filmCoordinate = filmCoordinate;
     }
 
     public Ray(Point origin, Vector direction) {
-        this(origin, direction, Double.MAX_VALUE);
+        this(origin, direction, null);
     }
 
     public Point atTime(double time) {

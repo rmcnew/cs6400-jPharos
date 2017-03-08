@@ -18,15 +18,14 @@
 
 package com.starrypenguin.jpharos.cameras;
 
-import com.starrypenguin.jpharos.core.Intersection;
 import com.starrypenguin.jpharos.core.Ray;
-import com.starrypenguin.jpharos.core.Scene;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.geometry.Vector;
 import com.starrypenguin.jpharos.lenses.Lens;
 import com.starrypenguin.jpharos.util.Shared;
 
-import java.awt.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Camera
@@ -57,22 +56,8 @@ final public class Camera {
         this.up = up;
     }
 
-    public void render(Scene scene, String outFilename) {
-    /*
-     * Rendering:
-     * filmCenter = location + lookAt;
-     * v = cross(lookAt, up);
-     *
-     *
-     * for each xPixel in Film.xPixels {
-     *     for each yPixel in Film.yPixels {
-     *          get Point for Film pixel location based on current grid location and pixel size
-     *          cast a ray from Film pixel location to lens
-     *          create a Intersection to record what the Ray hit (or did not hit)
-     *
-     */
-        int rayCastCount = 0;
-        int rayHitCount = 0;
+    public List<Ray> generateRays() {
+        LinkedList<Ray> rays = new LinkedList<>();
         Point filmCenter = cameraLocation.plus(lookAt.normalized().scale(lens.focalLength));
         Vector right = lookAt.cross(up).normalized();
         Vector left = right.inverse();
@@ -84,25 +69,17 @@ final public class Camera {
 
         for (int upDownIndex = 0; upDownIndex < film.filmHeightInPixels; upDownIndex++) {
             for (int leftRightIndex = 0; leftRightIndex < film.filmWidthInPixels; leftRightIndex++) {
-                Point pixelLocation = topLeft.plus(right.scale(film.pixelSize * leftRightIndex)).plus(down.scale(film.pixelSize*upDownIndex));
+                Point pixelLocation = topLeft.plus(right.scale(film.pixelSize * leftRightIndex)).plus(down.scale(film.pixelSize * upDownIndex));
                 Vector rayDirection = new Vector(cameraLocation, pixelLocation);
-                Ray currentRay = new Ray(cameraLocation, rayDirection);
-                rayCastCount++;
-                //System.out.println("Casting ray: " + currentRay);
-                // see what the ray hits
-                Intersection maybeIntersection = scene.castRay(currentRay);
-                if (maybeIntersection != null) {
-                    rayHitCount++;
-                    //System.out.println("Camera:  Ray hit!  Intersection details: " + maybeIntersection);
-                    //film.capture(leftRightIndex, upDownIndex, maybeIntersection.color);
-                    film.capture(leftRightIndex, upDownIndex, maybeIntersection.calculateLambertianAndShadow());
-                } else {
-                    film.capture(leftRightIndex, upDownIndex, Color.DARK_GRAY);
-                }
+                Ray currentRay = new Ray(cameraLocation, rayDirection, film.newFilmCoordinate(upDownIndex, leftRightIndex));
+                rays.add(currentRay);
             }
         }
+        return rays;
+    }
+
+    public void develop(String outFilename) {
         film.develop(outFilename);
-        System.out.println("Total rays cast: " + rayCastCount + ", total rays hit: " + rayHitCount);
     }
 
 }

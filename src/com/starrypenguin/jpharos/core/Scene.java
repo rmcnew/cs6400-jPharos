@@ -27,7 +27,7 @@ import java.util.Set;
 /**
  * Scene
  * <p/>
- * The overall container of with objects needed to render a scene
+ * The overall container of with objects needed to generateRays a scene
  */
 final public class Scene {
 
@@ -35,8 +35,6 @@ final public class Scene {
     final public Camera camera;
     final public Set<Light> lights;
     final public Set<Body> bodies;
-
-    public static Scene scene;
 
     public Scene(Camera camera, Set<Light> lights,  Set<Body> bodies) {
         Shared.notNull(camera, "camera cannot be null!");
@@ -46,15 +44,4 @@ final public class Scene {
         this.lights = lights;
         this.bodies = bodies;
     }
-
-    public Intersection castRay(Ray ray) {
-        for (Body body : bodies) {
-            Intersection maybeIntersection = body.Intersects(ray);
-            if (maybeIntersection != null) {
-                return maybeIntersection;
-            }
-        }
-        return null;
-    }
-
 }

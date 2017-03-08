@@ -20,12 +20,7 @@ package com.starrypenguin.jpharos.core;
 
 import com.starrypenguin.jpharos.geometry.Normal;
 import com.starrypenguin.jpharos.geometry.Point;
-import com.starrypenguin.jpharos.geometry.Vector;
-import com.starrypenguin.jpharos.lights.Light;
-import com.starrypenguin.jpharos.main.jPharos;
 import com.starrypenguin.jpharos.util.Shared;
-
-import java.awt.*;
 
 
 /**
@@ -52,30 +47,6 @@ final public class Intersection implements Comparable<Intersection> {
         this.surfaceNormal = surfaceNormal;
         this.intersectionPoint = intersectionPoint;
         this.body = body;
-    }
-
-    /**
-     * Calculate the Lambertian lighting and shadows
-     * @return Color with darkness values adjusted
-     */
-    public Color calculateLambertianAndShadow() {
-        // see if this intersection point is in the shadows:  can we cast rays to a light source?
-        for (Light light : jPharos.scene.lights) {
-            Vector directionToLight = new Vector(intersectionPoint, light.location);
-            Ray towardLight = new Ray(intersectionPoint, directionToLight);
-            Intersection maybeIntersection = jPharos.scene.castRay(towardLight);
-            if (maybeIntersection != null && maybeIntersection.body != body) {  // we hit something, a shadow is here
-                return Color.BLACK.brighter();
-            }
-        }
-        double rawLambert = Math.max(ray.direction.dot(surfaceNormal), 0.0);
-        double maxValue = ray.direction.magnitude() * surfaceNormal.magnitude();
-        double scaledLambert = rawLambert / maxValue;
-        float factor = (float) (1.0 - scaledLambert);
-        float red = (float) (this.body.material.color.getRed() / 255.0) * factor;
-        float green = (float) (this.body.material.color.getGreen() / 255.0) * factor;
-        float blue = (float) (this.body.material.color.getBlue() / 255.0) * factor;
-        return new Color(red, green, blue);
     }
 
     @Override

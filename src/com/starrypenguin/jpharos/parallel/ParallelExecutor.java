@@ -18,8 +18,11 @@
 
 package com.starrypenguin.jpharos.parallel;
 
-import java.util.List;
+import com.starrypenguin.jpharos.cameras.Film;
+
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
 
 /**
  * ParallelExecutor
@@ -28,37 +31,47 @@ import java.util.concurrent.*;
  */
 public class ParallelExecutor {
 
-    final private static ExecutorService executor = Executors.newWorkStealingPool();
+    final private static long WAIT_TIME = 2500; // milliseconds
+    final public AtomicLong taskCount = new AtomicLong(0L);
+    final private ConcurrentLinkedQueue<Future<Film.DevelopedPixel>> outputQueue = new ConcurrentLinkedQueue<>();
+    final private ExecutorService executor = Executors.newWorkStealingPool();
 
-    public static void shutdown() {
-        executor.shutdown();
+    public void submit(Callable<Film.DevelopedPixel> task) {
+        outputQueue.add(executor.submit(task));
     }
 
-    public static List<Runnable> shutdownNow() {
-        return executor.shutdownNow();
+    public void finishExecuting() {
+        while (taskCount.get() != 0L) {
+            try {
+                Thread.sleep(WAIT_TIME);
+                System.out.print(".");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public static boolean isShutdown() {
-        return executor.isShutdown();
-    }
-
-    public static boolean isTerminated() {
-        return executor.isTerminated();
-    }
-
-    public static boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
-        return executor.awaitTermination(timeout, unit);
-    }
-
-    public static <T> Future<T> submit(Callable<T> task) {
-        return executor.submit(task);
-    }
-
-    public static Future<?> submit(Runnable task) {
-        return executor.submit(task);
-    }
-
-    public static void execute(Runnable command) {
+    public void execute(Runnable command) {
         executor.execute(command);
+    }
+
+    public Future<Film.DevelopedPixel> poll() throws InterruptedException {
+        return outputQueue.poll();
+    }
+
+    public boolean isEmpty() {
+        return outputQueue.isEmpty();
+    }
+
+    public int size() {
+        return outputQueue.size();
+    }
+
+    public Stream<Future<Film.DevelopedPixel>> stream() {
+        return outputQueue.stream();
+    }
+
+    public Stream<Future<Film.DevelopedPixel>> parallelStream() {
+        return outputQueue.parallelStream();
     }
 }

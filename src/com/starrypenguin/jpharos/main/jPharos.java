@@ -20,8 +20,7 @@ package com.starrypenguin.jpharos.main;
 
 import com.starrypenguin.jpharos.cameras.Camera;
 import com.starrypenguin.jpharos.cameras.Film;
-import com.starrypenguin.jpharos.core.Body;
-import com.starrypenguin.jpharos.core.Scene;
+import com.starrypenguin.jpharos.core.*;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.geometry.Vector;
 import com.starrypenguin.jpharos.lenses.Lens;
@@ -29,12 +28,15 @@ import com.starrypenguin.jpharos.lenses.PinholeLens;
 import com.starrypenguin.jpharos.lights.Light;
 import com.starrypenguin.jpharos.lights.PointLight;
 import com.starrypenguin.jpharos.materials.Material;
+import com.starrypenguin.jpharos.parallel.ParallelExecutor;
 import com.starrypenguin.jpharos.shapes.TriangleMesh;
 import com.starrypenguin.jpharos.util.TriangleMeshReader;
 
 import java.awt.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * jPharos
@@ -71,8 +73,12 @@ final public class jPharos {
 
 
     // For now, hard-code the Scene
+    public static final long WAIT_TIME = 2500; // milliseconds
     public static Scene scene;
     public static Camera camera;
+    public static ParallelExecutor executor = new ParallelExecutor();
+    public static AtomicInteger raysCast = new AtomicInteger(0);
+    public static AtomicInteger raysHit = new AtomicInteger(0);
 
     static {
         // Bodies
@@ -107,7 +113,30 @@ final public class jPharos {
         if (args.length > 0 && !args[0].isEmpty()) {
             outFilename = args[0];
         }
-        camera.render(scene, outFilename);
+        List<Ray> rays = camera.generateRays();
+        for (Ray ray : rays) {
+            executor.submit(new CastRay(ray));
+        }
+
+        try {
+            // wait a moment for the queue to prime
+            Thread.sleep(WAIT_TIME);
+
+            while (!executor.isEmpty()) {
+                executor.execute(new DevelopPixel(executor.poll()));
+            }
+            // wait a moment for the executor to run
+            Thread.sleep(WAIT_TIME);
+            executor.finishExecuting();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // write out the image
+        camera.develop(outFilename);
+
+        System.out.println("Total rays cast: " + raysCast.get() + ", total rays hit: " + raysHit.get());
     }
 
 }

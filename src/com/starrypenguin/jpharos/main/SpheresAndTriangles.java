@@ -86,13 +86,13 @@ static {
         // Put it all in the scene
         scene = new Scene(camera, lights, bodies);
     }
-
+/*
     public static void main(String[] args) {
         String outFilename = "sphere.ppm";
         if (args.length > 0 && !args[0].isEmpty()) {
             outFilename = args[0];
         }
-        camera.render(scene, outFilename);
+        camera.generateRays(scene, outFilename);
     }
-
+*/
 }
