@@ -18,7 +18,14 @@
 
 package com.starrypenguin.jpharos.geometry;
 
+import com.starrypenguin.jpharos.core.Ray;
+import com.starrypenguin.jpharos.shapes.Triangle;
+import com.starrypenguin.jpharos.shapes.TriangleMesh;
+import com.starrypenguin.jpharos.shapes.TriangleMeshBuilder;
 import com.starrypenguin.jpharos.util.Shared;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * BoundingBox
@@ -29,6 +36,8 @@ public class BoundingBox {
 
     public final Point max;  // the point with the highest x, y, and z values calculated from the supplied corner Points
     public final Point min;  // the point with the lowest x, y, and z values calculated from the supplied corner Points
+    private Point center = null; // if we calculate the center Point, cache it for reuse
+    private TriangleMesh triangleMesh = null;  // if we create the TriangleMesh for this BoundingBox, cache it for reuse
 
     public BoundingBox() {
         this.min = new Point(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
@@ -43,14 +52,80 @@ public class BoundingBox {
         min = new Point(Math.min(pA.x, pB.x), Math.min(pA.y, pB.y), Math.min(pA.z, pB.z));
     }
 
+    public boolean containsPoint(Point point) {
+        return (min.x <= point.x) && (point.x <= max.x) &&
+               (min.y <= point.y) && (point.y <= max.y) &&
+               (min.z <= point.z) && (point.z <= max.z);
+    }
+
+    private class Rectangle {
+        final Point p1, p2, p3, p4;
+        Rectangle(Point p1, Point p2, Point p3, Point p4) {
+            Shared.notNull(p1, "Parameter p1 cannot be null!");
+            Shared.notNull(p2, "Parameter p2 cannot be null!");
+            Shared.notNull(p3, "Parameter p3 cannot be null!");
+            Shared.notNull(p4, "Parameter p4 cannot be null!");
+            this.p1 = p1;
+            this.p2 = p2;
+            this.p3 = p3;
+            this.p4 = p4;
+        }
+
+        List<Triangle> toTriangles() {
+            List<Triangle> triangles = new ArrayList<>(2);
+            triangles.add(new Triangle(p1, p2, p3));
+            triangles.add(new Triangle(p1, p3, p4));
+            return triangles;
+        }
+    }
+
+    private List<Rectangle> toRectangles() {
+        List<Rectangle> rectangles = new ArrayList<>(6);
+        Point pA = min;
+        Point pB = max;
+        Point pC = new Point(pB.x, pA.y, pA.z);
+        Point pD = new Point(pB.x, pB.y, pA.z);
+        Point pE = new Point(pA.x, pB.y, pB.z);
+        Point pF = new Point(pA.x, pA.y, pB.z);
+        Point pG = new Point(pB.x, pA.y, pB.z);
+        Point pH = new Point(pA.x, pB.y, pA.z);
+        rectangles.add(new Rectangle(pG, pC, pA, pF));
+        rectangles.add(new Rectangle(pB, pD, pC, pG));
+        rectangles.add(new Rectangle(pE, pH, pD, pB));
+        rectangles.add(new Rectangle(pF, pA, pH, pE));
+        rectangles.add(new Rectangle(pB, pG, pF, pE));
+        rectangles.add(new Rectangle(pC, pD, pH, pA));
+        return rectangles;
+    }
+
+    public synchronized TriangleMesh getTriangleMesh() {
+        if (triangleMesh == null) {
+            TriangleMeshBuilder builder = new TriangleMeshBuilder();
+            for (Rectangle rectangle : toRectangles()) {
+                for (Triangle triangle : rectangle.toTriangles()) {
+                    builder.addTriangle(triangle.v1, triangle.v2, triangle.v3);
+                }
+            }
+            triangleMesh =  builder.build();
+        }
+        return triangleMesh;
+    }
+
+    public boolean intersectsP(Ray ray) {
+        return getTriangleMesh().IntersectsP(ray);
+    }
+
     public BoundingBox union(BoundingBox boundingBox) {
         Point max = new Point(Math.max(this.max.x, boundingBox.max.x), Math.max(this.max.y, boundingBox.max.y), Math.max(this.max.z, boundingBox.max.z));
         Point min = new Point(Math.min(this.min.x, boundingBox.min.x), Math.min(this.min.y, boundingBox.min.y), Math.min(this.min.z, boundingBox.min.z));
         return new BoundingBox(max, min);
     }
 
-    public Point getCenterPoint() {
-        return new Point((this.min.x + this.max.x)/2.0, (this.min.y + this.max.y)/2.0, (this.min.z + this.max.z)/2.0);
+    public synchronized Point getCenterPoint() {
+        if (center == null) {
+            center = new Point((this.min.x + this.max.x) / 2.0, (this.min.y + this.max.y) / 2.0, (this.min.z + this.max.z) / 2.0);
+        }
+        return center;
     }
 
     @Override
