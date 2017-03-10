@@ -27,7 +27,7 @@ import com.starrypenguin.jpharos.lenses.Lens;
 import com.starrypenguin.jpharos.lenses.PinholeLens;
 import com.starrypenguin.jpharos.lights.Light;
 import com.starrypenguin.jpharos.lights.PointLight;
-import com.starrypenguin.jpharos.materials.Material;
+import com.starrypenguin.jpharos.materials.ColorMaterial;
 import com.starrypenguin.jpharos.parallel.ParallelExecutor;
 import com.starrypenguin.jpharos.shapes.Sphere;
 import com.starrypenguin.jpharos.shapes.Triangle;
@@ -102,7 +102,7 @@ final public class jPharos {
         // Sphere
         Point sphereLocation = new Point(0, 0, 70);
         Sphere sphere = new Sphere(sphereLocation, 40);
-        Material redStuff = new Material(Color.RED);
+        ColorMaterial redStuff = new ColorMaterial(Color.RED);
         Body sphereBody = new Body(sphere, redStuff);
         bodies.add(sphereBody);
 
@@ -113,7 +113,7 @@ final public class jPharos {
         Point quadrant4 = new Point(150, -100, 0);
         Triangle triangle1 = new Triangle(quadrant4, quadrant1, quadrant3);
         Triangle triangle2 = new Triangle(quadrant1, quadrant2, quadrant3);
-        Material whiteStuff = new Material(Color.WHITE);
+        ColorMaterial whiteStuff = new ColorMaterial(Color.WHITE);
         Body triangle1Body = new Body(triangle1, whiteStuff);
         Body triangle2Body = new Body(triangle2, whiteStuff);
         bodies.add(triangle1Body);
@@ -142,7 +142,7 @@ final public class jPharos {
 
         // read in shape from PLY file
         TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/teapot.ply");
-        Material greenMaterial = new Material(Color.RED);
+        ColorMaterial greenMaterial = new ColorMaterial(Color.RED);
         Body meshBody = new Body(triangleMesh, greenMaterial);
         bodies.add(meshBody);
 

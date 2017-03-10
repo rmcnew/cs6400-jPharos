@@ -26,9 +26,9 @@ import com.starrypenguin.jpharos.util.Shared;
 /**
  * Body
  * <p/>
- * A Shape of a given Material that is somewhere in a Scene
+ * A Shape of a given ColorMaterial that is somewhere in a Scene
  */
-final public class Body {
+public class Body {
     // value class; immutable and cannot be changed after being created
     public final Shape shape;
     public final Material material;

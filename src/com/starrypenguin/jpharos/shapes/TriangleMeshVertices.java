@@ -35,7 +35,7 @@ public class TriangleMeshVertices {
 
     private ArrayList<Point> verticesList = new ArrayList<>();
     private Set<Triangle> triangles = new LinkedHashSet<>();
-    private BoundingBox boundingBox = new BoundingBox();
+    private BoundingBox boundingBox = null;
     private double surfaceArea = 0.0;
 
     public TriangleMeshVertices() {
@@ -48,8 +48,12 @@ public class TriangleMeshVertices {
 
     private void addTriangle(Triangle triangleToAdd) {
         triangles.add(triangleToAdd);
-        boundingBox = boundingBox.union(triangleToAdd.getBoundingBox());
-        surfaceArea += triangleToAdd.surfaceArea();
+        if (boundingBox == null) {
+            boundingBox = triangleToAdd.getBoundingBox();
+        } else {
+            boundingBox = boundingBox.union(triangleToAdd.getBoundingBox());
+        }
+        surfaceArea += triangleToAdd.surfaceArea(); // assume that this is a convex hull
     }
 
     public void addTriangle(Point v1arg, Point v2arg, Point v3arg) {

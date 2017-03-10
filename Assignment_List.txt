@@ -26,7 +26,7 @@ that was produced by your ray tracer.
 
 BVH and Meshes
 
-Due Mar 1 by 11:59pm
+Due Mar 15 by 11:59pm
 
 Points 100
 

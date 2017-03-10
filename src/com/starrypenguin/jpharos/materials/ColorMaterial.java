@@ -18,16 +18,26 @@
 
 package com.starrypenguin.jpharos.materials;
 
+import com.starrypenguin.jpharos.util.Shared;
+
 import java.awt.*;
 
 /**
- * Material
+ * ColorMaterial
  * <p/>
- * The material composition of a Body that determines what happens when light interacts with a Body;
- * This is the abstract base class for all materials
+ * A Material with a given color that does not specify light interaction
  */
-public abstract class Material {
+public class ColorMaterial extends Material {
 
-    public Color color;
-    // common Material properties go here
+    public ColorMaterial(Color color) {
+        Shared.notNull(color, "Parameter color cannot be null!");
+        this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return "ColorMaterial{" +
+                "color=" + color +
+                '}';
+    }
 }

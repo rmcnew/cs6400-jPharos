@@ -21,13 +21,21 @@ package com.starrypenguin.jpharos.materials;
 import java.awt.*;
 
 /**
- * Material
+ * NullMaterial
  * <p/>
- * The material composition of a Body that determines what happens when light interacts with a Body;
- * This is the abstract base class for all materials
+ * Dummy material to simplify class hierarchy; used when raw Shapes are
+ * needed to fill Bodies that do not have corresponding Materials.
  */
-public abstract class Material {
+final public class NullMaterial extends Material {
+    // use a Singleton NullMaterial object to save resources
+    private static final NullMaterial nullMaterial = new NullMaterial();
 
-    public Color color;
-    // common Material properties go here
+    private NullMaterial() {
+        this.color = Color.BLACK;
+    }
+
+    public static NullMaterial instance() {
+        return nullMaterial;
+    }
+
 }
