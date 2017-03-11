@@ -88,15 +88,16 @@ public class BoundingVolumeHierarchy {
     }
 
     public Intersection castRay(Ray ray) {
-        Intersection maybeIntersection = null;
         Body currentBody = head;
         while (currentBody instanceof BvhNode) {
             BvhNode currentNode = (BvhNode) currentBody;
-            if (currentNode.IntersectsP(ray)) {
-                // Implement a recursive traversal of the BVH tree
+            if (currentNode.left.IntersectsP(ray)) {
+                currentBody = currentNode.left;
+            } else if (currentNode.right.IntersectsP(ray)) {
+                currentBody = currentNode.right;
             }
         }
-        return maybeIntersection;
+        return currentBody.Intersects(ray);
     }
 
     /**

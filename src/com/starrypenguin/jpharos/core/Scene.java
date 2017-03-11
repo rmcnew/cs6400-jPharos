@@ -35,6 +35,7 @@ final public class Scene {
     final public Camera camera;
     final public Set<Light> lights;
     final public Set<Body> bodies;
+    final public BoundingVolumeHierarchy boundingVolumeHierarchy;
 
     public Scene(Camera camera, Set<Light> lights,  Set<Body> bodies) {
         Shared.notNull(camera, "camera cannot be null!");
@@ -43,5 +44,6 @@ final public class Scene {
         this.camera = camera;
         this.lights = lights;
         this.bodies = bodies;
+        this.boundingVolumeHierarchy = new BoundingVolumeHierarchy(bodies);
     }
 }

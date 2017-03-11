@@ -60,14 +60,11 @@ public class CastRay implements Callable<Film.DevelopedPixel> {
 
     public Intersection castRay(Ray ray) {
         jPharos.instance.raysCast.incrementAndGet();
-        for (Body body : jPharos.instance.scene.bodies) {
-            Intersection maybeIntersection = body.Intersects(ray);
-            if (maybeIntersection != null) {
-                jPharos.instance.raysHit.incrementAndGet();
-                return maybeIntersection;
-            }
+        Intersection maybeIntersection = jPharos.instance.scene.boundingVolumeHierarchy.castRay(ray);
+        if (maybeIntersection != null) {
+            jPharos.instance.raysHit.incrementAndGet();
         }
-        return null;
+        return maybeIntersection;
     }
 
     /**
