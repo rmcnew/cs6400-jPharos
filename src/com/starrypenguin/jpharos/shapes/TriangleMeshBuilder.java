@@ -20,6 +20,8 @@ package com.starrypenguin.jpharos.shapes;
 
 import com.starrypenguin.jpharos.geometry.Point;
 
+import java.awt.*;
+
 /**
  * TriangleMeshBuilder
  * <p/>
@@ -34,12 +36,19 @@ public class TriangleMeshBuilder {
         return this;
     }
 
-    public void addVertex(Point vertex) {
+    public TriangleMeshBuilder addVertex(Point vertex) {
         vertices.addVertex(vertex);
+        return this;
     }
 
-    public void addTriangleByVertexIndex(int vertexIndex1, int vertexIndex2, int vertexIndex3) {
+    public TriangleMeshBuilder addColor(Color color) {
+        vertices.addColor(color);
+        return this;
+    }
+
+    public TriangleMeshBuilder addTriangleByVertexIndex(int vertexIndex1, int vertexIndex2, int vertexIndex3) {
         vertices.addTriangleByVertexIndex(vertexIndex1, vertexIndex2, vertexIndex3);
+        return this;
     }
 
     public TriangleMesh build() {

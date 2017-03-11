@@ -22,6 +22,7 @@ import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.util.Shared;
 
+import java.awt.*;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -34,6 +35,7 @@ import java.util.stream.Stream;
 public class TriangleMeshVertices {
 
     private ArrayList<Point> verticesList = new ArrayList<>();
+    private ArrayList<Color> colorsList = new ArrayList<>();
     private Set<Triangle> triangles = new LinkedHashSet<>();
     private BoundingBox boundingBox = null;
     private double surfaceArea = 0.0;
@@ -44,6 +46,11 @@ public class TriangleMeshVertices {
     public void addVertex(Point vertex) {
         Shared.notNull(vertex, "Parameter vertex cannot be null!");
         verticesList.add(vertex);
+    }
+
+    public void addColor(Color color) {
+        Shared.notNull(color, "Parameter color cannot be null!");
+        colorsList.add(color);
     }
 
     private void addTriangle(Triangle triangleToAdd) {

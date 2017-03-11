@@ -141,7 +141,7 @@ final public class jPharos {
         Set<Body> bodies = new HashSet<>();
 
         // read in shape from PLY file
-        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/teapot.ply");
+        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/vase-v2.ply");
         ColorMaterial greenMaterial = new ColorMaterial(Color.RED);
         Body meshBody = new Body(triangleMesh, greenMaterial);
         bodies.add(meshBody);
