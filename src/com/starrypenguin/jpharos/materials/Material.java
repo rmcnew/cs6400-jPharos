@@ -18,6 +18,8 @@
 
 package com.starrypenguin.jpharos.materials;
 
+import com.starrypenguin.jpharos.geometry.Point;
+
 import java.awt.*;
 
 /**
@@ -28,6 +30,7 @@ import java.awt.*;
  */
 public abstract class Material {
 
-    public Color color;
     // common Material properties go here
+
+    public abstract Color getColor(Point point);
 }

@@ -64,6 +64,7 @@ public class CastRay implements Callable<Film.DevelopedPixel> {
         if (maybeIntersection != null) {
             jPharos.instance.raysHit.incrementAndGet();
         }
+        //System.out.println("CastRay:  returned Intersection is: " + maybeIntersection);
         return maybeIntersection;
     }
 
@@ -86,9 +87,10 @@ public class CastRay implements Callable<Film.DevelopedPixel> {
         double maxValue = ray.direction.magnitude() * intersection.surfaceNormal.magnitude();
         double scaledLambert = rawLambert / maxValue;
         float factor = (float) (1.0 - scaledLambert);
-        float red = (float) (intersection.body.material.color.getRed() / 255.0) * factor;
-        float green = (float) (intersection.body.material.color.getGreen() / 255.0) * factor;
-        float blue = (float) (intersection.body.material.color.getBlue() / 255.0) * factor;
+        Color intersectionPointColor = intersection.body.material.getColor(intersection.intersectionPoint);
+        float red = (float) (intersectionPointColor.getRed() / 255.0) * factor;
+        float green = (float) (intersectionPointColor.getGreen() / 255.0) * factor;
+        float blue = (float) (intersectionPointColor.getBlue() / 255.0) * factor;
         return new Color(red, green, blue);
     }
 }

@@ -91,7 +91,9 @@ final public class jPharos {
             outFilename = args[0];
         }
         // instance.prepareSphereAndTrianglesScene();
+        System.out.println("Reading scene . . .");
         instance.prepareSceneWithTriangleMesh();
+        System.out.println("Rendering . . .");
         instance.render(outFilename);
 
     }
@@ -141,18 +143,19 @@ final public class jPharos {
         Set<Body> bodies = new HashSet<>();
 
         // read in shape from PLY file
-        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/vase-v2.ply");
-        ColorMaterial greenMaterial = new ColorMaterial(Color.RED);
-        Body meshBody = new Body(triangleMesh, greenMaterial);
+        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/dolphins.ply");
+        //ColorMaterial material = new ColorMaterial(triangleMesh.getColorMap());
+        ColorMaterial material = new ColorMaterial(Color.BLUE);
+        Body meshBody = new Body(triangleMesh, material);
         bodies.add(meshBody);
 
         // Lights
-        Light pointLight = new PointLight(new Point(-1, 0, 7));
+        Light pointLight = new PointLight(new Point(0, 0, 500));
         Set<Light> lights = new HashSet<>();
         lights.add(pointLight);
 
         // Camera
-        Point cameraLocation = new Point(0, 4, 4);
+        Point cameraLocation = new Point(0, 500, 4);
         Point target = new Point(0, 0, 0);
         Vector up = new Vector(0, 0, 1);
         Vector lookAt = new Vector(cameraLocation, target).normalized();

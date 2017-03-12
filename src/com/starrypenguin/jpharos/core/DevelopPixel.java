@@ -44,8 +44,12 @@ public class DevelopPixel implements Runnable {
     public void run() {
         Film.DevelopedPixel developedPixel = null;
         try {
-            developedPixel = futureDevelopedPixel.get();
-            jPharos.instance.camera.film.capture(developedPixel);
+            if (futureDevelopedPixel != null) {
+                developedPixel = futureDevelopedPixel.get();
+                if (developedPixel != null) {
+                    jPharos.instance.camera.film.capture(developedPixel);
+                }
+            }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         } finally {

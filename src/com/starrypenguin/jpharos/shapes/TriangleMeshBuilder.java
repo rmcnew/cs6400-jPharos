@@ -41,8 +41,8 @@ public class TriangleMeshBuilder {
         return this;
     }
 
-    public TriangleMeshBuilder addColor(Color color) {
-        vertices.addColor(color);
+    public TriangleMeshBuilder addColor(Point point, Color color) {
+        vertices.addColor(point, color);
         return this;
     }
 

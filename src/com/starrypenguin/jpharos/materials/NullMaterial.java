@@ -18,6 +18,8 @@
 
 package com.starrypenguin.jpharos.materials;
 
+import com.starrypenguin.jpharos.geometry.Point;
+
 import java.awt.*;
 
 /**
@@ -31,11 +33,14 @@ final public class NullMaterial extends Material {
     private static final NullMaterial nullMaterial = new NullMaterial();
 
     private NullMaterial() {
-        this.color = Color.BLACK;
     }
 
     public static NullMaterial instance() {
         return nullMaterial;
     }
 
+    @Override
+    public Color getColor(Point point) {
+        return null;
+    }
 }

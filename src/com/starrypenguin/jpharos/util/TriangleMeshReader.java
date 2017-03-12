@@ -27,6 +27,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * TriangleMeshReader
@@ -38,6 +39,8 @@ public class TriangleMeshReader {
     private static String VERTEX_INDICES = "vertex_indices";
     private static String VERTEX_INDEX = "vertex_index";
 
+    private static Map<Point, Color> colorMap;
+
     private static void addVertexType(ElementReader elementReader, TriangleMeshBuilder triangleMeshBuilder) {
         try {
             Element element = elementReader.readElement();
@@ -45,12 +48,20 @@ public class TriangleMeshReader {
                 double x = element.getDouble("x");
                 double y = element.getDouble("y");
                 double z = element.getDouble("z");
-                int red = element.getInt("red");
-                int green = element.getInt("green");
-                int blue = element.getInt("blue");
                 //System.out.println(String.format("Adding Triangle Mesh vertex: x=%f, y=%f, z=%f", x, y, z));
-                triangleMeshBuilder.addVertex(new Point(x, y, z));
-                triangleMeshBuilder.addColor(new Color(red, green, blue));
+                Point vertex = new Point(x, y, z);
+                triangleMeshBuilder.addVertex(vertex);
+                try {
+                    int red = element.getInt("red");
+                    int green = element.getInt("green");
+                    int blue = element.getInt("blue");
+                    Color pointColor = new Color(red, green, blue);
+                    triangleMeshBuilder.addColor(vertex, pointColor);
+                    //System.out.println("Added color:  " + pointColor + " for vertex:  " + vertex);
+                } catch (IllegalArgumentException e) {
+                    // do nothing
+                }
+
                 element = elementReader.readElement();
             }
         } catch (IOException e) {
@@ -68,22 +79,16 @@ public class TriangleMeshReader {
                 } else if (element.getIntList(VERTEX_INDEX) != null) {
                     vertexIndices = element.getIntList(VERTEX_INDEX);
                 }
-                System.out.println("vertexIndices length is: " + vertexIndices.length);
+                //System.out.println("vertexIndices length is: " + vertexIndices.length);
                 if (vertexIndices != null && vertexIndices.length == 3) {
                     int vertexIndex1 = vertexIndices[0];
                     int vertexIndex2 = vertexIndices[1];
                     int vertexIndex3 = vertexIndices[2];
                     //System.out.println(String.format("Adding Triangle Mesh face: v1_index=%d, v2_index=%d, v3_index=%d", vertexIndex1, vertexIndex2, vertexIndex3));
                     triangleMeshBuilder.addTriangleByVertexIndex(vertexIndex1, vertexIndex2, vertexIndex3);
-                } else if (vertexIndices != null && vertexIndices.length > 3) {
-                    for (int vertexIndicesIndex = 0; vertexIndicesIndex < vertexIndices.length; vertexIndicesIndex += 3) {
-                        int vertexIndex1 = vertexIndices[vertexIndicesIndex];
-                        int vertexIndex2 = vertexIndices[vertexIndicesIndex + 1];
-                        int vertexIndex3 = vertexIndices[vertexIndicesIndex + 2];
-                        triangleMeshBuilder.addTriangleByVertexIndex(vertexIndex1, vertexIndex2, vertexIndex3);
-                    }
                 } else {
-                    throw new IllegalArgumentException("Unknown PLY triangle face property or strange number of indices used!");
+                    //throw new IllegalArgumentException("Unknown PLY triangle face property or strange number of indices used!");
+                    //System.err.println("Unknown PLY triangle face property or strange number of indices used!");
                 }
                 element = elementReader.readElement();
             }
@@ -149,4 +154,5 @@ public class TriangleMeshReader {
         Shared.notNullAndNotEmpty(filename, "filename parameter cannot be null or empty!");
         return fromPlyFile(new File(filename));
     }
+
 }

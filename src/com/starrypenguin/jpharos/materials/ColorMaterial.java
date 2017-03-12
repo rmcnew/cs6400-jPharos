@@ -18,26 +18,39 @@
 
 package com.starrypenguin.jpharos.materials;
 
+import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.util.Shared;
 
 import java.awt.*;
+import java.util.Map;
 
 /**
  * ColorMaterial
  * <p/>
- * A Material with a given color that does not specify light interaction
+ * A Material with a given color or colors that does not specify light interaction
  */
 public class ColorMaterial extends Material {
+
+    private Map<Point, Color> colorMap = null;
+    private Color color = null;
 
     public ColorMaterial(Color color) {
         Shared.notNull(color, "Parameter color cannot be null!");
         this.color = color;
     }
 
-    @Override
-    public String toString() {
-        return "ColorMaterial{" +
-                "color=" + color +
-                '}';
+    public ColorMaterial(Map<Point, Color> colorMap) {
+        Shared.notNull(colorMap, "Parameter colorMap cannot be null!");
+        this.colorMap = colorMap;
     }
+
+    @Override
+    public Color getColor(Point point) {
+        Shared.notNull(point, "Parameter point cannot be null!");
+        if (colorMap != null) {
+            return colorMap.get(point);
+        }
+        return color;
+    }
+
 }

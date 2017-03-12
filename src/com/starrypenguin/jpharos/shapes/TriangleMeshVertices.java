@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 public class TriangleMeshVertices {
 
     private ArrayList<Point> verticesList = new ArrayList<>();
-    private ArrayList<Color> colorsList = new ArrayList<>();
+    private HashMap<Point, Color> colorMap = new HashMap<>();
     private Set<Triangle> triangles = new LinkedHashSet<>();
     private BoundingBox boundingBox = null;
     private double surfaceArea = 0.0;
@@ -48,9 +48,10 @@ public class TriangleMeshVertices {
         verticesList.add(vertex);
     }
 
-    public void addColor(Color color) {
+    public void addColor(Point point, Color color) {
+        Shared.notNull(point, "Parameter point cannot be null!");
         Shared.notNull(color, "Parameter color cannot be null!");
-        colorsList.add(color);
+        colorMap.put(point, color);
     }
 
     private void addTriangle(Triangle triangleToAdd) {
@@ -78,11 +79,15 @@ public class TriangleMeshVertices {
     public void addTriangleByVertexIndex(int vertexIndex1, int vertexIndex2, int vertexIndex3) {
         //System.out.println(String.format("addTriangleByVertexIndex: vI1=%d, vI2=%d, vI3=%d", vertexIndex1, vertexIndex2, vertexIndex3));
         int vertexMaxIndex = verticesList.size() - 1;
-        Shared.inclusiveRangeCheck(vertexIndex1, 0, vertexMaxIndex, String.format("Parameter vertexIndex1 must be between 0 and %d", vertexMaxIndex));
-        Shared.inclusiveRangeCheck(vertexIndex2, 0, vertexMaxIndex, String.format("Parameter vertexIndex2 must be between 0 and %d", vertexMaxIndex));
-        Shared.inclusiveRangeCheck(vertexIndex3, 0, vertexMaxIndex, String.format("Parameter vertexIndex3 must be between 0 and %d", vertexMaxIndex));
-        Triangle triangleToAdd = new Triangle(verticesList.get(vertexIndex1), verticesList.get(vertexIndex2), verticesList.get(vertexIndex3));
-        addTriangle(triangleToAdd);
+        try {
+            Shared.inclusiveRangeCheck(vertexIndex1, 0, vertexMaxIndex, String.format("Parameter vertexIndex1 must be between 0 and %d!  vertexIndex1 value was %d", vertexMaxIndex, vertexIndex1));
+            Shared.inclusiveRangeCheck(vertexIndex2, 0, vertexMaxIndex, String.format("Parameter vertexIndex2 must be between 0 and %d!  vertexIndex2 value was %d", vertexMaxIndex, vertexIndex2));
+            Shared.inclusiveRangeCheck(vertexIndex3, 0, vertexMaxIndex, String.format("Parameter vertexIndex3 must be between 0 and %d!  vertexIndex3 value was %d", vertexMaxIndex, vertexIndex3));
+            Triangle triangleToAdd = new Triangle(verticesList.get(vertexIndex1), verticesList.get(vertexIndex2), verticesList.get(vertexIndex3));
+            addTriangle(triangleToAdd);
+        } catch (IllegalArgumentException e) {
+            // do nothing
+        }
     }
 
     public int size() {
@@ -127,5 +132,9 @@ public class TriangleMeshVertices {
 
     public double getSurfaceArea() {
         return surfaceArea;
+    }
+
+    public Map<Point, Color> getColorMap() {
+        return colorMap;
     }
 }

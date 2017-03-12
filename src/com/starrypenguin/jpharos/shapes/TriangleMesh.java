@@ -25,7 +25,9 @@ import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.util.Shared;
 
+import java.awt.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -72,5 +74,9 @@ public class TriangleMesh extends Shape {
     @Override
     public double surfaceArea() {
         return vertices.getSurfaceArea();
+    }
+
+    public Map<Point, Color> getColorMap() {
+        return vertices.getColorMap();
     }
 }
