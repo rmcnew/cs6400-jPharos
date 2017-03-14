@@ -37,6 +37,7 @@ import com.starrypenguin.jpharos.util.TriangleMeshReader;
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -143,9 +144,9 @@ final public class jPharos {
         Set<Body> bodies = new HashSet<>();
 
         // read in shape from PLY file
-        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/dolphins.ply");
-        //ColorMaterial material = new ColorMaterial(triangleMesh.getColorMap());
-        ColorMaterial material = new ColorMaterial(Color.BLUE);
+        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/dolphins_colored.ply");
+        ColorMaterial material = new ColorMaterial(triangleMesh.getColorMap());
+        //ColorMaterial material = new ColorMaterial(Color.BLUE);
         Body meshBody = new Body(triangleMesh, material);
         bodies.add(meshBody);
 
@@ -170,7 +171,9 @@ final public class jPharos {
     public void render(String outFilename) {
         java.util.List<Ray> rays = instance.camera.generateRays();
         for (Ray ray : rays) {
-            instance.executor.submit(new CastRay(ray));
+            if (ray != null) {
+                instance.executor.submit(new CastRay(ray));
+            }
         }
 
         try {
@@ -178,7 +181,12 @@ final public class jPharos {
             Thread.sleep(WAIT_TIME);
 
             while (!instance.executor.isEmpty()) {
-                instance.executor.execute(new DevelopPixel(instance.executor.poll()));
+                Future<Film.DevelopedPixel> futureDevelopedPixel = instance.executor.poll();
+                if (futureDevelopedPixel != null) {
+                    instance.executor.execute(new DevelopPixel(futureDevelopedPixel));
+                } else {
+                    Thread.sleep(WAIT_TIME);
+                }
             }
             // wait a moment for the executor to run
             Thread.sleep(WAIT_TIME);

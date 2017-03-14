@@ -42,16 +42,16 @@ public class DevelopPixel implements Runnable {
 
     @Override
     public void run() {
-        Film.DevelopedPixel developedPixel = null;
         try {
             if (futureDevelopedPixel != null) {
-                developedPixel = futureDevelopedPixel.get();
+                Film.DevelopedPixel developedPixel = futureDevelopedPixel.get();
                 if (developedPixel != null) {
                     jPharos.instance.camera.film.capture(developedPixel);
                 }
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+            System.exit(1);
         } finally {
             jPharos.instance.executor.taskCount.decrementAndGet();
         }

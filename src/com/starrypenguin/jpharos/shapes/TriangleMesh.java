@@ -77,6 +77,7 @@ public class TriangleMesh extends Shape {
     }
 
     public Map<Point, Color> getColorMap() {
+        //System.out.println("ColorMap size is: " + vertices.getColorMap().size());
         return vertices.getColorMap();
     }
 }

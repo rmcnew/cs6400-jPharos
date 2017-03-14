@@ -48,7 +48,13 @@ public class ColorMaterial extends Material {
     public Color getColor(Point point) {
         Shared.notNull(point, "Parameter point cannot be null!");
         if (colorMap != null) {
-            return colorMap.get(point);
+            Color mappedColor = colorMap.get(point);
+            if (mappedColor == null) {
+                return Color.BLACK;  // need to interpolate an arbitrary point to get the color
+            } else {
+                return mappedColor;
+            }
+
         }
         return color;
     }

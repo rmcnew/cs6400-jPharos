@@ -27,7 +27,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * TriangleMeshReader
@@ -38,8 +37,6 @@ public class TriangleMeshReader {
 
     private static String VERTEX_INDICES = "vertex_indices";
     private static String VERTEX_INDEX = "vertex_index";
-
-    private static Map<Point, Color> colorMap;
 
     private static void addVertexType(ElementReader elementReader, TriangleMeshBuilder triangleMeshBuilder) {
         try {
@@ -88,7 +85,7 @@ public class TriangleMeshReader {
                     triangleMeshBuilder.addTriangleByVertexIndex(vertexIndex1, vertexIndex2, vertexIndex3);
                 } else {
                     //throw new IllegalArgumentException("Unknown PLY triangle face property or strange number of indices used!");
-                    //System.err.println("Unknown PLY triangle face property or strange number of indices used!");
+                    System.err.println("Unknown PLY triangle face property or strange number of indices used!");
                 }
                 element = elementReader.readElement();
             }
