@@ -87,7 +87,7 @@ public class CastRay implements Callable<Film.DevelopedPixel> {
         double maxValue = ray.direction.magnitude() * intersection.surfaceNormal.magnitude();
         double scaledLambert = rawLambert / maxValue;
         float factor = (float) (1.0 - scaledLambert);
-        Color intersectionPointColor = intersection.body.material.getColor(intersection.intersectionPoint);
+        Color intersectionPointColor = intersection.body.material.getColor(intersection);
         float red = (float) (intersectionPointColor.getRed() / 255.0) * factor;
         float green = (float) (intersectionPointColor.getGreen() / 255.0) * factor;
         float blue = (float) (intersectionPointColor.getBlue() / 255.0) * factor;

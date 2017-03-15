@@ -18,7 +18,7 @@
 
 package com.starrypenguin.jpharos.materials;
 
-import com.starrypenguin.jpharos.geometry.Point;
+import com.starrypenguin.jpharos.core.Intersection;
 
 import java.awt.*;
 
@@ -32,5 +32,5 @@ public abstract class Material {
 
     // common Material properties go here
 
-    public abstract Color getColor(Point point);
+    public abstract Color getColor(Intersection intersection);
 }

@@ -160,7 +160,7 @@ final public class jPharos {
         Point target = new Point(0, 0, 0);
         Vector up = new Vector(0, 0, 1);
         Vector lookAt = new Vector(cameraLocation, target).normalized();
-        Lens lens = new PinholeLens(220);
+        Lens lens = new PinholeLens(170);
         Film film = new Film(1, 300, 300, 1);
         camera = new Camera(film, lens, cameraLocation, lookAt, up);
 

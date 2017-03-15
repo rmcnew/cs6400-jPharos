@@ -21,10 +21,7 @@ package com.starrypenguin.jpharos.shapes;
 import com.starrypenguin.jpharos.core.Body;
 import com.starrypenguin.jpharos.core.Intersection;
 import com.starrypenguin.jpharos.core.Ray;
-import com.starrypenguin.jpharos.geometry.BoundingBox;
-import com.starrypenguin.jpharos.geometry.Normal;
-import com.starrypenguin.jpharos.geometry.Point;
-import com.starrypenguin.jpharos.geometry.Vector;
+import com.starrypenguin.jpharos.geometry.*;
 import com.starrypenguin.jpharos.util.Shared;
 
 /**
@@ -196,6 +193,23 @@ public class Triangle extends Shape {
 
         double s = (a + b + c) / 2.0;
         return Math.sqrt( s * (s-a) * (s-b) * (s-c) );
+    }
+
+    public BarycentricCoordinate calculateBarycentricCoordinateForPoint(Point point) {
+        Shared.notNull(point, "Paramter point cannot be null!");
+        Vector vector0 = new Vector(this.v1, this.v2);
+        Vector vector1 = new Vector(this.v1, this.v3);
+        Vector vector2 = new Vector(this.v1, point);
+        double d00 = vector0.dot(vector0);
+        double d01 = vector0.dot(vector1);
+        double d11 = vector1.dot(vector1);
+        double d20 = vector2.dot(vector0);
+        double d21 = vector2.dot(vector1);
+        double denominator = d00 * d11 - d01 * d01;
+        double v = (d11 * d20 - d01 * d21) / denominator;
+        double w = (d00 * d21 - d01 * d20) / denominator;
+        double u = 1.0 - v - w;
+        return new BarycentricCoordinate(u, v, w);
     }
 
     @Override

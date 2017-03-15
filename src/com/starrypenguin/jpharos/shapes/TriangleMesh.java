@@ -29,6 +29,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +55,11 @@ public class TriangleMesh extends Shape {
 
     private List<Intersection> getIntersections(Ray ray, Body body) {
         return vertices.parallelStream().map(triangle -> triangle.Intersects(ray, body)).filter(Objects::nonNull).sorted().collect(Collectors.toList());
+    }
+
+    public Optional<Triangle> getIntersectingTriangle(Ray ray) {
+        Shared.notNull(ray, "Parameter ray cannot be null!");
+        return vertices.parallelStream().filter(triangle -> triangle.IntersectsP(ray)).findFirst();
     }
 
     @Override

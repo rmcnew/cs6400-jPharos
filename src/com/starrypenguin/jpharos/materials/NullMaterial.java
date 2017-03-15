@@ -18,7 +18,7 @@
 
 package com.starrypenguin.jpharos.materials;
 
-import com.starrypenguin.jpharos.geometry.Point;
+import com.starrypenguin.jpharos.core.Intersection;
 
 import java.awt.*;
 
@@ -40,7 +40,7 @@ final public class NullMaterial extends Material {
     }
 
     @Override
-    public Color getColor(Point point) {
+    public Color getColor(Intersection intersection) {
         return null;
     }
 }
