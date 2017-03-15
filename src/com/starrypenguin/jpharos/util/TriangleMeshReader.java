@@ -84,8 +84,8 @@ public class TriangleMeshReader {
                     //System.out.println(String.format("Adding Triangle Mesh face: v1_index=%d, v2_index=%d, v3_index=%d", vertexIndex1, vertexIndex2, vertexIndex3));
                     triangleMeshBuilder.addTriangleByVertexIndex(vertexIndex1, vertexIndex2, vertexIndex3);
                 } else {
-                    //throw new IllegalArgumentException("Unknown PLY triangle face property or strange number of indices used!");
-                    System.err.println("Unknown PLY triangle face property or strange number of indices used!");
+                    throw new IllegalArgumentException("Unknown PLY triangle face property or strange number of indices used!");
+                    //System.err.println("Unknown PLY triangle face property or strange number of indices used!");
                 }
                 element = elementReader.readElement();
             }
@@ -102,6 +102,7 @@ public class TriangleMeshReader {
         PlyReader plyReader = null;
         try {
             plyReader = new PlyReaderFile(file);
+            //plyReader = new NormalizingPlyReader(new PlyReaderFile(file), TesselationMode.TRIANGLES, NormalMode.PASS_THROUGH, TextureMode.PASS_THROUGH);
             ElementReader elementReader = plyReader.nextElementReader();
             while (elementReader != null) {
                 ElementType elementType = elementReader.getElementType();
@@ -123,8 +124,8 @@ public class TriangleMeshReader {
                         //break;
 
                     default:
-                        throw new UnsupportedOperationException("Unknown PLY element type: " + elementType.getName() +
-                                                                "jPharos does not know how to handle this PLY element type!");
+                        throw new UnsupportedOperationException("Unknown PLY element type: " + elementType.getName() + "jPharos does not know how to handle this PLY element type!");
+
                 }
                 elementReader.close();
                 elementReader = plyReader.nextElementReader();
