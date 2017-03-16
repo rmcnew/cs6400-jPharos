@@ -37,3 +37,17 @@ Support the PLY format.
 Also add a BVH acceleration structure with the surface area heuristic.
 
 Turn in an image of a model containing at least 1 M triangles.
+
+
+
+================================================
+
+Reflection and Refraction
+
+Due Apr 5 by 11:59pm  
+
+Add reflective and refractive materials to your ray tracer.   
+
+Generate an image showing off your new capabilities.  
+
+You do not need to have caustics working correctly.

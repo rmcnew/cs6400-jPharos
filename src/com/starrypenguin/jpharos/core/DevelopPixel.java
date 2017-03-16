@@ -37,7 +37,6 @@ public class DevelopPixel implements Runnable {
     public DevelopPixel(Future<Film.DevelopedPixel> futureDevelopedPixel) {
         Shared.notNull(futureDevelopedPixel, "Parameter futureDevelopedPixel cannot be null!");
         this.futureDevelopedPixel = futureDevelopedPixel;
-        jPharos.instance.executor.taskCount.incrementAndGet();
     }
 
     @Override
@@ -52,8 +51,6 @@ public class DevelopPixel implements Runnable {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             System.exit(1);
-        } finally {
-            jPharos.instance.executor.taskCount.decrementAndGet();
         }
     }
 }

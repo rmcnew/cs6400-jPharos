@@ -45,7 +45,7 @@ public class ParallelExecutor {
         while ((taskCount.get() > 0L) && (!jPharos.instance.camera.film.readyToDevelop())) {
             try {
                 Thread.sleep(WAIT_TIME);
-                System.out.print(".");
+                System.out.println(String.format("Tasks queued: %d, rays cast: %d, rays hit: %d", taskCount.get(), jPharos.instance.raysCast.get(), jPharos.instance.raysHit.get()));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -27,6 +27,7 @@ import com.starrypenguin.jpharos.lenses.Lens;
 import com.starrypenguin.jpharos.lenses.PinholeLens;
 import com.starrypenguin.jpharos.lights.Light;
 import com.starrypenguin.jpharos.lights.PointLight;
+import com.starrypenguin.jpharos.materials.ChromaticMaterial;
 import com.starrypenguin.jpharos.materials.ColorMaterial;
 import com.starrypenguin.jpharos.parallel.ParallelExecutor;
 import com.starrypenguin.jpharos.shapes.Sphere;
@@ -93,7 +94,8 @@ final public class jPharos {
         }
         // instance.prepareSphereAndTrianglesScene();
         System.out.println("Reading scene . . .");
-        instance.prepareSceneWithTriangleMesh();
+        //instance.prepareSceneWithArmadilloTriangleMesh();
+        instance.prepareSceneWithDragonTriangleMesh();
         System.out.println("Rendering . . .");
         instance.render(outFilename);
 
@@ -139,28 +141,59 @@ final public class jPharos {
         scene = new Scene(camera, lights, bodies);
     }
 
-    private void prepareSceneWithTriangleMesh() {
+    private void prepareSceneWithArmadilloTriangleMesh() {
         // Bodies
         Set<Body> bodies = new HashSet<>();
 
         // read in shape from PLY file
         TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/Armadillo.ply");
-        ColorMaterial material = new ColorMaterial(triangleMesh.getColorMap());
-        //ColorMaterial material = new ColorMaterial(Color.BLUE);
+        //ColorMaterial material = new ColorMaterial(triangleMesh.getColorMap()); // use with PLY files that have RGB values per vertex
+        //ColorMaterial material = new ColorMaterial(Color.GREEN.darker()); // use for a fixed color
+        ChromaticMaterial material = new ChromaticMaterial(); // use with PLY files that have no colors; colors are based on vertex location
         Body meshBody = new Body(triangleMesh, material);
         bodies.add(meshBody);
 
         // Lights
-        Light pointLight = new PointLight(new Point(0, 0, 15));
+        Light pointLight = new PointLight(new Point(10, 100, 0));
         Set<Light> lights = new HashSet<>();
         lights.add(pointLight);
 
         // Camera
-        Point cameraLocation = new Point(0, 100, 0);
-        Point target = new Point(0, 0, 0);
-        Vector up = new Vector(0, 0, 1);
+        Point cameraLocation = new Point(0, 0, -130);
+        Point target = new Point(0, 40, 0);
+        Vector up = new Vector(0, 1, 0);
         Vector lookAt = new Vector(cameraLocation, target);
         Lens lens = new PinholeLens(170);
+        Film film = new Film(1, 300, 300, 1);
+        camera = new Camera(film, lens, cameraLocation, lookAt, up);
+
+        // Put it all in the scene
+        scene = new Scene(camera, lights, bodies);
+    }
+
+    private void prepareSceneWithDragonTriangleMesh() {
+        // Bodies
+        Set<Body> bodies = new HashSet<>();
+
+        // read in shape from PLY file
+        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/dragon.ply");
+        //ColorMaterial material = new ColorMaterial(triangleMesh.getColorMap()); // use with PLY files that have RGB values per vertex
+        //ColorMaterial material = new ColorMaterial(Color.GREEN.darker()); // use for a fixed color
+        ChromaticMaterial material = new ChromaticMaterial(); // use with PLY files that have no colors; colors are based on vertex location
+        Body meshBody = new Body(triangleMesh, material);
+        bodies.add(meshBody);
+
+        // Lights
+        Light pointLight = new PointLight(new Point(0, 0.2, 0));
+        Set<Light> lights = new HashSet<>();
+        lights.add(pointLight);
+
+        // Camera
+        Point cameraLocation = new Point(0, 0.12, 0.15);
+        Point target = new Point(-0.005, 0.12, 0);
+        Vector up = new Vector(0, 1, 0);
+        Vector lookAt = new Vector(cameraLocation, target);
+        Lens lens = new PinholeLens(200);
         Film film = new Film(1, 300, 300, 1);
         camera = new Camera(film, lens, cameraLocation, lookAt, up);
 
