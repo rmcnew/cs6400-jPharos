@@ -23,29 +23,19 @@ import com.starrypenguin.jpharos.core.Intersection;
 import java.awt.*;
 
 /**
- * NullMaterial
+ * MirrorMaterial
  * <p/>
- * Dummy material to simplify class hierarchy; used when raw Shapes are
- * needed to fill Bodies that do not have corresponding Materials.
+ * Mirror-like reflective material
  */
-final public class NullMaterial extends Material {
-    // use a Singleton NullMaterial object to save resources
-    private static final NullMaterial nullMaterial = new NullMaterial();
-
-    private NullMaterial() {
-    }
-
-    public static NullMaterial instance() {
-        return nullMaterial;
-    }
+public class MirrorMaterial extends Material {
 
     @Override
-    protected Color getColorInternal(Intersection intersection) {
+    public Color getColor(Intersection intersection) {
         return null;
     }
 
     @Override
-    public Color getColor(Intersection intersection) {
+    protected Color getColorInternal(Intersection intersection) {
         return null;
     }
 }

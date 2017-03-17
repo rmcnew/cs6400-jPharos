@@ -51,6 +51,11 @@ public class ColorMaterial extends Material {
 
     @Override
     public Color getColor(Intersection intersection) {
+        return Material.calculateLambertianAndShadow(intersection);
+    }
+
+    @Override
+    protected Color getColorInternal(Intersection intersection) {
         Shared.notNull(intersection, "Parameter intersection cannot be null!");
         if (colorMap != null) {
             Color mappedColor = getColorFromTriangleMesh(intersection);

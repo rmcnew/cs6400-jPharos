@@ -176,7 +176,7 @@ final public class jPharos {
         Set<Body> bodies = new HashSet<>();
 
         // read in shape from PLY file
-        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/dragon.ply");
+        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/dragon_quick.ply");
         //ColorMaterial material = new ColorMaterial(triangleMesh.getColorMap()); // use with PLY files that have RGB values per vertex
         //ColorMaterial material = new ColorMaterial(Color.GREEN.darker()); // use for a fixed color
         ChromaticMaterial material = new ChromaticMaterial(); // use with PLY files that have no colors; colors are based on vertex location

@@ -18,7 +18,12 @@
 
 package com.starrypenguin.jpharos.materials;
 
+import com.starrypenguin.jpharos.core.CastRay;
 import com.starrypenguin.jpharos.core.Intersection;
+import com.starrypenguin.jpharos.core.Ray;
+import com.starrypenguin.jpharos.geometry.Vector;
+import com.starrypenguin.jpharos.lights.Light;
+import com.starrypenguin.jpharos.main.jPharos;
 
 import java.awt.*;
 
@@ -32,5 +37,34 @@ public abstract class Material {
 
     // common Material properties go here
 
+    /**
+     * Calculate the Lambertian lighting and shadows
+     *
+     * @return Color with darkness values adjusted
+     */
+    protected static Color calculateLambertianAndShadow(Intersection intersection) {
+        // see if this intersection point is in the shadows:  can we cast rays to a light source?
+        for (Light light : jPharos.instance.scene.lights) {
+            Vector directionToLight = new Vector(intersection.intersectionPoint, light.location);
+            Ray towardLight = new Ray(intersection.intersectionPoint, directionToLight);
+            CastRay castRay = new CastRay(towardLight);
+            Intersection maybeIntersection = castRay.castRay(towardLight);
+            if (maybeIntersection != null && maybeIntersection.body != intersection.body) {  // we hit something, a shadow is here
+                return Color.BLACK.brighter();
+            }
+        }
+        double rawLambert = Math.max(intersection.ray.direction.dot(intersection.surfaceNormal), 0.0);
+        double maxValue = intersection.ray.direction.magnitude() * intersection.surfaceNormal.magnitude();
+        double scaledLambert = rawLambert / maxValue;
+        float factor = (float) (1.0 - scaledLambert);
+        Color intersectionPointColor = intersection.body.material.getColorInternal(intersection);
+        float red = (float) (intersectionPointColor.getRed() / 255.0) * factor;
+        float green = (float) (intersectionPointColor.getGreen() / 255.0) * factor;
+        float blue = (float) (intersectionPointColor.getBlue() / 255.0) * factor;
+        return new Color(red, green, blue);
+    }
+
     public abstract Color getColor(Intersection intersection);
+
+    protected abstract Color getColorInternal(Intersection intersection);
 }

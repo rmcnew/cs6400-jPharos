@@ -35,7 +35,7 @@ public class ChromaticMaterial extends Material {
     final static private double OFFSET = 0.5;
 
     @Override
-    public Color getColor(Intersection intersection) {
+    protected Color getColorInternal(Intersection intersection) {
         double deltaX = intersection.body.getBoundingBox().max.x - intersection.body.getBoundingBox().min.x;
         double deltaY = intersection.body.getBoundingBox().max.y - intersection.body.getBoundingBox().min.y;
         double deltaZ = intersection.body.getBoundingBox().max.z - intersection.body.getBoundingBox().min.z;
@@ -46,4 +46,10 @@ public class ChromaticMaterial extends Material {
 
         return new Color(red, green, blue);
     }
+
+    @Override
+    public Color getColor(Intersection intersection) {
+        return Material.calculateLambertianAndShadow(intersection);
+    }
+
 }

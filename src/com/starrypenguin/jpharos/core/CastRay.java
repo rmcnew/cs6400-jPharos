@@ -19,8 +19,6 @@
 package com.starrypenguin.jpharos.core;
 
 import com.starrypenguin.jpharos.cameras.Film;
-import com.starrypenguin.jpharos.geometry.Vector;
-import com.starrypenguin.jpharos.lights.Light;
 import com.starrypenguin.jpharos.main.jPharos;
 import com.starrypenguin.jpharos.util.Shared;
 
@@ -49,8 +47,9 @@ public class CastRay implements Callable<Film.DevelopedPixel> {
         // see what the ray hits
         Intersection maybeIntersection = this.castRay(this.ray);
         if (maybeIntersection != null) {
-            retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, calculateLambertianAndShadow(maybeIntersection));
+            retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, maybeIntersection.body.material.getColor(maybeIntersection));
         } else {
+            // ray did not intersect, use background color
             retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, Color.BLACK);
         }
         //System.out.println("CastRay generated DevelopedPixel=" + retVal);
@@ -68,29 +67,5 @@ public class CastRay implements Callable<Film.DevelopedPixel> {
         return maybeIntersection;
     }
 
-    /**
-     * Calculate the Lambertian lighting and shadows
-     *
-     * @return Color with darkness values adjusted
-     */
-    private Color calculateLambertianAndShadow(Intersection intersection) {
-        // see if this intersection point is in the shadows:  can we cast rays to a light source?
-        for (Light light : jPharos.instance.scene.lights) {
-            Vector directionToLight = new Vector(intersection.intersectionPoint, light.location);
-            Ray towardLight = new Ray(intersection.intersectionPoint, directionToLight);
-            Intersection maybeIntersection = castRay(towardLight);
-            if (maybeIntersection != null && maybeIntersection.body != intersection.body) {  // we hit something, a shadow is here
-                return Color.BLACK.brighter();
-            }
-        }
-        double rawLambert = Math.max(ray.direction.dot(intersection.surfaceNormal), 0.0);
-        double maxValue = ray.direction.magnitude() * intersection.surfaceNormal.magnitude();
-        double scaledLambert = rawLambert / maxValue;
-        float factor = (float) (1.0 - scaledLambert);
-        Color intersectionPointColor = intersection.body.material.getColor(intersection);
-        float red = (float) (intersectionPointColor.getRed() / 255.0) * factor;
-        float green = (float) (intersectionPointColor.getGreen() / 255.0) * factor;
-        float blue = (float) (intersectionPointColor.getBlue() / 255.0) * factor;
-        return new Color(red, green, blue);
-    }
+
 }
