@@ -45,6 +45,7 @@ public class CastRay implements Callable<Film.DevelopedPixel> {
     public Film.DevelopedPixel call() throws Exception {
         Film.DevelopedPixel retVal;
         // see what the ray hits
+        System.out.println("Thread " + Thread.currentThread().getId() + " running CastRay.call() for Ray " + ray);
         Intersection maybeIntersection = this.castRay(this.ray);
         if (maybeIntersection != null) {
             retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, maybeIntersection.body.material.getColor(maybeIntersection));
@@ -52,18 +53,19 @@ public class CastRay implements Callable<Film.DevelopedPixel> {
             // ray did not intersect, use background color
             retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, Color.BLACK);
         }
-        //System.out.println("CastRay generated DevelopedPixel=" + retVal);
+        System.out.println("Thread " + Thread.currentThread().getId() + "ran CastRay.call() and generated DevelopedPixel=" + retVal);
         jPharos.instance.executor.taskCount.decrementAndGet();
         return retVal;
     }
 
     public Intersection castRay(Ray ray) {
         jPharos.instance.raysCast.incrementAndGet();
+        System.out.println("Thread " + Thread.currentThread().getId() + " running CastRay.castRay() for Ray " + ray);
         Intersection maybeIntersection = jPharos.instance.scene.boundingVolumeHierarchy.castRay(ray);
         if (maybeIntersection != null) {
             jPharos.instance.raysHit.incrementAndGet();
         }
-        //System.out.println("CastRay:  returned Intersection is: " + maybeIntersection);
+        System.out.println("CastRay:  returned Intersection is: " + maybeIntersection);
         return maybeIntersection;
     }
 

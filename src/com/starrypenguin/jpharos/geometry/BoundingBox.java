@@ -165,6 +165,7 @@ public class BoundingBox extends Shape {
             Shared.notNull(p2, "Parameter p2 cannot be null!");
             Shared.notNull(p3, "Parameter p3 cannot be null!");
             Shared.notNull(p4, "Parameter p4 cannot be null!");
+            //System.out.println("Attempting to create Rectangle with points:  p1=" + p1 + ", p2=" + p2 + ", p3=" + p3 + ", p4=" + p4);
             // make sure Points are unique
             if (p1.equals(p2) || p1.equals(p3) || p1.equals(p4) ||
                     p2.equals(p3) || p2.equals(p4) || p3.equals(p4)) {

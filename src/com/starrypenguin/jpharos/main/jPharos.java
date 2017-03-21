@@ -29,10 +29,12 @@ import com.starrypenguin.jpharos.lights.Light;
 import com.starrypenguin.jpharos.lights.PointLight;
 import com.starrypenguin.jpharos.materials.ChromaticMaterial;
 import com.starrypenguin.jpharos.materials.ColorMaterial;
+import com.starrypenguin.jpharos.materials.MirrorMaterial;
 import com.starrypenguin.jpharos.parallel.ParallelExecutor;
 import com.starrypenguin.jpharos.shapes.Sphere;
 import com.starrypenguin.jpharos.shapes.Triangle;
 import com.starrypenguin.jpharos.shapes.TriangleMesh;
+import com.starrypenguin.jpharos.shapes.TriangleMeshBuilder;
 import com.starrypenguin.jpharos.util.TriangleMeshReader;
 
 import java.awt.*;
@@ -92,10 +94,11 @@ final public class jPharos {
         if (args.length > 0 && !args[0].isEmpty()) {
             outFilename = args[0];
         }
-        // instance.prepareSphereAndTrianglesScene();
         System.out.println("Reading scene . . .");
+        // instance.prepareSphereAndTrianglesScene();
         //instance.prepareSceneWithArmadilloTriangleMesh();
-        instance.prepareSceneWithDragonTriangleMesh();
+        //instance.prepareSceneWithDragonTriangleMesh();
+        instance.prepareMirrorSphereAndTrianglesScene();
         System.out.println("Rendering . . .");
         instance.render(outFilename);
 
@@ -201,6 +204,99 @@ final public class jPharos {
         scene = new Scene(camera, lights, bodies);
     }
 
+    private void prepareMirrorSphereAndTrianglesScene() {
+        // Bodies
+        Set<Body> bodies = new HashSet<>();
+        // Sphere
+        Point sphereLocation = new Point(0, 0, 70);
+        Sphere sphere = new Sphere(sphereLocation, 40);
+        MirrorMaterial mirrorMaterial = new MirrorMaterial();
+        Body sphereBody = new Body(sphere, mirrorMaterial);
+        bodies.add(sphereBody);
+        System.out.println("Added sphere");
+        // Make a plane below the sphere
+        Point point1 = new Point(150, 100, 0);
+        Point point2 = new Point(-150, 100, 0);
+        Point point3 = new Point(-150, -100, 0);
+        Point point4 = new Point(150, -100, 0);
+        TriangleMeshBuilder belowBuilder = new TriangleMeshBuilder();
+        belowBuilder.addTriangle(point4, point1, point3);
+        belowBuilder.addTriangle(point1, point2, point3);
+        TriangleMesh belowTriangleMesh = belowBuilder.build();
+        ColorMaterial white = new ColorMaterial(Color.WHITE);
+        Body belowPlane = new Body(belowTriangleMesh, white);
+        bodies.add(belowPlane);
+        System.out.println("Added below plane");
+        // Make a plane above the sphere
+        Point point5 = new Point(150, 100, 150);
+        Point point6 = new Point(-150, 100, 150);
+        Point point7 = new Point(-150, -100, 150);
+        Point point8 = new Point(150, -100, 150);
+        TriangleMeshBuilder aboveBuilder = new TriangleMeshBuilder();
+        aboveBuilder.addTriangle(point8, point5, point7);
+        aboveBuilder.addTriangle(point5, point6, point7);
+        TriangleMesh aboveTriangleMesh = aboveBuilder.build();
+        ColorMaterial green = new ColorMaterial(Color.GREEN);
+        Body abovePlane = new Body(aboveTriangleMesh, green);
+        bodies.add(abovePlane);
+        System.out.println("Added above plane");
+        // Make a plane behind the sphere
+        Point point9 = new Point(150, 100, 150);
+        Point pointA = new Point(-150, 100, 150);
+        Point pointB = new Point(-150, 100, 0);
+        Point pointC = new Point(150, 100, 0);
+        TriangleMeshBuilder behindBuilder = new TriangleMeshBuilder();
+        behindBuilder.addTriangle(pointC, point9, pointB);
+        behindBuilder.addTriangle(point9, pointA, pointB);
+        TriangleMesh behindTriangleMesh = behindBuilder.build();
+        ColorMaterial orange = new ColorMaterial(Color.ORANGE);
+        Body behindPlane = new Body(behindTriangleMesh, orange);
+        bodies.add(behindPlane);
+        System.out.println("Added behind plane");
+        // Make a plane to the left of the sphere
+        Point pointD = new Point(-150, 100, 0);
+        Point pointE = new Point(-150, 100, 150);
+        Point pointF = new Point(-150, -100, 0);
+        Point pointG = new Point(-150, -100, 150);
+        TriangleMeshBuilder leftBuilder = new TriangleMeshBuilder();
+        leftBuilder.addTriangle(pointG, pointD, pointF);
+        leftBuilder.addTriangle(pointD, pointE, pointF);
+        TriangleMesh leftTriangleMesh = leftBuilder.build();
+        ColorMaterial cyan = new ColorMaterial(Color.CYAN);
+        Body leftPlane = new Body(leftTriangleMesh, cyan);
+        bodies.add(leftPlane);
+        System.out.println("Added left plane");
+        // Make a plane to the right of the sphere
+        Point pointH = new Point(150, 100, 0);
+        Point pointI = new Point(150, 100, 150);
+        Point pointJ = new Point(150, -100, 0);
+        Point pointK = new Point(150, -100, 150);
+        TriangleMeshBuilder rightBuilder = new TriangleMeshBuilder();
+        rightBuilder.addTriangle(pointK, pointH, pointJ);
+        rightBuilder.addTriangle(pointH, pointI, pointJ);
+        TriangleMesh rightTriangleMesh = rightBuilder.build();
+        ColorMaterial magenta = new ColorMaterial(Color.MAGENTA);
+        Body rightPlane = new Body(rightTriangleMesh, magenta);
+        bodies.add(rightPlane);
+        System.out.println("Added right plane");
+        // Lights
+        Light pointLight = new PointLight(new Point(-20, 0, 120));
+        Set<Light> lights = new HashSet<>();
+        lights.add(pointLight);
+        System.out.println("Added lights");
+        // Camera
+        Point cameraLocation = new Point(60, 0, 25);
+        Vector up = new Vector(0, 0, 1);
+        Vector lookAt = new Vector(-1, 0, 0);
+        Lens lens = new PinholeLens(60);
+        Film film = new Film(1, 300, 300, 1);
+        camera = new Camera(film, lens, cameraLocation, lookAt, up);
+        System.out.println("Added camera");
+        // Put it all in the scene
+        scene = new Scene(camera, lights, bodies);
+        System.out.println("Scene created");
+    }
+
     public void render(String outFilename) {
         java.util.List<Ray> rays = instance.camera.generateRays();
         for (Ray ray : rays) {
@@ -208,7 +304,7 @@ final public class jPharos {
                 instance.executor.submit(new CastRay(ray));
             }
         }
-
+        System.out.println("All initial rays submitted!");
         try {
             // wait a moment for the queue to prime
             Thread.sleep(WAIT_TIME);

@@ -40,11 +40,12 @@ public class BoundingVolumeHierarchy {
         unpairedBodies.addAll(bodies);
 
         while (unpairedBodies.size() > 1) {
+            System.out.println("Unpaired bodies size: " + unpairedBodies.size());
             Body left = null;
             Body right = null;
             double bestSurfaceAreaHeuristic = 0.0;
-            for (Body bodyA : bodies) {
-                for (Body bodyB : bodies) {
+            for (Body bodyA : unpairedBodies) {
+                for (Body bodyB : unpairedBodies) {
                     if (bodyA == bodyB) {
                         continue; // we cannot group a body with itself
                     }
@@ -92,11 +93,14 @@ public class BoundingVolumeHierarchy {
         while (currentBody instanceof BvhNode) {
             BvhNode currentNode = (BvhNode) currentBody;
             if (currentNode.left.IntersectsP(ray)) {
+                System.out.println("Thread " + Thread.currentThread().getId() + " BVH traversal going left");
                 currentBody = currentNode.left;
             } else if (currentNode.right.IntersectsP(ray)) {
                 currentBody = currentNode.right;
+                System.out.println("Thread " + Thread.currentThread().getId() + " BVH traversal going right");
             }
         }
+        System.out.println("Thread " + Thread.currentThread().getId() + " BVH traversal intersecting");
         return currentBody.Intersects(ray);
     }
 

@@ -31,7 +31,7 @@ public class MirrorMaterial extends Material {
 
     @Override
     public Color getColor(Intersection intersection) {
-        return null;
+        return Material.calculateReflection(intersection);
     }
 
     @Override
