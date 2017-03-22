@@ -35,7 +35,6 @@ import java.awt.*;
  */
 public abstract class Material {
 
-    // common Material properties go here
 
     /**
      * Calculate the Lambertian lighting and shadows
@@ -64,27 +63,8 @@ public abstract class Material {
         return new Color(red, green, blue);
     }
 
-    protected static Color calculateReflection(Intersection intersection) {
-        // cos(theta) = dot(-normal, ray.direction)
-        // cos(theta) must be positive, otherwise invert normal
-        double cosTheta = intersection.surfaceNormal.inverse().dot(intersection.ray.direction);
-        if (cosTheta < 0.0) {
-            cosTheta = intersection.surfaceNormal.dot(intersection.ray.direction);
-        }
 
-        // v_reflect = ray.direction + 2 * cos(theta) * normal
-        Vector v_reflect = intersection.ray.direction.plus(intersection.surfaceNormal.scale(2 * cosTheta));
 
-        // cast v_reflect to get color of whatever it hits, reduced by some factor
-        Ray reflectedRay = new Ray(intersection.intersectionPoint, v_reflect);
-        CastRay castRay = new CastRay(reflectedRay);
-        Intersection maybeIntersection = castRay.castRay(reflectedRay);
-        if (maybeIntersection != null) { // use the color of the reflection
-            return maybeIntersection.body.material.getColor(maybeIntersection).darker();
-        }
-        // the reflected ray did not hit anything, show the color of the surrounding environment
-        return Color.BLACK.brighter();
-    }
 
     public abstract Color getColor(Intersection intersection);
 

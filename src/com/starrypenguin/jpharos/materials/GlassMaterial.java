@@ -19,6 +19,7 @@
 package com.starrypenguin.jpharos.materials;
 
 import com.starrypenguin.jpharos.core.Intersection;
+import com.starrypenguin.jpharos.util.Shared;
 
 import java.awt.*;
 
@@ -29,13 +30,49 @@ import java.awt.*;
  */
 public class GlassMaterial extends Material {
 
+    final private double indexOfRefraction;
+
+    public GlassMaterial(double indexOfRefraction) {
+        Shared.notNaN(indexOfRefraction, "Parameter indexOfRefraction cannot be Not A Number!");
+        this.indexOfRefraction = indexOfRefraction;
+    }
+
+    protected static Color calculateRefraction(Intersection intersection) {
+        Shared.notNull(intersection, "Parameter intersection cannot be null!");
+        // make sure the intersected material is refractive
+        if (!(intersection.body.material instanceof GlassMaterial)) {
+            throw new IllegalArgumentException("material is not a refractive material!");
+        }
+
+        // r = n_1 / n_2 where n_1 is the index of refraction for the current medium
+        // and n_2 is the index of refraction for the new medium the light ray is entering
+
+        // c = dot(-normal, ray.direction
+
+        // v_refract = r * ray.direction + (r * c - sqrt( (1 - r^2) * (1 - c^2))) * normal
+        return null;
+    }
+
     @Override
     public Color getColor(Intersection intersection) {
-        return null;
+
+        return calculateRefraction(intersection);
     }
 
     @Override
     protected Color getColorInternal(Intersection intersection) {
         return null;
+    }
+
+    public static final class RefractionIndices {
+        // refraction indices from "Physically Based Rendering, Third Edition", Table 8.1
+        public static final double VACUUM = 1.0;
+        public static final double AIR_SEA_LEVEL = 1.00029;
+        public static final double ICE = 1.31;
+        public static final double WATER = 1.333; // at 20 degrees Celsius
+        public static final double FUSED_QUARTZ = 1.46;
+        public static final double GLASS = 1.55; // table gives 1.5 to 1.6
+        public static final double SAPPHIRE = 1.77;
+        public static final double DIAMOND = 2.42;
     }
 }

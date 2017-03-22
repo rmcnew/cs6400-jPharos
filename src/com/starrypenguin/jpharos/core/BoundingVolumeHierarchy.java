@@ -22,7 +22,9 @@ import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.materials.NullMaterial;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * BoundingVolumeHierarchy
@@ -33,7 +35,14 @@ import java.util.Set;
  */
 public class BoundingVolumeHierarchy {
 
-    private Body head;
+    /**
+     * BvhNodes are the non-leaf nodes in the BVH
+     * Leaf nodes are the actual Shape objects in the Scene; we
+     * extend Body to allow BvhNodes to be nested, but BvhNodes
+     * are not Body objects since they have no corresponding Material
+     */
+    static AtomicInteger nextID = new AtomicInteger(1);
+    public Body head;
 
     public BoundingVolumeHierarchy(Set<Body> bodies) {
         Set<Body> unpairedBodies = new HashSet<>();
@@ -65,9 +74,30 @@ public class BoundingVolumeHierarchy {
                 unpairedBodies.remove(right);
                 // add back the parent
                 unpairedBodies.add(node);
+                head = node;
             }
         }
-        head = unpairedBodies.iterator().next();
+    }
+
+    public void print() {
+        LinkedList<Body> queue = new LinkedList<>();
+        queue.push(head);
+        Body current;
+        do {
+            current = queue.pop();
+            if (current instanceof BvhNode) {
+                BvhNode node = (BvhNode) current;
+                if (node.left != null) {
+                    queue.push(node.left);
+                }
+                if (node.right != null) {
+                    queue.push(node.right);
+                }
+            }
+            System.out.println(current);
+
+        } while (!queue.isEmpty());
+
     }
 
     /**
@@ -90,6 +120,7 @@ public class BoundingVolumeHierarchy {
 
     public Intersection castRay(Ray ray) {
         Body currentBody = head;
+        System.out.println("Thread " + Thread.currentThread().getId() + " starting with head " + head);
         while (currentBody instanceof BvhNode) {
             BvhNode currentNode = (BvhNode) currentBody;
             if (currentNode.left.IntersectsP(ray)) {
@@ -104,15 +135,12 @@ public class BoundingVolumeHierarchy {
         return currentBody.Intersects(ray);
     }
 
-    /**
-     * BvhNodes are the non-leaf nodes in the BVH
-     * Leaf nodes are the actual Shape objects in the Scene; we
-     * extend Body to allow BvhNodes to be nested, but BvhNodes
-     * are not Body objects since they have no corresponding Material
-     */
     class BvhNode extends Body {
+
+
         final private Body left;
         final private Body right;
+        final private int id;
         // the BvhNode's BoundingBox is in the "shape" member variable
 
         BvhNode(Body left, Body right) {
@@ -121,7 +149,7 @@ public class BoundingVolumeHierarchy {
             super(left.getBoundingBox().union(right.getBoundingBox()), NullMaterial.instance());
             this.left = left;
             this.right = right;
-
+            this.id = nextID.getAndIncrement();
         }
 
         @Override
@@ -142,6 +170,15 @@ public class BoundingVolumeHierarchy {
         @Override
         public double surfaceArea() {
             return shape.surfaceArea();
+        }
+
+        @Override
+        public String toString() {
+            return "BvhNode{" +
+                    "\n\tid=" + id +
+                    "\n\tleft=" + left +
+                    "\n\tright=" + right +
+                    "} ";
         }
     } // ============ End BvhNode ==================
 
