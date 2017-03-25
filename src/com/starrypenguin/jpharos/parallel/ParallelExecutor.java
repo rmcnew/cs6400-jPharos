@@ -19,6 +19,7 @@
 package com.starrypenguin.jpharos.parallel;
 
 import com.starrypenguin.jpharos.cameras.Film;
+import com.starrypenguin.jpharos.core.Intersection;
 import com.starrypenguin.jpharos.main.jPharos;
 
 import java.util.concurrent.*;
@@ -34,11 +35,16 @@ public class ParallelExecutor {
 
     final private static long WAIT_TIME = 2500; // milliseconds
     final public AtomicLong taskCount = new AtomicLong(0L);
-    final private ConcurrentLinkedQueue<Future<Film.DevelopedPixel>> outputQueue = new ConcurrentLinkedQueue<>();
+    final private ConcurrentLinkedQueue<Future<Film.DevelopedPixel>> pixelOutputQueue = new ConcurrentLinkedQueue<>();
+    final private ConcurrentLinkedQueue<Future<Intersection>> intersectionOutputQueue = new ConcurrentLinkedQueue<>();
     final private ExecutorService executor = Executors.newWorkStealingPool();
 
     public void submit(Callable<Film.DevelopedPixel> task) {
-        outputQueue.add(executor.submit(task));
+        pixelOutputQueue.add(executor.submit(task));
+    }
+
+    public void castRay(Callable<Intersection> task) {
+        intersectionOutputQueue.add(executor.submit(task));
     }
 
     public void finishExecuting() {
@@ -56,23 +62,27 @@ public class ParallelExecutor {
         executor.execute(command);
     }
 
-    public Future<Film.DevelopedPixel> poll() throws InterruptedException {
-        return outputQueue.poll();
+    public Future<Film.DevelopedPixel> pollPixels() throws InterruptedException {
+        return pixelOutputQueue.poll();
+    }
+
+    public Future<Intersection> pollIntersections() throws InterruptedException {
+        return intersectionOutputQueue.poll();
     }
 
     public boolean isEmpty() {
-        return outputQueue.isEmpty();
+        return pixelOutputQueue.isEmpty();
     }
 
     public int size() {
-        return outputQueue.size();
+        return pixelOutputQueue.size();
     }
 
     public Stream<Future<Film.DevelopedPixel>> stream() {
-        return outputQueue.stream();
+        return pixelOutputQueue.stream();
     }
 
     public Stream<Future<Film.DevelopedPixel>> parallelStream() {
-        return outputQueue.parallelStream();
+        return pixelOutputQueue.parallelStream();
     }
 }

@@ -18,56 +18,35 @@
 
 package com.starrypenguin.jpharos.core;
 
-import com.starrypenguin.jpharos.cameras.Film;
 import com.starrypenguin.jpharos.main.jPharos;
 import com.starrypenguin.jpharos.util.Shared;
 
-import java.awt.*;
 import java.util.concurrent.Callable;
 
-
 /**
- * CastRay
+ * CastRayForIntersection
  * <p/>
- * Cast a ray, determine what happens and return a color
+ * Cast a ray, determine if it intersects, and if so, intersection details
  */
-public class CastRay implements Callable<Film.DevelopedPixel> {
+public class CastRayForIntersection implements Callable<Intersection> {
 
     private Ray ray;
 
-    public CastRay(Ray ray) {
+    public CastRayForIntersection(Ray ray) {
         Shared.notNull(ray, "Parameter ray cannot be null!");
         this.ray = ray;
         jPharos.instance.executor.taskCount.incrementAndGet();
     }
 
-    @Override
-    public Film.DevelopedPixel call() throws Exception {
-        Film.DevelopedPixel retVal;
-        // see what the ray hits
-        System.out.println("Thread " + Thread.currentThread().getId() + " running CastRay.call() for Ray " + ray);
-        Intersection maybeIntersection = this.castRay(this.ray);
-        if (maybeIntersection != null) {
-            retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, maybeIntersection.body.material.getColor(maybeIntersection));
-        } else {
-            // ray did not intersect, use background color
-            retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, Color.BLACK);
-        }
-        System.out.println("Thread " + Thread.currentThread().getId() + "ran CastRay.call() and generated DevelopedPixel=" + retVal);
-        jPharos.instance.executor.taskCount.decrementAndGet();
-        return retVal;
-    }
-
-    public Intersection castRay(Ray ray) {
+    public Intersection call() {
         jPharos.instance.raysCast.incrementAndGet();
-        System.out.println("Thread " + Thread.currentThread().getId() + " running CastRay.castRay() for Ray " + ray);
+        //System.out.println("Thread " + Thread.currentThread().getId() + " running CastRay.castRay() for Ray " + ray);
         Intersection maybeIntersection = jPharos.instance.scene.boundingVolumeHierarchy.castRay(ray);
         if (maybeIntersection != null) {
             jPharos.instance.raysHit.incrementAndGet();
         }
-        System.out.println("CastRay:  returned Intersection is: " + maybeIntersection);
+        //System.out.println("CastRay:  returned Intersection is: " + maybeIntersection);
         return maybeIntersection;
     }
-
 
 }

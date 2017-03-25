@@ -295,13 +295,14 @@ final public class jPharos {
         // Put it all in the scene
         scene = new Scene(camera, lights, bodies);
         System.out.println("Scene created");
+        //scene.boundingVolumeHierarchy.print();
     }
 
     public void render(String outFilename) {
         java.util.List<Ray> rays = instance.camera.generateRays();
         for (Ray ray : rays) {
             if (ray != null) {
-                instance.executor.submit(new CastRay(ray));
+                instance.executor.submit(new CastRayForDevelopedPixel(ray));
             }
         }
         System.out.println("All initial rays submitted!");
@@ -310,7 +311,7 @@ final public class jPharos {
             Thread.sleep(WAIT_TIME);
 
             while (!instance.executor.isEmpty()) {
-                Future<Film.DevelopedPixel> futureDevelopedPixel = instance.executor.poll();
+                Future<Film.DevelopedPixel> futureDevelopedPixel = instance.executor.pollPixels();
                 if (futureDevelopedPixel != null) {
                     instance.executor.execute(new DevelopPixel(futureDevelopedPixel));
                 } else {

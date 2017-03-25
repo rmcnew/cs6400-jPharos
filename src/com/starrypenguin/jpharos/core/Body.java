@@ -78,7 +78,15 @@ public class Body {
     public String toString() {
         return "Body{" +
                 "shape=" + shape +
-                ", material=" + material +
                 '}';
+    }
+
+    public String print(int level) {
+        StringBuilder stringBuilder = new StringBuilder("\n");
+        for (int i = 0; i < level; i++) {
+            stringBuilder.append("\t");
+        }
+        stringBuilder.append(this.toString());
+        return stringBuilder.toString();
     }
 }

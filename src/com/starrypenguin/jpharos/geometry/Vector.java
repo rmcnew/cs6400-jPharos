@@ -64,6 +64,14 @@ final public class Vector {
         return new Vector(this.x - vector.x, this.y - vector.y, this.z - vector.z);
     }
 
+    public Vector minus(Normal normal) {
+        if (normal == null) {
+            throw new IllegalArgumentException("normal cannot be null!");
+        }
+        return new Vector(this.x - normal.x, this.y - normal.y, this.z - normal.z);
+    }
+
+
     public double magnitude() {
         return Math.sqrt( (this.x * this.x) + (this.y * this.y) + (this.z * this.z)  );
     }

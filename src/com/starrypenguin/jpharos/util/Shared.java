@@ -30,27 +30,18 @@ import java.util.List;
  */
 final public class Shared {
 
-    // constants
-    final public class GraphicsFileFormat {
-        public static final String ASCII_BW_PBM_MAGIC_NUMBER = "P1";
-        public static final String ASCII_GRAYSCALE_PGM_MAGIC_NUMBER = "P2";
-        public static final String ASCII_COLOR_PPM_MAGIC_NUMBER = "P3";
-        // Reference:  https://en.wikipedia.org/wiki/Netpbm_format
-    }
-    // methods
-
     public static void notNullAndNotEmpty(String str, String errorMessage) {
         if (str == null || str.isEmpty()) {
             throw new IllegalArgumentException(errorMessage);
         }
     }
+    // methods
 
     public static void notNullExistsAndReadable(File file, String errorMessage) {
         if (file == null || !file.exists() || !file.canRead()) {
             throw new IllegalArgumentException(errorMessage);
         }
     }
-
 
     public static void notNull(Object obj, String errorMessage) {
         if (obj == null) {
@@ -135,7 +126,7 @@ final public class Shared {
         notNaN(b, "Parameter b cannot be Not a Number!");
         notNaN(c, "Parameter c cannot be Not a Number!");
 
-        List<Double> results = new ArrayList<>();
+        List<Double> results = new ArrayList<>(2);
         // if a is zero and b is not zero, then just solve for bx + c = 0  ==>  x = -c / b
         if ((Double.compare(a, 0.0) == 0) && (Double.compare(b, 0.0) != 0)) {
             results.add(-c / b);
@@ -170,6 +161,20 @@ final public class Shared {
                 results.add(Math.max(root1, root2));
             }
         }
-        return results;
+        List<Double> retVal = new ArrayList<>(2);
+        for (Double result : results) {
+            if (!result.isNaN()) {
+                retVal.add(result);
+            }
+        }
+        return retVal;
+    }
+
+    // constants
+    final public class GraphicsFileFormat {
+        public static final String ASCII_BW_PBM_MAGIC_NUMBER = "P1";
+        public static final String ASCII_GRAYSCALE_PGM_MAGIC_NUMBER = "P2";
+        public static final String ASCII_COLOR_PPM_MAGIC_NUMBER = "P3";
+        // Reference:  https://en.wikipedia.org/wiki/Netpbm_format
     }
 }

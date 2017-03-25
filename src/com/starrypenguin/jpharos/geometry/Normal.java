@@ -56,6 +56,14 @@ final public class Normal {
         return new Normal(this.x + normal.x, this.y + normal.y, this.z + normal.z);
     }
 
+    public Vector plus(Vector vector) {
+        if (vector == null) {
+            throw new IllegalArgumentException("vector cannot be null!");
+        }
+        return new Vector(this.x + vector.x, this.y + vector.y, this.z + vector.z);
+    }
+
+
     public Normal minus(Normal normal) {
         if (normal == null) {
             throw new IllegalArgumentException("normal cannot be null!");

@@ -18,7 +18,7 @@
 
 package com.starrypenguin.jpharos.materials;
 
-import com.starrypenguin.jpharos.core.CastRay;
+import com.starrypenguin.jpharos.core.CastRayForIntersection;
 import com.starrypenguin.jpharos.core.Intersection;
 import com.starrypenguin.jpharos.core.Ray;
 import com.starrypenguin.jpharos.geometry.Vector;
@@ -26,6 +26,8 @@ import com.starrypenguin.jpharos.lights.Light;
 import com.starrypenguin.jpharos.main.jPharos;
 
 import java.awt.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Material
@@ -46,8 +48,16 @@ public abstract class Material {
         for (Light light : jPharos.instance.scene.lights) {
             Vector directionToLight = new Vector(intersection.intersectionPoint, light.location);
             Ray towardLight = new Ray(intersection.intersectionPoint, directionToLight);
-            CastRay castRay = new CastRay(towardLight);
-            Intersection maybeIntersection = castRay.castRay(towardLight);
+            CastRayForIntersection castRayForIntersection = new CastRayForIntersection(towardLight);
+            jPharos.instance.executor.castRay(castRayForIntersection);
+
+            Intersection maybeIntersection = null;
+            try {
+                Future<Intersection> futureIntersection = jPharos.instance.executor.pollIntersections();
+                maybeIntersection = futureIntersection.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
             if (maybeIntersection != null && maybeIntersection.body != intersection.body) {  // we hit something, a shadow is here
                 return Color.BLACK.brighter();
             }

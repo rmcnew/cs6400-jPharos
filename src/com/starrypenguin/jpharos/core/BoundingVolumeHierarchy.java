@@ -22,7 +22,6 @@ import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.materials.NullMaterial;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -80,24 +79,7 @@ public class BoundingVolumeHierarchy {
     }
 
     public void print() {
-        LinkedList<Body> queue = new LinkedList<>();
-        queue.push(head);
-        Body current;
-        do {
-            current = queue.pop();
-            if (current instanceof BvhNode) {
-                BvhNode node = (BvhNode) current;
-                if (node.left != null) {
-                    queue.push(node.left);
-                }
-                if (node.right != null) {
-                    queue.push(node.right);
-                }
-            }
-            System.out.println(current);
-
-        } while (!queue.isEmpty());
-
+        System.out.println("BVH is:\n" + head.print(0));
     }
 
     /**
@@ -120,19 +102,32 @@ public class BoundingVolumeHierarchy {
 
     public Intersection castRay(Ray ray) {
         Body currentBody = head;
-        System.out.println("Thread " + Thread.currentThread().getId() + " starting with head " + head);
-        while (currentBody instanceof BvhNode) {
+        // System.out.println("Thread " + Thread.currentThread().getId() + " starting with head " + head);
+        //if (currentBody instanceof BvhNode) {
+        //    System.out.println("Thread " + Thread.currentThread().getId() + " currentBody is a BvhNode");
+        //} else {
+        //    System.out.println("Thread " + Thread.currentThread().getId() + " currentBody is NOT a BvhNode.  currentBody is " + currentBody);
+        //}
+        while (currentBody instanceof BvhNode && currentBody.IntersectsP(ray)) {
+            //System.out.println("Thread " + Thread.currentThread().getId() + " casting currentBody to BvhNode . . .");
             BvhNode currentNode = (BvhNode) currentBody;
+            //System.out.println("Thread " + Thread.currentThread().getId() + " casted currentBody to a BvhNode");
             if (currentNode.left.IntersectsP(ray)) {
-                System.out.println("Thread " + Thread.currentThread().getId() + " BVH traversal going left");
+                //System.out.println("Thread " + Thread.currentThread().getId() + " BVH traversal going left");
                 currentBody = currentNode.left;
             } else if (currentNode.right.IntersectsP(ray)) {
+                //System.out.println("Thread " + Thread.currentThread().getId() + " BVH traversal going right");
                 currentBody = currentNode.right;
-                System.out.println("Thread " + Thread.currentThread().getId() + " BVH traversal going right");
+            } else {
+                break;
             }
         }
-        System.out.println("Thread " + Thread.currentThread().getId() + " BVH traversal intersecting");
+        //System.out.println("Thread " + Thread.currentThread().getId() + " BVH traversal intersecting");
+        if (currentBody instanceof BvhNode) {
+            return null;
+        }
         return currentBody.Intersects(ray);
+
     }
 
     class BvhNode extends Body {
@@ -172,14 +167,16 @@ public class BoundingVolumeHierarchy {
             return shape.surfaceArea();
         }
 
-        @Override
-        public String toString() {
-            return "BvhNode{" +
-                    "\n\tid=" + id +
-                    "\n\tleft=" + left +
-                    "\n\tright=" + right +
-                    "} ";
+
+        public String print(int level) {
+            StringBuilder stringBuilder = new StringBuilder("\n");
+            for (int i = 0; i < level; i++) {
+                stringBuilder.append("\t");
+            }
+            stringBuilder.append("BvhNode { id=" + id + ", left=" + left.print(level + 1) + ", right=" + right.print(level + 1) + " }");
+            return stringBuilder.toString();
         }
+
     } // ============ End BvhNode ==================
 
 
