@@ -32,12 +32,18 @@ public class Body {
     // value class; immutable and cannot be changed after being created
     public final Shape shape;
     public final Material material;
+    public final String name; // optional name
 
-    public Body(Shape shape,  Material material) {
+    public Body(Shape shape, Material material, String name) {
         Shared.notNull(shape, "shape cannot be null!");
         Shared.notNull(material, "material cannot be null!");
         this.shape = shape;
         this.material = material;
+        this.name = name;
+    }
+
+    public Body(Shape shape, Material material) {
+        this(shape, material, null);
     }
 
     public boolean IntersectsP(Ray ray) {

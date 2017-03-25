@@ -34,34 +34,30 @@ import java.util.concurrent.Future;
  * Mirror-like reflective material
  */
 public class MirrorMaterial extends Material {
-    /*
-        protected static Color calculateReflection(Intersection intersection) {
-            // cos(theta) = dot(-normal, ray.direction)
-            // cos(theta) must be positive, otherwise invert normal
-            double cosTheta = intersection.surfaceNormal.inverse().dot(intersection.ray.direction);
-            if (cosTheta < 0.0) {
-                cosTheta = intersection.surfaceNormal.dot(intersection.ray.direction);
-            }
 
-            // v_reflect = ray.direction + 2 * cos(theta) * normal
-            Vector v_reflect = intersection.ray.direction.plus(intersection.surfaceNormal.scale(2 * cosTheta));
-
-            // cast v_reflect to get color of whatever it hits, reduced by some factor
-            Ray reflectedRay = new Ray(intersection.intersectionPoint, v_reflect);
-            CastRay castRay = new CastRay(reflectedRay);
-            Intersection maybeIntersection = castRay.castRay(reflectedRay);
-            if (maybeIntersection != null) { // use the color of the reflection
-                return maybeIntersection.body.material.getColor(maybeIntersection).darker();
-            }
-            // the reflected ray did not hit anything, show the color of the surrounding environment
-            return Color.BLACK.brighter();
+    protected static Vector calculateReflectedVector1(Intersection intersection) {
+        // cos(theta) = dot(-normal, ray.direction)
+        // cos(theta) must be positive, otherwise invert normal
+        double cosTheta = intersection.surfaceNormal.inverse().dot(intersection.ray.direction);
+        if (cosTheta < 0.0) {
+            cosTheta = intersection.surfaceNormal.dot(intersection.ray.direction);
         }
-    */
-    protected static Color calculateReflection(Intersection intersection) {
-        Vector tempVector = intersection.ray.direction.inverse().minus(intersection.surfaceNormal);
-        Vector v_reflect = intersection.surfaceNormal.plus(tempVector);
 
+        // v_reflect = ray.direction + 2 * cos(theta) * normal
+        Vector v_reflect = intersection.ray.direction.plus(intersection.surfaceNormal.scale(2 * cosTheta));
+        return v_reflect;
+    }
+
+    protected static Vector calculateReflectedVector2(Intersection intersection) {
+        Vector tempVector = intersection.ray.direction.inverse().minus(intersection.surfaceNormal);
+        Vector v_reflect = intersection.surfaceNormal.plus(tempVector).normalized();
+        return v_reflect;
+    }
+
+    protected static Color calculateReflection(Intersection intersection) {
+        Vector v_reflect = calculateReflectedVector1(intersection);
         // cast v_reflect to get color of whatever it hits, reduced by some factor
+        //System.out.println("Intersection point is: " + intersection.intersectionPoint + ", v_reflect is: " + v_reflect);
         Ray reflectedRay = new Ray(intersection.intersectionPoint, v_reflect);
         CastRayForIntersection castRayForIntersection = new CastRayForIntersection(reflectedRay);
         jPharos.instance.executor.castRay(castRayForIntersection);
@@ -73,6 +69,7 @@ public class MirrorMaterial extends Material {
             e.printStackTrace();
         }
         if (maybeIntersection != null) { // use the color of the reflection
+            System.out.println("Reflected ray hit " + maybeIntersection.body.name);
             return maybeIntersection.body.material.getColor(maybeIntersection).darker();
         }
         // the reflected ray did not hit anything, show the color of the surrounding environment
