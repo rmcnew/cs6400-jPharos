@@ -70,7 +70,7 @@ final public class Camera {
         for (int upDownIndex = 0; upDownIndex < film.filmHeightInPixels; upDownIndex++) {
             for (int leftRightIndex = 0; leftRightIndex < film.filmWidthInPixels; leftRightIndex++) {
                 Point pixelLocation = topLeft.plus(right.scale(film.pixelSize * leftRightIndex)).plus(down.scale(film.pixelSize * upDownIndex));
-                Vector rayDirection = new Vector(cameraLocation, pixelLocation);
+                Vector rayDirection = new Vector(cameraLocation, pixelLocation).normalized();
                 Ray currentRay = new Ray(cameraLocation, rayDirection, film.newFilmCoordinate(upDownIndex, leftRightIndex));
                 rays.add(currentRay);
             }

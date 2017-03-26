@@ -32,9 +32,7 @@ final public class Normal {
     public final double z;
 
     public Normal(double x, double y, double z) {
-        if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z)) {
-            throw new IllegalArgumentException("Normal coordinates cannot be Not a Number!");
-        }
+        Shared.notNaN3D(x, y, z, "All parameters x, y, and z cannot be Not A Number!");
         this.x = x;
         this.y = y;
         this.z = z;
@@ -50,25 +48,23 @@ final public class Normal {
     }
 
     public Normal plus(Normal normal) {
-        if (normal == null) {
-            throw new IllegalArgumentException("normal cannot be null!");
-        }
+        Shared.notNull(normal, "Parameter normal cannot be null!");
         return new Normal(this.x + normal.x, this.y + normal.y, this.z + normal.z);
     }
 
     public Vector plus(Vector vector) {
-        if (vector == null) {
-            throw new IllegalArgumentException("vector cannot be null!");
-        }
+        Shared.notNull(vector, "Parameter vector cannot be null!");
         return new Vector(this.x + vector.x, this.y + vector.y, this.z + vector.z);
     }
 
-
     public Normal minus(Normal normal) {
-        if (normal == null) {
-            throw new IllegalArgumentException("normal cannot be null!");
-        }
+        Shared.notNull(normal, "Parameter normal cannot be null!");
         return new Normal(this.x - normal.x, this.y - normal.y, this.z - normal.z);
+    }
+
+    public Vector minus(Vector vector) {
+        Shared.notNull(vector, "Parameter vector cannot be null!");
+        return new Vector(this.x - vector.x, this.y - vector.y, this.z - vector.z);
     }
 
     public double magnitude() {
@@ -76,9 +72,7 @@ final public class Normal {
     }
 
     public Normal scale(double scalar) {
-        if (Double.isNaN(scalar)) {
-            throw new IllegalArgumentException("scalar cannot be Not a Number!");
-        }
+        Shared.notNaN(scalar, "Parameter scalar cannot be Not A Number!");
         return new Normal(this.x * scalar, this.y * scalar, this.z * scalar);
     }
 
@@ -88,9 +82,7 @@ final public class Normal {
     }
 
     public double dot(Vector vector) {
-        if (vector == null) {
-            throw new IllegalArgumentException("vector cannot be null!");
-        }
+        Shared.notNull(vector, "Parameter vector cannot be null!");
         return (this.x * vector.x) + (this.y * vector.y) + (this.z * vector.z);
     }
 
@@ -99,9 +91,7 @@ final public class Normal {
     }
 
     public Vector cross(Vector vector) {
-        if (vector == null) {
-            throw new IllegalArgumentException("vector cannot be null!");
-        }
+        Shared.notNull(vector, "Parameter vector cannot be null!");
         return new Vector( (this.y * vector.z - this.z * vector.y),
                 (this.z * vector.x - this.x * vector.z),
                 (this.x * vector.y - this.y * vector.x) );
@@ -109,6 +99,10 @@ final public class Normal {
 
     public Normal inverse() {
         return new Normal(-this.x, -this.y, -this.z);
+    }
+
+    public Vector toVector() {
+        return new Vector(this.x, this.y, this.z);
     }
 
     @Override

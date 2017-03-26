@@ -39,7 +39,6 @@ public class CastRayForDevelopedPixel implements Callable<Film.DevelopedPixel> {
     public CastRayForDevelopedPixel(Ray ray) {
         Shared.notNull(ray, "Parameter ray cannot be null!");
         this.ray = ray;
-        jPharos.instance.executor.taskCount.incrementAndGet();
     }
 
     @Override
@@ -52,13 +51,13 @@ public class CastRayForDevelopedPixel implements Callable<Film.DevelopedPixel> {
         Future<Intersection> futureIntersection = jPharos.instance.executor.pollIntersections();
         Intersection maybeIntersection = futureIntersection.get();
         if (maybeIntersection != null) {
+            jPharos.instance.raysHit.incrementAndGet();
             retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, maybeIntersection.body.material.getColor(maybeIntersection));
         } else {
             // ray did not intersect, use background color
             retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, Color.BLACK);
         }
         //System.out.println("Thread " + Thread.currentThread().getId() + "ran CastRay.call() and generated DevelopedPixel=" + retVal);
-        jPharos.instance.executor.taskCount.decrementAndGet();
         return retVal;
     }
 

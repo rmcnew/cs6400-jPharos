@@ -26,6 +26,9 @@ import com.starrypenguin.jpharos.util.Shared;
  * Points are value classes that represent a location in 3D space
  */
 final public class Point {
+
+    final public static Point ORIGIN = new Point(0, 0, 0);
+
     // value class; immutable and cannot be changed after being created
     final public double x;
     final public double y;

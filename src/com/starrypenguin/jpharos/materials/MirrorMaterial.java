@@ -21,12 +21,10 @@ package com.starrypenguin.jpharos.materials;
 import com.starrypenguin.jpharos.core.CastRayForIntersection;
 import com.starrypenguin.jpharos.core.Intersection;
 import com.starrypenguin.jpharos.core.Ray;
+import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.geometry.Vector;
-import com.starrypenguin.jpharos.main.jPharos;
 
 import java.awt.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * MirrorMaterial
@@ -35,45 +33,35 @@ import java.util.concurrent.Future;
  */
 public class MirrorMaterial extends Material {
 
-    protected static Vector calculateReflectedVector1(Intersection intersection) {
-        // cos(theta) = dot(-normal, ray.direction)
-        // cos(theta) must be positive, otherwise invert normal
-        double cosTheta = intersection.surfaceNormal.inverse().dot(intersection.ray.direction);
-        if (cosTheta < 0.0) {
-            cosTheta = intersection.surfaceNormal.dot(intersection.ray.direction);
-        }
+    private final static double RAY_ADJUST_TIME = 1.0;
 
-        // v_reflect = ray.direction + 2 * cos(theta) * normal
-        Vector v_reflect = intersection.ray.direction.plus(intersection.surfaceNormal.scale(2 * cosTheta));
-        return v_reflect;
-    }
-
-    protected static Vector calculateReflectedVector2(Intersection intersection) {
-        Vector tempVector = intersection.ray.direction.inverse().minus(intersection.surfaceNormal);
-        Vector v_reflect = intersection.surfaceNormal.plus(tempVector).normalized();
+    protected static Vector calculateReflectedVector(Intersection intersection) {
+        Vector v_reflect = intersection.surfaceNormal.scale(2.0).minus(intersection.ray.direction);
         return v_reflect;
     }
 
     protected static Color calculateReflection(Intersection intersection) {
-        Vector v_reflect = calculateReflectedVector1(intersection);
+        Vector v_reflect = calculateReflectedVector(intersection);
         // cast v_reflect to get color of whatever it hits, reduced by some factor
         //System.out.println("Intersection point is: " + intersection.intersectionPoint + ", v_reflect is: " + v_reflect);
-        Ray reflectedRay = new Ray(intersection.intersectionPoint, v_reflect);
+        Ray reflectedRay = adjustRayOrigin(intersection.intersectionPoint, v_reflect);
+        //System.out.println("Angle between inverted incidence and normal: " + intersection.ray.direction.inverse().angleBetween(intersection.surfaceNormal.toVector()) + ", angle between normal and reflection: " + reflectedRay.direction.angleBetween(intersection.surfaceNormal.toVector()));
+        //System.out.println("Incident ray: " + intersection.ray + ", intersection Point: " + intersection.intersectionPoint + ", Intersection Point distance from origin: " + Point.distance(intersection.intersectionPoint, Point.ORIGIN)  + ", Reflected ray: " + reflectedRay);
         CastRayForIntersection castRayForIntersection = new CastRayForIntersection(reflectedRay);
-        jPharos.instance.executor.castRay(castRayForIntersection);
-        Intersection maybeIntersection = null;
-        try {
-            Future<Intersection> futureIntersection = jPharos.instance.executor.pollIntersections();
-            maybeIntersection = futureIntersection.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+        Intersection maybeIntersection = castRayForIntersection.call();
+
         if (maybeIntersection != null) { // use the color of the reflection
-            System.out.println("Reflected ray hit " + maybeIntersection.body.name);
+            //System.out.println("Reflected ray: " + maybeIntersection.ray + " hit " + maybeIntersection.body.name + " at intersection point: " + maybeIntersection.intersectionPoint + " and intersection time: " + maybeIntersection.intersectionTime);
             return maybeIntersection.body.material.getColor(maybeIntersection).darker();
         }
         // the reflected ray did not hit anything, show the color of the surrounding environment
         return Color.BLACK.brighter();
+    }
+
+    private static Ray adjustRayOrigin(com.starrypenguin.jpharos.geometry.Point intersectionPoint, Vector direction) {
+        Ray tempRay = new Ray(intersectionPoint, direction.normalized());
+        Point adjustedIntersectionPoint = tempRay.atTime(RAY_ADJUST_TIME);
+        return new Ray(adjustedIntersectionPoint, direction);
     }
 
     @Override

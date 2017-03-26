@@ -95,5 +95,20 @@ public class VectorTest {
         Vector v2 = v1.inverse();
         assertTrue(v2.equals(new Vector(-4, -7, -10)));
     }
-    
+
+    @Test
+    public void normalizedTest() {
+        Vector v1 = new Vector(2, 2, 2);
+        Vector v2 = v1.normalized();
+        Vector v3 = new Vector(0.5, 0, 0);
+        Vector v4 = v2.normalized();
+        double v1Length = v1.magnitude();
+        double v2Length = v2.magnitude();
+        double v3Length = v3.magnitude();
+        double v4Length = v4.magnitude();
+        System.out.println("v1 is " + v1 + ", v1 magnitude is " + v1Length);
+        System.out.println("v2 is " + v2 + ", v2 magnitude is " + v2Length);
+        System.out.println("v3 is " + v3 + ", v3 magnitude is " + v3Length);
+        System.out.println("v4 is " + v4 + ", v4 magnitude is " + v4Length);
+    }
 }

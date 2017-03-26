@@ -18,6 +18,8 @@
 
 package com.starrypenguin.jpharos.geometry;
 
+import com.starrypenguin.jpharos.util.Shared;
+
 /**
  * Vector
  * <p/>
@@ -30,9 +32,7 @@ final public class Vector {
     final public double z;
 
     public Vector(double x, double y, double z) {
-        if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z)) {
-            throw new IllegalArgumentException("Vector coordinates cannot be Not a Number!");
-        }
+        Shared.notNaN3D(x, y, z, "Point coordinates must be valid numbers");
         this.x = x;
         this.y = y;
         this.z = z;
@@ -43,43 +43,32 @@ final public class Vector {
     }
 
     public Vector plus(Vector vector) {
-        if (vector == null) {
-            throw new IllegalArgumentException("vector cannot be null!");
-        }
+        Shared.notNull(vector, "Parameter vector cannot be null!");
         return new Vector(this.x + vector.x, this.y + vector.y, this.z + vector.z);
     }
 
     public Vector plus(Normal normal) {
-        if (normal == null) {
-            throw new IllegalArgumentException("normal cannot be null!");
-        }
+        Shared.notNull(normal, "Parameter normal cannot be null!");
         return new Vector(this.x + normal.x, this.y + normal.y, this.z + normal.z);
     }
 
 
     public Vector minus(Vector vector) {
-        if (vector == null) {
-            throw new IllegalArgumentException("vector cannot be null!");
-        }
+        Shared.notNull(vector, "Parameter vector cannot be null!");
         return new Vector(this.x - vector.x, this.y - vector.y, this.z - vector.z);
     }
 
     public Vector minus(Normal normal) {
-        if (normal == null) {
-            throw new IllegalArgumentException("normal cannot be null!");
-        }
+        Shared.notNull(normal, "Parameter normal cannot be null!");
         return new Vector(this.x - normal.x, this.y - normal.y, this.z - normal.z);
     }
-
 
     public double magnitude() {
         return Math.sqrt( (this.x * this.x) + (this.y * this.y) + (this.z * this.z)  );
     }
 
     public Vector scale(double scalar) {
-        if (Double.isNaN(scalar)) {
-            throw new IllegalArgumentException("scalar cannot be Not a Number!");
-        }
+        Shared.notNaN(scalar, "Parameter scalar cannot be Not A Number!");
         return new Vector(this.x * scalar, this.y * scalar, this.z * scalar);
     }
 
@@ -89,17 +78,17 @@ final public class Vector {
     }
 
     public double dot(Vector vector) {
-        if (vector == null) {
-            throw new IllegalArgumentException("vector cannot be null!");
-        }
+        Shared.notNull(vector, "Parameter vector cannot be null!");
         return (this.x * vector.x) + (this.y * vector.y) + (this.z * vector.z);
     }
 
     public double dot(Normal normal) {
-        if (normal == null) {
-            throw new IllegalArgumentException("normal cannot be null!");
-        }
+        Shared.notNull(normal, "Parameter normal cannot be null!");
         return (this.x * normal.x) + (this.y * normal.y) + (this.z * normal.z);
+    }
+
+    public double angleBetween(Vector vector) {
+        return Math.acos(this.dot(vector) / (this.magnitude() * vector.magnitude()));
     }
 
     public boolean isOrthogonalTo(Vector vector) {
@@ -107,9 +96,7 @@ final public class Vector {
     }
 
     public Vector cross(Vector vector) {
-        if (vector == null) {
-            throw new IllegalArgumentException("vector cannot be null!");
-        }
+        Shared.notNull(vector, "Parameter vector cannot be null!");
         return new Vector( (this.y * vector.z - this.z * vector.y),
                            (this.z * vector.x - this.x * vector.z),
                            (this.x * vector.y - this.y * vector.x) );

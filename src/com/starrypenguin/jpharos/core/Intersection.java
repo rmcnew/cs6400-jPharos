@@ -38,7 +38,7 @@ final public class Intersection implements Comparable<Intersection> {
 
     public Intersection(Ray ray, double intersectionTime, Normal surfaceNormal, Point intersectionPoint, Body body) {
         Shared.notNull(ray, "ray cannot be null!");
-        Shared.notNaN(intersectionTime, "intersectionTime cannot be Not A Number!");
+        Shared.notNaNAndPositive(intersectionTime, "intersectionTime cannot be Not A Number!");
         Shared.notNull(surfaceNormal, "surfaceNormal cannot be null!");
         Shared.notNull(intersectionPoint, "intersectionPoint cannot be null!");
         Shared.notNull(body, "body cannot be null!");

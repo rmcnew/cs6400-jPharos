@@ -35,16 +35,11 @@ public class CastRayForIntersection implements Callable<Intersection> {
     public CastRayForIntersection(Ray ray) {
         Shared.notNull(ray, "Parameter ray cannot be null!");
         this.ray = ray;
-        jPharos.instance.executor.taskCount.incrementAndGet();
     }
 
     public Intersection call() {
-        jPharos.instance.raysCast.incrementAndGet();
         //System.out.println("Thread " + Thread.currentThread().getId() + " running CastRay.castRay() for Ray " + ray);
         Intersection maybeIntersection = jPharos.instance.scene.boundingVolumeHierarchy.castRay(ray);
-        if (maybeIntersection != null) {
-            jPharos.instance.raysHit.incrementAndGet();
-        }
         //System.out.println("CastRay:  returned Intersection is: " + maybeIntersection);
         return maybeIntersection;
     }

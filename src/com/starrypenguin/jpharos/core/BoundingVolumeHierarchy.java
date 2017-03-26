@@ -48,7 +48,7 @@ public class BoundingVolumeHierarchy {
         unpairedBodies.addAll(bodies);
 
         while (unpairedBodies.size() > 1) {
-            System.out.println("Unpaired bodies size: " + unpairedBodies.size());
+            //System.out.println("Unpaired bodies size: " + unpairedBodies.size());
             Body left = null;
             Body right = null;
             double bestSurfaceAreaHeuristic = 0.0;
@@ -68,6 +68,7 @@ public class BoundingVolumeHierarchy {
             if (left != null && right != null) {
                 // combine the best
                 BvhNode node = new BvhNode(left, right);
+                //System.out.println("Combining " + left.name + " with " + right.name + " in BvhNode");
                 // remove the newly combined children
                 unpairedBodies.remove(left);
                 unpairedBodies.remove(right);
@@ -131,20 +132,16 @@ public class BoundingVolumeHierarchy {
     }
 
     class BvhNode extends Body {
-
-
         final private Body left;
         final private Body right;
-        final private int id;
         // the BvhNode's BoundingBox is in the "shape" member variable
 
         BvhNode(Body left, Body right) {
             // we cannot validate non-null parameters since we need to call super first;
             // to overcome this, validate outside the constructor call
-            super(left.getBoundingBox().union(right.getBoundingBox()), NullMaterial.instance());
+            super(left.getBoundingBox().union(right.getBoundingBox()), NullMaterial.instance(), "BvhNode_" + nextID.getAndIncrement());
             this.left = left;
             this.right = right;
-            this.id = nextID.getAndIncrement();
         }
 
         @Override
@@ -173,7 +170,7 @@ public class BoundingVolumeHierarchy {
             for (int i = 0; i < level; i++) {
                 stringBuilder.append("\t");
             }
-            stringBuilder.append("BvhNode { id=" + id + ", left=" + left.print(level + 1) + ", right=" + right.print(level + 1) + " }");
+            stringBuilder.append("BvhNode { left=" + left.print(level + 1) + ", right=" + right.print(level + 1) + " }");
             return stringBuilder.toString();
         }
 

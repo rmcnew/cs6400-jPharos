@@ -26,6 +26,7 @@ import com.starrypenguin.jpharos.geometry.Normal;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.util.Shared;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,8 +83,25 @@ final public class Sphere extends Shape {
          double b = 2 * ( (d_x * o_x) + (d_y * o_y) + (d_z * o_z) );
          double c = (o_x * o_x) + (o_y * o_y) + (o_z * o_z) - (radius * radius);
          //System.out.println("Finding quadratic roots for a=" + a + ", b=" + b + ",c=" + c);
-         return Shared.findQuadraticRoots(a, b, c);
+         List<Double> roots = Shared.findQuadraticRoots(a, b, c);
+         List<Double> results = new ArrayList<>(2);
+         for (Double root : roots) {
+             if (!Double.isNaN(root) && (root >= 0.0)) {
+                 results.add(root);
+             }
+         }
+         return results;
      }
+
+    public List<Point> getIntersectionPoints(Ray ray) {
+        List<Point> intersectionPoints = new ArrayList<>(2);
+        List<Double> intersectionTimes = getIntersectionTimes(ray);
+        for (double intersectionTime : intersectionTimes) {
+            Point intersectionPoint = ray.atTime(intersectionTime);
+            intersectionPoints.add(intersectionPoint);
+        }
+        return intersectionPoints;
+    }
 
     @Override
     public Intersection Intersects(Ray ray, Body body) {
