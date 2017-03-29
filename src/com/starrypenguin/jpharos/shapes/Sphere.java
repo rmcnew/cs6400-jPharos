@@ -107,14 +107,17 @@ final public class Sphere extends Shape {
     public Intersection Intersects(Ray ray, Body body) {
         List<Double> intersectionTimes = getIntersectionTimes(ray);
         Intersection intersection = null;
-        if (intersectionTimes.isEmpty()) {
-            // there are no intersections, return null;
-        } else {
+        if (intersectionTimes.size() > 0) {
             // calculate surface normal for intersection
             double intersectionTime = intersectionTimes.get(0);
-            Point intersectionPoint = ray.atTime(intersectionTime);
-            Normal surfaceNormal = new Normal(location, intersectionPoint);
-            intersection = new Intersection(ray, intersectionTime, surfaceNormal, intersectionPoint, body);
+            if (Double.isNaN(intersectionTime) && intersectionTimes.get(1) != null) {
+                intersectionTime = intersectionTimes.get(1);
+            }
+            if (!Double.isNaN(intersectionTime)) {
+                Point intersectionPoint = ray.atTime(intersectionTime);
+                Normal surfaceNormal = new Normal(location, intersectionPoint);
+                intersection = new Intersection(ray, intersectionTime, surfaceNormal, intersectionPoint, body);
+            }
         }
         return intersection;
     }

@@ -210,31 +210,31 @@ final public class jPharos {
         Point sphereLocation = new Point(0, 0, 0);
         Sphere sphere = new Sphere(sphereLocation, 40);
         //MirrorMaterial mirrorMaterial = new MirrorMaterial();
-        ColorMaterial mirrorMaterial = new ColorMaterial(Color.YELLOW);
+        ColorMaterial mirrorMaterial = new ColorMaterial(Color.BLUE);
         Body sphereBody = new Body(sphere, mirrorMaterial, "Mirrored Sphere");
         bodies.add(sphereBody);
         //System.out.println("Added sphere");
         // Make a plane below the sphere
-        Point point1 = new Point(150, 100, 0);
-        Point point2 = new Point(-150, 100, 0);
-        Point point3 = new Point(-150, -100, 0);
-        Point point4 = new Point(150, -100, 0);
+        Point point1 = new Point(150, 150, -150);
+        Point point2 = new Point(-150, 150, -150);
+        Point point3 = new Point(-150, -150, -150);
+        Point point4 = new Point(150, -150, -150);
         TriangleMeshBuilder belowBuilder = new TriangleMeshBuilder();
-        belowBuilder.addTriangle(point4, point1, point3);
         belowBuilder.addTriangle(point1, point2, point3);
+        belowBuilder.addTriangle(point1, point3, point4);
         TriangleMesh belowTriangleMesh = belowBuilder.build();
         ColorMaterial white = new ColorMaterial(Color.WHITE);
         Body belowPlane = new Body(belowTriangleMesh, white, "White Lower Plane");
         bodies.add(belowPlane);
         //System.out.println("Added below plane");
         // Make a plane above the sphere
-        Point point5 = new Point(150, 100, 150);
-        Point point6 = new Point(-150, 100, 150);
-        Point point7 = new Point(-150, -100, 150);
-        Point point8 = new Point(150, -100, 150);
+        Point point5 = new Point(150, 150, 150);
+        Point point6 = new Point(-150, 150, 150);
+        Point point7 = new Point(-150, -150, 150);
+        Point point8 = new Point(150, -150, 150);
         TriangleMeshBuilder aboveBuilder = new TriangleMeshBuilder();
-        aboveBuilder.addTriangle(point8, point5, point7);
         aboveBuilder.addTriangle(point5, point6, point7);
+        aboveBuilder.addTriangle(point5, point7, point8);
         TriangleMesh aboveTriangleMesh = aboveBuilder.build();
         ColorMaterial green = new ColorMaterial(Color.GREEN);
         Body abovePlane = new Body(aboveTriangleMesh, green, "Green Upper Plane");
@@ -251,7 +251,7 @@ final public class jPharos {
         TriangleMesh behindTriangleMesh = behindBuilder.build();
         ColorMaterial orange = new ColorMaterial(Color.ORANGE);
         Body behindPlane = new Body(behindTriangleMesh, orange, "Orange Back Plane");
-        bodies.add(behindPlane);
+        //bodies.add(behindPlane);
         //System.out.println("Added behind plane");
         // Make a plane to the left of the sphere
         Point pointD = new Point(-150, 100, 0);
@@ -288,7 +288,7 @@ final public class jPharos {
         Point cameraLocation = new Point(0, -60, 0);
         Vector up = new Vector(0, 0, 1);
         Vector lookAt = new Vector(0, 1, 0);
-        Lens lens = new PinholeLens(150);
+        Lens lens = new PinholeLens(70);
         Film film = new Film(1, 300, 300, 1);
         camera = new Camera(film, lens, cameraLocation, lookAt, up);
         //System.out.println("Added camera");

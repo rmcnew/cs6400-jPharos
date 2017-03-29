@@ -47,35 +47,39 @@ public class BoundingVolumeHierarchy {
         Set<Body> unpairedBodies = new HashSet<>();
         unpairedBodies.addAll(bodies);
 
-        while (unpairedBodies.size() > 1) {
-            //System.out.println("Unpaired bodies size: " + unpairedBodies.size());
-            Body left = null;
-            Body right = null;
-            double bestSurfaceAreaHeuristic = 0.0;
-            for (Body bodyA : unpairedBodies) {
-                for (Body bodyB : unpairedBodies) {
-                    if (bodyA == bodyB) {
-                        continue; // we cannot group a body with itself
-                    }
-                    double surfaceAreaHeuristic = calculateSurfaceAreaHeuristic(bodyA, bodyB);
-                    if (surfaceAreaHeuristic > bestSurfaceAreaHeuristic) {
-                        bestSurfaceAreaHeuristic = surfaceAreaHeuristic;
-                        left = bodyA;
-                        right = bodyB;
+        if (unpairedBodies.size() > 1) {
+            while (unpairedBodies.size() > 1) {
+                //System.out.println("Unpaired bodies size: " + unpairedBodies.size());
+                Body left = null;
+                Body right = null;
+                double bestSurfaceAreaHeuristic = 0.0;
+                for (Body bodyA : unpairedBodies) {
+                    for (Body bodyB : unpairedBodies) {
+                        if (bodyA == bodyB) {
+                            continue; // we cannot group a body with itself
+                        }
+                        double surfaceAreaHeuristic = calculateSurfaceAreaHeuristic(bodyA, bodyB);
+                        if (surfaceAreaHeuristic > bestSurfaceAreaHeuristic) {
+                            bestSurfaceAreaHeuristic = surfaceAreaHeuristic;
+                            left = bodyA;
+                            right = bodyB;
+                        }
                     }
                 }
+                if (left != null && right != null) {
+                    // combine the best
+                    BvhNode node = new BvhNode(left, right);
+                    //System.out.println("Combining " + left.name + " with " + right.name + " in BvhNode");
+                    // remove the newly combined children
+                    unpairedBodies.remove(left);
+                    unpairedBodies.remove(right);
+                    // add back the parent
+                    unpairedBodies.add(node);
+                    head = node;
+                }
             }
-            if (left != null && right != null) {
-                // combine the best
-                BvhNode node = new BvhNode(left, right);
-                //System.out.println("Combining " + left.name + " with " + right.name + " in BvhNode");
-                // remove the newly combined children
-                unpairedBodies.remove(left);
-                unpairedBodies.remove(right);
-                // add back the parent
-                unpairedBodies.add(node);
-                head = node;
-            }
+        } else {
+            head = bodies.iterator().next();
         }
     }
 

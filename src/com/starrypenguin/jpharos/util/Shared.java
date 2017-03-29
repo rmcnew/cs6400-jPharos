@@ -56,7 +56,7 @@ final public class Shared {
     }
 
     public static void notNaNAndPositive(double value, String errorMessage) {
-        if (Double.isNaN(value) || value <= 0) {
+        if (Double.isNaN(value) || Double.compare(value, 0.0) < 0) {
             throw new IllegalArgumentException(errorMessage);
         }
     }
@@ -129,7 +129,10 @@ final public class Shared {
         List<Double> results = new ArrayList<>(2);
         // if a is zero and b is not zero, then just solve for bx + c = 0  ==>  x = -c / b
         if ((Double.compare(a, 0.0) == 0) && (Double.compare(b, 0.0) != 0)) {
-            results.add(-c / b);
+            double result = -c / b;
+            if (!Double.isNaN(result)) {
+                results.add(result);
+            }
             // if a is not zero and b is zero, then just solve for ax^2 + c = 0  ==>  x = +/- sqrt(-c / a) iff -c / a  is positive
         } else if ((Double.compare(a, 0.0) != 0) && (Double.compare(b, 0.0) == 0)) {
             double minusCdivA = -c / a;
@@ -138,8 +141,14 @@ final public class Shared {
             } else {
                 double sqrtMinusCdivA = Math.sqrt(minusCdivA);
                 double negSqrtMinusCdivA = -sqrtMinusCdivA;
-                results.add(Math.min(sqrtMinusCdivA, negSqrtMinusCdivA));
-                results.add(Math.max(sqrtMinusCdivA, negSqrtMinusCdivA));
+                double min = Math.min(sqrtMinusCdivA, negSqrtMinusCdivA);
+                double max = Math.max(sqrtMinusCdivA, negSqrtMinusCdivA);
+                if (!Double.isNaN(min)) {
+                    results.add(min);
+                }
+                if (!Double.isNaN(max)) {
+                    results.add(max);
+                }
             }
             // a and b are both not zero; use the full quadratic formula:  x = (-b +/- sqrt(b^2 - 4ac)) / 2a
         } else {
@@ -157,17 +166,17 @@ final public class Shared {
             } else {
                 double root1 = (-b + Math.sqrt(discriminant)) / (2.0 * a);
                 double root2 = (-b - Math.sqrt(discriminant)) / (2.0 * a);
-                results.add(Math.min(root1, root2));
-                results.add(Math.max(root1, root2));
+                double min = Math.min(root1, root2);
+                double max = Math.max(root1, root2);
+                if (!Double.isNaN(min)) {
+                    results.add(min);
+                }
+                if (!Double.isNaN(max)) {
+                    results.add(max);
+                }
             }
         }
-        List<Double> retVal = new ArrayList<>(2);
-        for (Double result : results) {
-            if (!result.isNaN()) {
-                retVal.add(result);
-            }
-        }
-        return retVal;
+        return results;
     }
 
     // constants
