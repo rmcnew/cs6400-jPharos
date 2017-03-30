@@ -49,6 +49,10 @@ public class ParallelExecutor {
         intersectionOutputQueue.add(executor.submit(task));
     }
 
+    public Future<Intersection> castRayForFutureIntersection(Callable<Intersection> task) {
+        return executor.submit(task);
+    }
+
     public void finishExecuting() {
         while ((taskCount.get() > 0L) || (!jPharos.instance.camera.film.readyToDevelop())) {
             try {

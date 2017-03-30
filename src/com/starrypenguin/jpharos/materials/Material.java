@@ -49,11 +49,9 @@ public abstract class Material {
             Vector directionToLight = new Vector(intersection.intersectionPoint, light.location);
             Ray towardLight = new Ray(intersection.intersectionPoint, directionToLight);
             CastRayForIntersection castRayForIntersection = new CastRayForIntersection(towardLight);
-            jPharos.instance.executor.castRay(castRayForIntersection);
-
+            Future<Intersection> futureIntersection = jPharos.instance.executor.castRayForFutureIntersection(castRayForIntersection);
             Intersection maybeIntersection = null;
             try {
-                Future<Intersection> futureIntersection = jPharos.instance.executor.pollIntersections();
                 maybeIntersection = futureIntersection.get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
