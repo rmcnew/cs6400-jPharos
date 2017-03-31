@@ -24,6 +24,7 @@ import com.starrypenguin.jpharos.core.Ray;
 import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.geometry.Normal;
 import com.starrypenguin.jpharos.geometry.Point;
+import com.starrypenguin.jpharos.geometry.Vector;
 import com.starrypenguin.jpharos.util.Shared;
 
 import java.util.ArrayList;
@@ -68,20 +69,17 @@ final public class Sphere extends Shape {
      * If there are no real roots, then no intersection occurs and we return null
      *
      * Reference:  "Physically Based Rendering", Third Edition, Section 3.2 "Spheres"
+     *
+     * Updated to use vector forms for simpler code
+     * Reference: https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
      * @param ray
      * @return
      */
      private List<Double> getIntersectionTimes(Ray ray) {
-         double o_x = ray.origin.x;
-         double o_y = ray.origin.y;
-         double o_z = ray.origin.z;
-         double d_x = ray.direction.x;
-         double d_y = ray.direction.y;
-         double d_z = ray.direction.z;
-
-         double a = (d_x * d_x) + (d_y * d_y) + (d_z * d_z);
-         double b = 2 * ( (d_x * o_x) + (d_y * o_y) + (d_z * o_z) );
-         double c = (o_x * o_x) + (o_y * o_y) + (o_z * o_z) - (radius * radius);
+         double a = ray.direction.dot(ray.direction);
+         Vector temp = new Vector(location, ray.origin);
+         double b = 2 * ray.direction.dot(temp);
+         double c = temp.dot(temp) - (radius * radius);
          //System.out.println("Finding quadratic roots for a=" + a + ", b=" + b + ",c=" + c);
          List<Double> roots = Shared.findQuadraticRoots(a, b, c);
          List<Double> results = new ArrayList<>(2);

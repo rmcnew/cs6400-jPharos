@@ -207,25 +207,25 @@ final public class jPharos {
         // Bodies
         Set<Body> bodies = new HashSet<>();
         // Sphere 1
-        Point sphere1Location = new Point(-55, 0, 0);
-        Sphere sphere1 = new Sphere(sphere1Location, 10);
+        Point sphere1Location = new Point(-25, 0, 0);
+        Sphere sphere1 = new Sphere(sphere1Location, 20);
         //MirrorMaterial mirrorMaterial = new MirrorMaterial();
         ColorMaterial mirrorMaterial = new ColorMaterial(Color.BLUE);
         Body sphere1Body = new Body(sphere1, mirrorMaterial, "Mirrored Sphere");
         bodies.add(sphere1Body);
         // Sphere 2
-        Point sphere2Location = new Point(55, 0, 0);
-        Sphere sphere2 = new Sphere(sphere2Location, 10);
+        Point sphere2Location = new Point(25, 0, 0);
+        Sphere sphere2 = new Sphere(sphere2Location, 20);
         //GlassMaterial glassMaterial = new GlassMaterial();
         ColorMaterial glassMaterial = new ColorMaterial(Color.RED);
-        Body sphere2Body = new Body(sphere1, glassMaterial, "Glass Sphere");
+        Body sphere2Body = new Body(sphere2, glassMaterial, "Glass Sphere");
         bodies.add(sphere2Body);
         //System.out.println("Added sphere");
         // Make a plane below the sphere
-        Point point1 = new Point(150, 150, -150);
-        Point point2 = new Point(-150, 150, -150);
-        Point point3 = new Point(-150, -150, -150);
-        Point point4 = new Point(150, -150, -150);
+        Point point1 = new Point(55, 55, -55);
+        Point point2 = new Point(-55, 55, -55);
+        Point point3 = new Point(-55, -55, -55);
+        Point point4 = new Point(55, -55, -55);
         TriangleMeshBuilder belowBuilder = new TriangleMeshBuilder();
         belowBuilder.addTriangle(point1, point2, point3);
         belowBuilder.addTriangle(point1, point3, point4);
@@ -235,10 +235,10 @@ final public class jPharos {
         bodies.add(belowPlane);
         //System.out.println("Added below plane");
         // Make a plane above the sphere
-        Point point5 = new Point(150, 150, 150);
-        Point point6 = new Point(-150, 150, 150);
-        Point point7 = new Point(-150, -150, 150);
-        Point point8 = new Point(150, -150, 150);
+        Point point5 = new Point(55, 55, 55);
+        Point point6 = new Point(-55, 55, 55);
+        Point point7 = new Point(-55, -55, 55);
+        Point point8 = new Point(55, -55, 55);
         TriangleMeshBuilder aboveBuilder = new TriangleMeshBuilder();
         aboveBuilder.addTriangle(point5, point6, point7);
         aboveBuilder.addTriangle(point5, point7, point8);
@@ -248,10 +248,10 @@ final public class jPharos {
         //bodies.add(abovePlane);
         //System.out.println("Added above plane");
         // Make a plane behind the sphere
-        Point point9 = new Point(150, 150, 150);
-        Point pointA = new Point(-150, 150, 150);
-        Point pointB = new Point(-150, 150, 0);
-        Point pointC = new Point(150, 150, 0);
+        Point point9 = new Point(55, 55, 55);
+        Point pointA = new Point(-55, 55, 55);
+        Point pointB = new Point(-55, 55, -55);
+        Point pointC = new Point(55, 55, -55);
         TriangleMeshBuilder behindBuilder = new TriangleMeshBuilder();
         behindBuilder.addTriangle(point9, pointA, pointB);
         behindBuilder.addTriangle(point9, pointB, pointC);
@@ -261,10 +261,10 @@ final public class jPharos {
         bodies.add(behindPlane);
         //System.out.println("Added behind plane");
         // Make a plane to the left of the sphere
-        Point pointD = new Point(-150, 150, 0);
-        Point pointE = new Point(-150, 150, 150);
-        Point pointF = new Point(-150, -150, 0);
-        Point pointG = new Point(-150, -150, 150);
+        Point pointD = new Point(-55, 55, 55);
+        Point pointE = new Point(-55, 55, -55);
+        Point pointF = new Point(-55, -55, -55);
+        Point pointG = new Point(-55, -55, 55);
         TriangleMeshBuilder leftBuilder = new TriangleMeshBuilder();
         leftBuilder.addTriangle(pointD, pointE, pointF);
         leftBuilder.addTriangle(pointD, pointF, pointG);
@@ -274,10 +274,10 @@ final public class jPharos {
         bodies.add(leftPlane);
         //System.out.println("Added left plane");
         // Make a plane to the right of the sphere
-        Point pointH = new Point(150, 150, 0);
-        Point pointI = new Point(150, 150, 150);
-        Point pointJ = new Point(150, -150, 0);
-        Point pointK = new Point(150, -150, 150);
+        Point pointH = new Point(55, 55, 55);
+        Point pointI = new Point(55, 55, -55);
+        Point pointJ = new Point(55, -55, -55);
+        Point pointK = new Point(55, -55, 55);
         TriangleMeshBuilder rightBuilder = new TriangleMeshBuilder();
         rightBuilder.addTriangle(pointH, pointI, pointJ);
         rightBuilder.addTriangle(pointH, pointJ, pointK);
@@ -288,21 +288,15 @@ final public class jPharos {
         //System.out.println("Added right plane");
         // Lights
         Set<Light> lights = new HashSet<>();
-        Light pointLight1 = new PointLight(new Point(0, 0, 100));
-        Light pointLight2 = new PointLight(new Point(100, 100, 100));
-        Light pointLight3 = new PointLight(new Point(-100, -100, 100));
-        Light pointLight4 = new PointLight(new Point(100, -1000, 100));
+        Light pointLight1 = new PointLight(new Point(0, 0, 120));
         lights.add(pointLight1);
-        //lights.add(pointLight2);
-        //lights.add(pointLight3);
-        //lights.add(pointLight4);
         //System.out.println("Added lights");
         // Camera
-        Point cameraLocation = new Point(0, -50, 0);
+        Point cameraLocation = new Point(0, -70, 0);
         Vector up = new Vector(0, 0, 1);
         Vector lookAt = new Vector(0, 1, 0);
-        Lens lens = new PinholeLens(50);
-        Film film = new Film(1, 300, 300, 1);
+        Lens lens = new PinholeLens(20);
+        Film film = new Film(0.1, 600, 600, 1);
         camera = new Camera(film, lens, cameraLocation, lookAt, up);
         //System.out.println("Added camera");
         // Put it all in the scene

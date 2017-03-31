@@ -117,10 +117,21 @@ public class BoundingVolumeHierarchy {
             //System.out.println("Thread " + Thread.currentThread().getId() + " casting currentBody to BvhNode . . .");
             BvhNode currentNode = (BvhNode) currentBody;
             //System.out.println("Thread " + Thread.currentThread().getId() + " casted currentBody to a BvhNode");
-            if (currentNode.left.IntersectsP(ray)) {
+            boolean leftIntersects = currentNode.left.IntersectsP(ray);
+            boolean rightIntersects = currentNode.right.IntersectsP(ray);
+            if (leftIntersects && rightIntersects) {
+                // determine which intersects first
+                Intersection leftIntersection = currentNode.left.Intersects(ray);
+                Intersection rightIntersection = currentNode.right.Intersects(ray);
+                if (leftIntersection.intersectionTime < rightIntersection.intersectionTime) {
+                    currentBody = currentNode.left;
+                } else {
+                    currentBody = currentNode.right;
+                }
+            } else if (leftIntersects) {
                 //System.out.println("Thread " + Thread.currentThread().getId() + " BVH traversal going left");
                 currentBody = currentNode.left;
-            } else if (currentNode.right.IntersectsP(ray)) {
+            } else if (rightIntersects) {
                 //System.out.println("Thread " + Thread.currentThread().getId() + " BVH traversal going right");
                 currentBody = currentNode.right;
             } else {
@@ -155,7 +166,7 @@ public class BoundingVolumeHierarchy {
 
         @Override
         public Intersection Intersects(Ray ray) {
-            throw new IllegalArgumentException("Call the Intersects method on true Body objects, not BvhNodes!");
+            return shape.getBoundingBox().Intersects(ray, null);
         }
 
         @Override

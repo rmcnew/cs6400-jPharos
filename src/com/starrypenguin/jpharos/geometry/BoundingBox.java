@@ -107,7 +107,7 @@ public class BoundingBox extends Shape {
 
     @Override
     public Intersection Intersects(Ray ray, Body body) {
-        throw new IllegalArgumentException("Call the Intersects method on true Shapes, not BoundingBoxes!");
+        return getTriangleMesh().Intersects(ray, body);
     }
 
     @Override

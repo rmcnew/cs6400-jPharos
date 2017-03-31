@@ -127,53 +127,22 @@ final public class Shared {
         notNaN(c, "Parameter c cannot be Not a Number!");
 
         List<Double> results = new ArrayList<>(2);
-        // if a is zero and b is not zero, then just solve for bx + c = 0  ==>  x = -c / b
-        if ((Double.compare(a, 0.0) == 0) && (Double.compare(b, 0.0) != 0)) {
-            double result = -c / b;
-            if (!Double.isNaN(result)) {
-                results.add(result);
-            }
-            // if a is not zero and b is zero, then just solve for ax^2 + c = 0  ==>  x = +/- sqrt(-c / a) iff -c / a  is positive
-        } else if ((Double.compare(a, 0.0) != 0) && (Double.compare(b, 0.0) == 0)) {
-            double minusCdivA = -c / a;
-            if (Double.compare(minusCdivA, 0.0) < 0) {
-                // -c / a is less than zero, so no real roots; return empty results list
+        double discriminantSquared = Math.pow(b, 2) - (4 * a * c);
+        if (discriminantSquared > 0) {
+            double rootA = (-b + Math.sqrt(discriminantSquared)) / (2 * a);
+            double rootB = (-b - Math.sqrt(discriminantSquared)) / (2 * a);
+            if (!Double.isNaN(rootA) && !Double.isNaN(rootB)) {
+                results.add(Math.min(rootA, rootB));
+                results.add(Math.max(rootA, rootB));
+            } else if (!Double.isNaN(rootA)) {
+                results.add(rootA);
             } else {
-                double sqrtMinusCdivA = Math.sqrt(minusCdivA);
-                double negSqrtMinusCdivA = -sqrtMinusCdivA;
-                double min = Math.min(sqrtMinusCdivA, negSqrtMinusCdivA);
-                double max = Math.max(sqrtMinusCdivA, negSqrtMinusCdivA);
-                if (!Double.isNaN(min)) {
-                    results.add(min);
-                }
-                if (!Double.isNaN(max)) {
-                    results.add(max);
-                }
+                results.add(rootB);
             }
-            // a and b are both not zero; use the full quadratic formula:  x = (-b +/- sqrt(b^2 - 4ac)) / 2a
-        } else {
-            // first check sign of discriminant:
-            //    a negative discriminant means no real roots;
-            //    a discriminant with value 0 means one real root;
-            //    a positive discriminant means two real roots
-            double discriminant = (b * b) - (4.0 * a * c);
-            if (Double.compare(discriminant, 0.0) < 0) {
-                // the discriminant is negative; return empty results list
-            } else if (Double.compare(discriminant, 0.0) == 0) {
-                // there is only one real root
-                double root = -b / (2.0 * a);
+        } else if (discriminantSquared == 0) {
+            double root = -b / (2 * a);
+            if (!Double.isNaN(root)) {
                 results.add(root);
-            } else {
-                double root1 = (-b + Math.sqrt(discriminant)) / (2.0 * a);
-                double root2 = (-b - Math.sqrt(discriminant)) / (2.0 * a);
-                double min = Math.min(root1, root2);
-                double max = Math.max(root1, root2);
-                if (!Double.isNaN(min)) {
-                    results.add(min);
-                }
-                if (!Double.isNaN(max)) {
-                    results.add(max);
-                }
             }
         }
         return results;

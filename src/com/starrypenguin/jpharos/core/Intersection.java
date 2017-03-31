@@ -41,7 +41,6 @@ final public class Intersection implements Comparable<Intersection> {
         Shared.notNaNAndPositive(intersectionTime, "intersectionTime cannot be Not A Number!");
         Shared.notNull(surfaceNormal, "surfaceNormal cannot be null!");
         Shared.notNull(intersectionPoint, "intersectionPoint cannot be null!");
-        Shared.notNull(body, "body cannot be null!");
         this.ray = ray;
         this.intersectionTime = intersectionTime;
         this.surfaceNormal = surfaceNormal;
