@@ -33,7 +33,7 @@ import java.awt.*;
  */
 public class MirrorMaterial extends Material {
 
-    private final static double RAY_ADJUST_TIME = 1.0;
+    private final static double RAY_ADJUST_TIME = 0.01;
 
     protected static Vector calculateReflectedVector(Intersection intersection) {
         Vector v_reflect = intersection.surfaceNormal.scale(2.0).minus(intersection.ray.direction);
@@ -58,7 +58,7 @@ public class MirrorMaterial extends Material {
         return Color.BLACK.brighter();
     }
 
-    private static Ray adjustRayOrigin(com.starrypenguin.jpharos.geometry.Point intersectionPoint, Vector direction) {
+    private static Ray adjustRayOrigin(Point intersectionPoint, Vector direction) {
         Ray tempRay = new Ray(intersectionPoint, direction.normalized());
         Point adjustedIntersectionPoint = tempRay.atTime(RAY_ADJUST_TIME);
         return new Ray(adjustedIntersectionPoint, direction);

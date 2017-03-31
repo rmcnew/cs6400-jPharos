@@ -153,7 +153,7 @@ public class Triangle extends Shape {
     public Intersection Intersects(Ray ray, Body body) {
         Intersection intersection = null;
         Double intersectionTime = determineIntersection(ray);
-        if (intersectionTime != null) {
+        if (intersectionTime != null && intersectionTime > 0) {
             Point intersectionPoint = ray.atTime(intersectionTime);
             intersection = new Intersection(ray, intersectionTime, getSurfaceNormal(), intersectionPoint, body);
             //System.out.println("Intersected with triangle: " + intersection);

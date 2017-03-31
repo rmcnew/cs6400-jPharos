@@ -18,10 +18,17 @@
 
 package com.starrypenguin.jpharos.materials;
 
+import com.starrypenguin.jpharos.core.CastRayForIntersection;
 import com.starrypenguin.jpharos.core.Intersection;
+import com.starrypenguin.jpharos.core.Ray;
+import com.starrypenguin.jpharos.geometry.Point;
+import com.starrypenguin.jpharos.geometry.Vector;
+import com.starrypenguin.jpharos.main.jPharos;
 import com.starrypenguin.jpharos.util.Shared;
 
 import java.awt.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * GlassMaterial
@@ -30,6 +37,7 @@ import java.awt.*;
  */
 public class GlassMaterial extends Material {
 
+    private final static double RAY_ADJUST_TIME = 0.01;
     final private double indexOfRefraction;
 
     public GlassMaterial(double indexOfRefraction) {
@@ -43,19 +51,46 @@ public class GlassMaterial extends Material {
         if (!(intersection.body.material instanceof GlassMaterial)) {
             throw new IllegalArgumentException("material is not a refractive material!");
         }
-
+        GlassMaterial intersectionMaterial = (GlassMaterial) intersection.body.material;
         // r = n_1 / n_2 where n_1 is the index of refraction for the current medium
         // and n_2 is the index of refraction for the new medium the light ray is entering
 
-        // c = dot(-normal, ray.direction
+        // assume we are casting rays through the air
+        double r = RefractionIndices.AIR_SEA_LEVEL / intersectionMaterial.indexOfRefraction;
+
+        // c = dot(-normal, ray.direction)
+        double c = intersection.surfaceNormal.inverse().dot(intersection.ray.direction);
 
         // v_refract = r * ray.direction + (r * c - sqrt( (1 - r^2) * (1 - c^2))) * normal
-        return null;
+        Vector rl = intersection.ray.direction.scale(r);
+        double temp = (r * c) - Math.sqrt(1 - Math.pow(r, 2) * (1 - Math.pow(c, 2)));
+        if (!Double.isNaN(temp)) {
+            Vector tn = intersection.surfaceNormal.scale(temp).toVector();
+            Vector v_refract = rl.plus(tn);
+            Ray refractedRay = adjustRayOrigin(intersection.intersectionPoint, v_refract);
+            CastRayForIntersection castRayForIntersection = new CastRayForIntersection(refractedRay);
+            Future<Intersection> futureIntersection = jPharos.instance.executor.castRayForFutureIntersection(castRayForIntersection);
+            Intersection maybeIntersection = null;
+            try {
+                maybeIntersection = futureIntersection.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+            if (maybeIntersection != null && maybeIntersection.body != intersection.body) {  // we hit something, get a darker version of the intersection color
+                return maybeIntersection.body.material.getColor(maybeIntersection).darker().darker();
+            }
+        }
+        return Color.DARK_GRAY;
+    }
+
+    private static Ray adjustRayOrigin(Point intersectionPoint, Vector direction) {
+        Ray tempRay = new Ray(intersectionPoint, direction.normalized());
+        Point adjustedIntersectionPoint = tempRay.atTime(RAY_ADJUST_TIME);
+        return new Ray(adjustedIntersectionPoint, direction);
     }
 
     @Override
     public Color getColor(Intersection intersection) {
-
         return calculateRefraction(intersection);
     }
 

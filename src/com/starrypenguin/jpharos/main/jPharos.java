@@ -29,6 +29,8 @@ import com.starrypenguin.jpharos.lights.Light;
 import com.starrypenguin.jpharos.lights.PointLight;
 import com.starrypenguin.jpharos.materials.ChromaticMaterial;
 import com.starrypenguin.jpharos.materials.ColorMaterial;
+import com.starrypenguin.jpharos.materials.GlassMaterial;
+import com.starrypenguin.jpharos.materials.MirrorMaterial;
 import com.starrypenguin.jpharos.parallel.ParallelExecutor;
 import com.starrypenguin.jpharos.shapes.Sphere;
 import com.starrypenguin.jpharos.shapes.Triangle;
@@ -209,15 +211,15 @@ final public class jPharos {
         // Sphere 1
         Point sphere1Location = new Point(-25, 0, 0);
         Sphere sphere1 = new Sphere(sphere1Location, 20);
-        //MirrorMaterial mirrorMaterial = new MirrorMaterial();
-        ColorMaterial mirrorMaterial = new ColorMaterial(Color.BLUE);
+        MirrorMaterial mirrorMaterial = new MirrorMaterial();
+        //ColorMaterial mirrorMaterial = new ColorMaterial(Color.BLUE);
         Body sphere1Body = new Body(sphere1, mirrorMaterial, "Mirrored Sphere");
         bodies.add(sphere1Body);
         // Sphere 2
         Point sphere2Location = new Point(25, 0, 0);
         Sphere sphere2 = new Sphere(sphere2Location, 20);
-        //GlassMaterial glassMaterial = new GlassMaterial();
-        ColorMaterial glassMaterial = new ColorMaterial(Color.RED);
+        GlassMaterial glassMaterial = new GlassMaterial(GlassMaterial.RefractionIndices.GLASS);
+        //ColorMaterial glassMaterial = new ColorMaterial(Color.RED);
         Body sphere2Body = new Body(sphere2, glassMaterial, "Glass Sphere");
         bodies.add(sphere2Body);
         //System.out.println("Added sphere");
@@ -234,19 +236,6 @@ final public class jPharos {
         Body belowPlane = new Body(belowTriangleMesh, white, "White Lower Plane");
         bodies.add(belowPlane);
         //System.out.println("Added below plane");
-        // Make a plane above the sphere
-        Point point5 = new Point(55, 55, 55);
-        Point point6 = new Point(-55, 55, 55);
-        Point point7 = new Point(-55, -55, 55);
-        Point point8 = new Point(55, -55, 55);
-        TriangleMeshBuilder aboveBuilder = new TriangleMeshBuilder();
-        aboveBuilder.addTriangle(point5, point6, point7);
-        aboveBuilder.addTriangle(point5, point7, point8);
-        TriangleMesh aboveTriangleMesh = aboveBuilder.build();
-        ColorMaterial green = new ColorMaterial(Color.GREEN);
-        Body abovePlane = new Body(aboveTriangleMesh, green, "Green Upper Plane");
-        //bodies.add(abovePlane);
-        //System.out.println("Added above plane");
         // Make a plane behind the sphere
         Point point9 = new Point(55, 55, 55);
         Point pointA = new Point(-55, 55, 55);
