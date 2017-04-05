@@ -60,12 +60,14 @@ public class RefractiveMaterial extends Material {
         double r = RefractionIndices.AIR_SEA_LEVEL / intersectionMaterial.indexOfRefraction;
 
         // c = dot(normal, ray.direction)
-        double c = intersection.surfaceNormal.dot(intersection.ray.direction);
+        double c = -(intersection.surfaceNormal.dot(intersection.ray.direction));
 
-        double s = r * r * (1 - c * c);
-
-        if (!Double.isNaN(s) || s <= 1.0) {
-            Vector v_refract = intersection.ray.direction.scale(r).minus(intersection.surfaceNormal.scale(r + Math.sqrt(1.0 - s)));
+        // v_refract = r * ray.direction + (r * c - sqrt( (1 - r^2) * (1 - c^2))) * normal
+        Vector rl = intersection.ray.direction.scale(r);
+        double temp = (r * c) - Math.sqrt(1 - Math.pow(r, 2) * (1 - Math.pow(c, 2)));
+        if (!Double.isNaN(temp)) {
+            Vector tn = intersection.surfaceNormal.scale(temp).toVector();
+            Vector v_refract = rl.plus(tn);
             Ray refractedRay = adjustRayOrigin(intersection.intersectionPoint, v_refract);
             CastRayForIntersection castRayForIntersection = new CastRayForIntersection(refractedRay);
             Future<Intersection> futureIntersection = jPharos.instance.executor.castRayForFutureIntersection(castRayForIntersection);
