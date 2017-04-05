@@ -31,16 +31,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
- * GlassMaterial
+ * RefractiveMaterial
  * <p/>
- * Glass-like refractive material
+ * Refractive material that bends light similar to glass, quartz, diamond, etc.
+ * See RefractionIndices below for refractive materials.
  */
-public class GlassMaterial extends Material {
+public class RefractiveMaterial extends Material {
 
     private final static double RAY_ADJUST_TIME = 0.01;
     final private double indexOfRefraction;
 
-    public GlassMaterial(double indexOfRefraction) {
+    public RefractiveMaterial(double indexOfRefraction) {
         Shared.notNaN(indexOfRefraction, "Parameter indexOfRefraction cannot be Not A Number!");
         this.indexOfRefraction = indexOfRefraction;
     }
@@ -48,25 +49,23 @@ public class GlassMaterial extends Material {
     protected static Color calculateRefraction(Intersection intersection) {
         Shared.notNull(intersection, "Parameter intersection cannot be null!");
         // make sure the intersected material is refractive
-        if (!(intersection.body.material instanceof GlassMaterial)) {
+        if (!(intersection.body.material instanceof RefractiveMaterial)) {
             throw new IllegalArgumentException("material is not a refractive material!");
         }
-        GlassMaterial intersectionMaterial = (GlassMaterial) intersection.body.material;
+        RefractiveMaterial intersectionMaterial = (RefractiveMaterial) intersection.body.material;
         // r = n_1 / n_2 where n_1 is the index of refraction for the current medium
         // and n_2 is the index of refraction for the new medium the light ray is entering
 
         // assume we are casting rays through the air
         double r = RefractionIndices.AIR_SEA_LEVEL / intersectionMaterial.indexOfRefraction;
 
-        // c = dot(-normal, ray.direction)
-        double c = intersection.surfaceNormal.inverse().dot(intersection.ray.direction);
+        // c = dot(normal, ray.direction)
+        double c = intersection.surfaceNormal.dot(intersection.ray.direction);
 
-        // v_refract = r * ray.direction + (r * c - sqrt( (1 - r^2) * (1 - c^2))) * normal
-        Vector rl = intersection.ray.direction.scale(r);
-        double temp = (r * c) - Math.sqrt(1 - Math.pow(r, 2) * (1 - Math.pow(c, 2)));
-        if (!Double.isNaN(temp)) {
-            Vector tn = intersection.surfaceNormal.scale(temp).toVector();
-            Vector v_refract = rl.plus(tn);
+        double s = r * r * (1 - c * c);
+
+        if (!Double.isNaN(s) || s <= 1.0) {
+            Vector v_refract = intersection.ray.direction.scale(r).minus(intersection.surfaceNormal.scale(r + Math.sqrt(1.0 - s)));
             Ray refractedRay = adjustRayOrigin(intersection.intersectionPoint, v_refract);
             CastRayForIntersection castRayForIntersection = new CastRayForIntersection(refractedRay);
             Future<Intersection> futureIntersection = jPharos.instance.executor.castRayForFutureIntersection(castRayForIntersection);

@@ -29,8 +29,8 @@ import com.starrypenguin.jpharos.lenses.PinholeLens;
 import com.starrypenguin.jpharos.lights.Light;
 import com.starrypenguin.jpharos.lights.PointLight;
 import com.starrypenguin.jpharos.materials.ColorMaterial;
-import com.starrypenguin.jpharos.materials.GlassMaterial;
 import com.starrypenguin.jpharos.materials.MirrorMaterial;
+import com.starrypenguin.jpharos.materials.RefractiveMaterial;
 import com.starrypenguin.jpharos.shapes.Sphere;
 import com.starrypenguin.jpharos.shapes.TriangleMesh;
 import com.starrypenguin.jpharos.shapes.TriangleMeshBuilder;
@@ -65,9 +65,9 @@ public class MirrorAndGlassSpheres implements SceneBuilder {
         // Sphere 2
         Point sphere2Location = new Point(25, 0, 0);
         Sphere sphere2 = new Sphere(sphere2Location, 20);
-        GlassMaterial glassMaterial = new GlassMaterial(GlassMaterial.RefractionIndices.GLASS);
+        RefractiveMaterial refractiveMaterial = new RefractiveMaterial(RefractiveMaterial.RefractionIndices.GLASS);
         //ColorMaterial glassMaterial = new ColorMaterial(Color.RED);
-        Body sphere2Body = new Body(sphere2, glassMaterial, "Glass Sphere");
+        Body sphere2Body = new Body(sphere2, refractiveMaterial, "Glass Sphere");
         bodies.add(sphere2Body);
         //System.out.println("Added sphere");
         // Make a plane below the sphere

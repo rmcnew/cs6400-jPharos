@@ -51,3 +51,22 @@ Add reflective and refractive materials to your ray tracer.
 Generate an image showing off your new capabilities.  
 
 You do not need to have caustics working correctly.
+
+
+================================================
+
+Distributed Ray Tracing
+
+Due by April 26 at 11:59 pm
+
+Use multiple rays per pixel (distributed ray tracing) to achieve the following effects:
+
+* anti-aliasing (multiple points on film)
+
+* depth of field (multiple points on lens)
+
+* soft shadows (multiple points on light area)
+
+Other effects such as glossy reflections are also possible.
+
+Compose an image that shows these effects.

@@ -25,7 +25,6 @@ import com.starrypenguin.jpharos.shapes.Shape;
 import com.starrypenguin.jpharos.shapes.Triangle;
 import com.starrypenguin.jpharos.shapes.TriangleMesh;
 import com.starrypenguin.jpharos.shapes.TriangleMeshBuilder;
-import com.starrypenguin.jpharos.util.Shared;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,7 @@ public class BoundingBox extends Shape {
                (min.z <= point.z) && (point.z <= max.z);
     }
 
-    private List<Rectangle> toRectangles() {
+    public List<Rectangle> toRectangles() {
         List<Rectangle> rectangles = new ArrayList<>(6);
         Point pA = min;
         Point pB = max;
@@ -146,52 +145,5 @@ public class BoundingBox extends Shape {
                 '}';
     }
 
-    private class Rectangle {
-        // We assume Points are ordered as shown:
-        //
-        //  p4-----------p1
-        //  |             |
-        //  |             |
-        //  |             |
-        //  |             |
-        //  |             |
-        //  p3-----------p2
-        //
-        final Point p1, p2, p3, p4;
 
-        Rectangle(Point p1, Point p2, Point p3, Point p4) {
-            // make sure Point are not null
-            Shared.notNull(p1, "Parameter p1 cannot be null!");
-            Shared.notNull(p2, "Parameter p2 cannot be null!");
-            Shared.notNull(p3, "Parameter p3 cannot be null!");
-            Shared.notNull(p4, "Parameter p4 cannot be null!");
-            //System.out.println("Attempting to create Rectangle with points:  p1=" + p1 + ", p2=" + p2 + ", p3=" + p3 + ", p4=" + p4);
-            // make sure Points are unique
-            if (p1.equals(p2) || p1.equals(p3) || p1.equals(p4) ||
-                    p2.equals(p3) || p2.equals(p4) || p3.equals(p4)) {
-                throw new IllegalArgumentException("All Rectangle points must be unique!");
-            }
-            // make sure points are pairwise equidistant
-            double distP1P2 = Point.distance(p1, p2);
-            double distP2P3 = Point.distance(p2, p3);
-            double distP3P4 = Point.distance(p3, p4);
-            double distP4P1 = Point.distance(p4, p1);
-            if ((Double.compare(distP1P2, distP3P4) != 0) ||
-                    (Double.compare(distP2P3, distP4P1) != 0)) {
-                throw new IllegalArgumentException("Rectangular legs must be pairwise equidistant!");
-            }
-            // skip right angle tests
-            this.p1 = p1;
-            this.p2 = p2;
-            this.p3 = p3;
-            this.p4 = p4;
-        }
-
-        List<Triangle> toTriangles() {
-            List<Triangle> triangles = new ArrayList<>(2);
-            triangles.add(new Triangle(p1, p2, p3));
-            triangles.add(new Triangle(p1, p3, p4));
-            return triangles;
-        }
-    }
 }
