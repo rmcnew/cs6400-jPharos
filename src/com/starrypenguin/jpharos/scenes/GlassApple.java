@@ -50,13 +50,13 @@ import java.util.Set;
  * <p>
  * You do not need to have caustics working correctly.
  */
-public class DiamondDragon implements SceneBuilder {
+public class GlassApple implements SceneBuilder {
 
     public Scene build() {
         // Bodies
         Set<Body> bodies = new HashSet<>();
         // read in shape from PLY file
-        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/urn2.ply");
+        TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/apple.ply");
         RefractiveMaterial diamondMaterial = new RefractiveMaterial(RefractiveMaterial.RefractionIndices.GLASS);
         //ChromaticMaterial diamondMaterial = new ChromaticMaterial();
         Body meshBody = new Body(triangleMesh, diamondMaterial);
@@ -82,7 +82,7 @@ public class DiamondDragon implements SceneBuilder {
         Point target = new Point(0, 0, 0);
         Vector up = new Vector(0, 1, 0);
         Vector lookAt = new Vector(cameraLocation, target);
-        Lens lens = new PinholeLens(3);
+        Lens lens = new PinholeLens(30);
         Film film = new Film(0.1, 300, 300, 1);
         Camera camera = new Camera(film, lens, cameraLocation, lookAt, up);
         // Put it all in the scene
