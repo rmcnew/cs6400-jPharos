@@ -22,17 +22,16 @@ import com.starrypenguin.jpharos.cameras.Camera;
 import com.starrypenguin.jpharos.cameras.Film;
 import com.starrypenguin.jpharos.core.Body;
 import com.starrypenguin.jpharos.core.Scene;
+import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.geometry.Rectangle;
 import com.starrypenguin.jpharos.geometry.Vector;
-import com.starrypenguin.jpharos.geometry.BoundingBox;
 import com.starrypenguin.jpharos.lenses.Lens;
 import com.starrypenguin.jpharos.lenses.PinholeLens;
 import com.starrypenguin.jpharos.lights.Light;
 import com.starrypenguin.jpharos.lights.PointLight;
 import com.starrypenguin.jpharos.materials.ColorMaterial;
-import com.starrypenguin.jpharos.materials.RefractiveMaterial;
-import com.starrypenguin.jpharos.materials.ChromaticMaterial;
+import com.starrypenguin.jpharos.materials.MirrorMaterial;
 import com.starrypenguin.jpharos.shapes.TriangleMesh;
 import com.starrypenguin.jpharos.util.TriangleMeshReader;
 
@@ -59,13 +58,15 @@ public class GlassApple implements SceneBuilder {
         Set<Body> bodies = new HashSet<>();
         // read in shape from PLY file
         TriangleMesh triangleMesh = TriangleMeshReader.fromPlyFile("ply-input-files/apple.ply");
-        RefractiveMaterial glassMaterial = new RefractiveMaterial(RefractiveMaterial.RefractionIndices.GLASS);
+        //RefractiveMaterial glassMaterial = new RefractiveMaterial(RefractiveMaterial.RefractionIndices.DIAMOND);
         //ChromaticMaterial glassMaterial = new ChromaticMaterial();
-        Body meshBody = new Body(triangleMesh, glassMaterial);
+        MirrorMaterial mirrorMaterial = new MirrorMaterial();
+        Body meshBody = new Body(triangleMesh, mirrorMaterial);
         bodies.add(meshBody);
         // Use the bounding box to create colorful walls nearby
         BoundingBox boundingBox = triangleMesh.getBoundingBox();
-        BoundingBox expandedBoundingBox = new BoundingBox(boundingBox.min.plus(new Point(-0.5, -0.5, -0.5)), boundingBox.max.plus(new Point(0.5, 0.5, 0.5))); 
+        BoundingBox expandedBoundingBox = new BoundingBox(boundingBox.min.plus(new Point(-0.09, -0.09, -0.09)),
+                boundingBox.max.plus(new Point(0.09, 0.09, 0.09)));
         List<Rectangle> rectangles = expandedBoundingBox.toRectangles();
         for (int i = 0; i < rectangles.size(); i++) {
             if ((i <= 1) || (i == 3) || (i == 5)) { // 2: top, 4: front; exclude these so the camera and light are not blocked
@@ -77,17 +78,17 @@ public class GlassApple implements SceneBuilder {
         }
 
         // Lights
-        Light pointLight = new PointLight(new Point(0, 0.2, 0));
+        Light pointLight = new PointLight(new Point(0, 0.22, 0));
         Set<Light> lights = new HashSet<>();
         lights.add(pointLight);
 
         // Camera
-        Point cameraLocation = new Point(0, 0.1, 0.11);
+        Point cameraLocation = new Point(0, 0.08, 0.08);
         Point target = new Point(-0.005, 0, 0);
         Vector up = new Vector(0, 1, 0);
         Vector lookAt = new Vector(cameraLocation, target);
-        Lens lens = new PinholeLens(200);
-        Film film = new Film(1, 300, 300, 1);
+        Lens lens = new PinholeLens(0.02);
+        Film film = new Film(0.0002, 300, 300, 1);
         Camera camera = new Camera(film, lens, cameraLocation, lookAt, up);
         // Put it all in the scene
         return new Scene(camera, lights, bodies);

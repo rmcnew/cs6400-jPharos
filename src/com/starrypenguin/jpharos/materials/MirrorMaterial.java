@@ -23,8 +23,11 @@ import com.starrypenguin.jpharos.core.Intersection;
 import com.starrypenguin.jpharos.core.Ray;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.geometry.Vector;
+import com.starrypenguin.jpharos.main.jPharos;
 
 import java.awt.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * MirrorMaterial
@@ -48,7 +51,13 @@ public class MirrorMaterial extends Material {
         //System.out.println("Angle between inverted incidence and normal: " + intersection.ray.direction.inverse().angleBetween(intersection.surfaceNormal.toVector()) + ", angle between normal and reflection: " + reflectedRay.direction.angleBetween(intersection.surfaceNormal.toVector()));
         //System.out.println("Incident ray: " + intersection.ray + ", intersection Point: " + intersection.intersectionPoint + ", Intersection Point distance from origin: " + Point.distance(intersection.intersectionPoint, Point.ORIGIN)  + ", Reflected ray: " + reflectedRay);
         CastRayForIntersection castRayForIntersection = new CastRayForIntersection(reflectedRay);
-        Intersection maybeIntersection = castRayForIntersection.call();
+        Future<Intersection> futureIntersection = jPharos.instance.executor.castRayForFutureIntersection(castRayForIntersection);
+        Intersection maybeIntersection = null;
+        try {
+            maybeIntersection = futureIntersection.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
 
         if (maybeIntersection != null) { // use the color of the reflection
             //System.out.println("Reflected ray: " + maybeIntersection.ray + " hit " + maybeIntersection.body.name + " at intersection point: " + maybeIntersection.intersectionPoint + " and intersection time: " + maybeIntersection.intersectionTime);

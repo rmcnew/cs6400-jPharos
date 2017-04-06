@@ -77,7 +77,21 @@ public class RefractiveMaterial extends Material {
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
-            if (maybeIntersection != null && maybeIntersection.body != intersection.body) {  // we hit something, get a darker version of the intersection color
+            if (maybeIntersection != null && maybeIntersection.body == intersection.body) {
+                // re-cast the ray starting at the new intersection point
+                refractedRay = adjustRayOrigin(maybeIntersection.intersectionPoint, v_refract);
+                castRayForIntersection = new CastRayForIntersection(refractedRay);
+                futureIntersection = jPharos.instance.executor.castRayForFutureIntersection(castRayForIntersection);
+                maybeIntersection = null;
+                try {
+                    maybeIntersection = futureIntersection.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+                if (maybeIntersection != null) {
+                    return maybeIntersection.body.material.getColor(maybeIntersection).darker().darker();
+                }
+            } else if (maybeIntersection != null) {
                 return maybeIntersection.body.material.getColor(maybeIntersection).darker().darker();
             }
         }
