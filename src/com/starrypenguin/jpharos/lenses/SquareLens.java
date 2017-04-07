@@ -19,6 +19,7 @@
 package com.starrypenguin.jpharos.lenses;
 
 import com.starrypenguin.jpharos.geometry.Point;
+import com.starrypenguin.jpharos.geometry.Vector;
 import com.starrypenguin.jpharos.util.Shared;
 
 /**
@@ -29,15 +30,23 @@ import com.starrypenguin.jpharos.util.Shared;
 public class SquareLens extends Lens {
 
     private final Point cameraLocation;
+    private final Point target;
     private final double sideLength;
     //public final Rectangle square;
 
-    public SquareLens(double focalLength, Point cameraLocation, double sideLength) {
+    public SquareLens(double focalLength, Point cameraLocation, Point target, double sideLength) {
         super(focalLength);
         Shared.notNull(cameraLocation, "Parameter cameraLocation cannot be null!");
+        Shared.notNull(target, "Parameter target cannot be null!");
         Shared.notNaNAndPositive(sideLength, "Parameter sideLength cannot be Not A Number!");
         this.cameraLocation = cameraLocation;
+        this.target = target;
         this.sideLength = sideLength;
 
+        double distanceFromCameraToTarget = Point.distance(cameraLocation, target);
+        double distanceFromFilmToLens = (focalLength * distanceFromCameraToTarget) / (focalLength + distanceFromCameraToTarget);
+        Vector cameraToTarget = new Vector(cameraLocation, target).normalized();
+        Point lensCenter = cameraLocation.plus(cameraToTarget.scale(distanceFromFilmToLens));
+        // Finish Lens shape and location calculations
     }
 }
