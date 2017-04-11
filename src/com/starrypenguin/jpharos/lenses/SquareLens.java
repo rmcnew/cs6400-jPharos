@@ -19,6 +19,8 @@
 package com.starrypenguin.jpharos.lenses;
 
 import com.starrypenguin.jpharos.geometry.Point;
+import com.starrypenguin.jpharos.geometry.Vector;
+import com.starrypenguin.jpharos.main.jPharos;
 import com.starrypenguin.jpharos.util.Shared;
 
 /**
@@ -28,16 +30,40 @@ import com.starrypenguin.jpharos.util.Shared;
  */
 public class SquareLens extends Lens {
 
-    private final Point cameraLocation;
+    private final double focusKnob; // range 0.0 to 2.0 inclusive;
     private final double sideLength;
     //public final Rectangle square;
 
-    public SquareLens(double focalLength, Point cameraLocation, double sideLength) {
+    public SquareLens(double focalLength, double focusKnob, double sideLength) {
         super(focalLength);
-        Shared.notNull(cameraLocation, "Parameter cameraLocation cannot be null!");
+        Shared.notNaNAndInclusiveRangeCheck(focusKnob, 0.0, 2.0, "Parameter focusKnob must be between 0.0 and 2.0 inclusive!");
         Shared.notNaNAndPositive(sideLength, "Parameter sideLength cannot be Not A Number!");
-        this.cameraLocation = cameraLocation;
+        this.focusKnob = focusKnob;
         this.sideLength = sideLength;
+        // calculate z'
+        double zPrime = solveForZPrime();
+        // determine lens location
+        Point cameraLocation = jPharos.instance.camera.cameraLocation;
+        Vector lookAt = jPharos.instance.camera.lookAt;
+        Vector up = jPharos.instance.camera.up;
+        Point lensCenter = cameraLocation.plus(lookAt.normalized().scale(zPrime));
+        Vector right = lookAt.cross(up).normalized();
+        Vector left = right.inverse();
+        Vector normalizedUp = up.normalized();
+        Vector down = normalizedUp.inverse();
 
+        // place lens shape
+    }
+
+    /**
+     * Use the Gaussian lens equation to determine focus:
+     * Z = focusKnob * focalLength
+     * Z' = (focalLength * Z) / (focalLength + Z)
+     *
+     * @return zPrime, the distance from the lens to the film
+     */
+    private double solveForZPrime() {
+        double Z = this.focusKnob * this.focalLength;
+        return (focalLength * Z) / (focalLength + Z);
     }
 }
