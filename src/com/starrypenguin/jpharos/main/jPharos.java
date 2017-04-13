@@ -25,7 +25,7 @@ import com.starrypenguin.jpharos.core.DevelopPixel;
 import com.starrypenguin.jpharos.core.Ray;
 import com.starrypenguin.jpharos.core.Scene;
 import com.starrypenguin.jpharos.parallel.ParallelExecutor;
-import com.starrypenguin.jpharos.scenes.GlassApple;
+import com.starrypenguin.jpharos.scenes.MirrorAndGlassSpheres;
 import com.starrypenguin.jpharos.scenes.SceneBuilder;
 
 import java.util.concurrent.Future;
@@ -61,8 +61,8 @@ final public class jPharos {
         //sceneBuilder = new SphereOnAPlane();
         //sceneBuilder = new ArmadilloTriangleMesh();
         //sceneBuilder = new DragonTriangleMesh();
-        //sceneBuilder = new MirrorAndGlassSpheres();
-        sceneBuilder = new GlassApple();
+        sceneBuilder = new MirrorAndGlassSpheres();
+        //sceneBuilder = new GlassApple();
 
         instance.scene = sceneBuilder.build();
         instance.camera = instance.scene.camera;

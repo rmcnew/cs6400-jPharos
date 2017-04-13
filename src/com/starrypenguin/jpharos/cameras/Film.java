@@ -35,7 +35,7 @@ final public class Film {
     final public int filmWidthInPixels;  // film size in pixels
     final public int filmHeightInPixels;
     final public int raysPerPixel;       // number of rays used for each pixel
-    final public Color[][] colorGrid;     // used to capture results
+    final public ColorGrid colorGrid;     // used to capture results
     final private String COLOR_DEPTH = "255";
 
     public Film(double pixelSize, int filmWidthInPixels, int filmHeightInPixels, int raysPerPixel) {
@@ -47,7 +47,7 @@ final public class Film {
         this.filmWidthInPixels = filmWidthInPixels;
         this.filmHeightInPixels = filmHeightInPixels;
         this.raysPerPixel = raysPerPixel;
-        this.colorGrid = new Color[filmHeightInPixels][filmWidthInPixels];
+        this.colorGrid = new ColorGrid(filmHeightInPixels, filmWidthInPixels);
     }
 
     public FilmCoordinate newFilmCoordinate(int heightIndex, int widthIndex) {
@@ -61,7 +61,7 @@ final public class Film {
     public void capture(FilmCoordinate filmCoordinate, Color color) {
         Shared.notNull(filmCoordinate, "Parameter filmCoordinate cannot be null!");
         Shared.notNull(color, "Parameter color cannot be null!");
-        this.colorGrid[filmCoordinate.heightIndex][filmCoordinate.widthIndex] = color;
+        this.colorGrid.put(filmCoordinate.heightIndex, filmCoordinate.widthIndex, color);
         //System.out.println(String.format("Captured pixel at heightIndex=%d, widthIndex=%d as color=%s", filmCoordinate.heightIndex, filmCoordinate.widthIndex, color));
     }
 
@@ -71,14 +71,7 @@ final public class Film {
     }
 
     public boolean readyToDevelop() {
-        for (int heightIndex = 0; heightIndex < filmHeightInPixels; heightIndex++) {
-            for (int widthIndex = 0; widthIndex < filmWidthInPixels; widthIndex++) {
-                if (colorGrid[heightIndex][widthIndex] == null) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return colorGrid.readyToDevelop();
     }
 
     private String colorToStr(Color color) {
@@ -95,8 +88,9 @@ final public class Film {
         fileWriter.write(COLOR_DEPTH + "\n");
         for (int heightIndex = 0; heightIndex < filmHeightInPixels; heightIndex++) {
             for (int widthIndex = 0; widthIndex < filmWidthInPixels; widthIndex++) {
-                if (colorGrid[heightIndex][widthIndex] != null) {
-                    fileWriter.write(colorToStr(colorGrid[heightIndex][widthIndex]));
+                Color color = colorGrid.get(heightIndex, widthIndex);
+                if (color != null) {
+                    fileWriter.write(colorToStr(color));
                 } else {
                     String errorMessage = String.format("colorGrid is null at heightIndex=%d, widthIndex=%d", heightIndex, widthIndex);
                     System.err.println(errorMessage);
