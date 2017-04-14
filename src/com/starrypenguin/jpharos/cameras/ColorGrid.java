@@ -39,6 +39,11 @@ public class ColorGrid {
         this.filmHeightInPixels = filmHeightInPixels;
         this.filmWidthInPixels = filmWidthInPixels;
         this.colorGrid = new ColorWrapper[filmHeightInPixels][filmWidthInPixels];
+        for (int heightIndex = 0; heightIndex < filmHeightInPixels; heightIndex++) {
+            for (int widthIndex = 0; widthIndex < filmWidthInPixels; widthIndex++) {
+                colorGrid[heightIndex][widthIndex] = new ColorWrapper();
+            }
+        }
     }
 
     public void put(int heightIndex, int widthIndex, Color color) {
@@ -52,7 +57,7 @@ public class ColorGrid {
     public boolean readyToDevelop() {
         for (int heightIndex = 0; heightIndex < filmHeightInPixels; heightIndex++) {
             for (int widthIndex = 0; widthIndex < filmWidthInPixels; widthIndex++) {
-                if (colorGrid[heightIndex][widthIndex] == null) {
+                if (colorGrid[heightIndex][widthIndex].getColor() == null) {
                     return false;
                 }
             }
