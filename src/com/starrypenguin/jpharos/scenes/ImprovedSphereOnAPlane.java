@@ -49,37 +49,41 @@ public class ImprovedSphereOnAPlane implements SceneBuilder {
         Set<Body> bodies = new HashSet<>();
         // Sphere
         Point sphereLocation = new Point(0, 0, 1);
-        Sphere sphere = new Sphere(sphereLocation, 40);
+        Sphere sphere = new Sphere(sphereLocation, 30);
         ColorMaterial redStuff = new ColorMaterial(Color.RED);
         Body sphereBody = new Body(sphere, redStuff);
         bodies.add(sphereBody);
 
         //Triangles to make a plane
-        Point quadrant1 = new Point(150, 100, 0);
-        Point quadrant2 = new Point(-150, 100, 0);
-        Point quadrant3 = new Point(-150, -100, 0);
-        Point quadrant4 = new Point(150, -100, 0);
-        TriangleMeshBuilder triangleMeshBuilder = new TriangleMeshBuilder();
-        triangleMeshBuilder.addTriangle(quadrant4, quadrant1, quadrant3);
-        triangleMeshBuilder.addTriangle(quadrant1, quadrant2, quadrant3);
-        ColorMaterial whiteStuff = new ColorMaterial(Color.WHITE);
-        TriangleMesh triangleMesh = triangleMeshBuilder.build();
-        Body plane = new Body(triangleMesh, whiteStuff);
-        bodies.add(plane);
+        Point point1 = new Point(205, 205, -205);
+        Point point2 = new Point(-205, 205, -205);
+        Point point3 = new Point(-205, -205, -205);
+        Point point4 = new Point(205, -205, -205);
+        TriangleMeshBuilder belowBuilder = new TriangleMeshBuilder();
+        belowBuilder.addTriangle(point1, point2, point3);
+        belowBuilder.addTriangle(point1, point3, point4);
+        TriangleMesh belowTriangleMesh = belowBuilder.build();
+        ColorMaterial white = new ColorMaterial(Color.WHITE);
+        Body belowPlane = new Body(belowTriangleMesh, white, "White Lower Plane");
+        bodies.add(belowPlane);
 
         // Lights
-        Point lightCenter = new Point(0, 0, 50);
+        Point lightCenter = new Point(0, 0, 100);
         double lightRadius = 10;
-        AreaLight areaLight = new AreaLight(new Sphere(lightCenter, lightRadius));
+        Sphere lightSphere = new Sphere(lightCenter, lightRadius);
+        AreaLight areaLight = new AreaLight(lightSphere);
         Set<Light> lights = new HashSet<>();
         lights.add(areaLight);
+        ColorMaterial lightMaterial = new ColorMaterial(Color.YELLOW);
+        Body areaLightBody = new Body(lightSphere, lightMaterial, "Light");
+        bodies.add(areaLightBody);
 
         // Camera
-        Point cameraLocation = new Point(60, 0, 25);
+        Point cameraLocation = new Point(0, -100, 10);
         Vector up = new Vector(0, 0, 1);
-        Vector lookAt = new Vector(-1, 0, 0);
-        Lens lens = new PinholeLens(60);
-        Film film = new Film(1, 300, 300, 1);
+        Vector lookAt = new Vector(0, 1, 0);
+        Lens lens = new PinholeLens(20);
+        Film film = new Film(0.1, 600, 600, 1);
         Camera camera = new Camera(film, lens, cameraLocation, lookAt, up);
 
         // Put it all in the scene

@@ -18,10 +18,12 @@
 
 package com.starrypenguin.jpharos.util;
 
+import com.starrypenguin.jpharos.core.Ray;
+import com.starrypenguin.jpharos.geometry.Point;
+import com.starrypenguin.jpharos.geometry.Vector;
+
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Shared
@@ -30,12 +32,15 @@ import java.util.List;
  */
 final public class Shared {
 
+    final static int differentialsPerRay = 10;
+    // methods
+    final static double lengthPercentage = 2.0;
+
     public static void notNullAndNotEmpty(String str, String errorMessage) {
         if (str == null || str.isEmpty()) {
             throw new IllegalArgumentException(errorMessage);
         }
     }
-    // methods
 
     public static void notNullExistsAndReadable(File file, String errorMessage) {
         if (file == null || !file.exists() || !file.canRead()) {
@@ -146,6 +151,41 @@ final public class Shared {
             }
         }
         return results;
+    }
+
+    /**
+     * Get a set of differentials for a given ray that share the same
+     * starting point, but have slightly different directions centered around
+     * the given ray
+     *
+     * @param ray the ray to perturb
+     * @return a set of differential Rays, including the original ray
+     */
+    final static Set<Ray> perturbRay(Ray ray) {
+        Shared.notNull(ray, "Parameter ray cannot be null!");
+        Set<Ray> differentials = new HashSet<>();
+        // add the original vector
+        differentials.add(ray);
+        // perturb the original vector to get differentials
+        Point rayOrigin = ray.origin;
+        Point rayEndPoint = rayOrigin.plus(ray.direction);
+        double perturbRadius = ray.direction.magnitude() * (lengthPercentage / 100.0);
+        for (int i = 0; i < differentialsPerRay; i++) {
+            Point perturbedEndPoint = perturbPoint(rayEndPoint, perturbRadius);
+            differentials.add(new Ray(rayOrigin, new Vector(rayOrigin, perturbedEndPoint)));
+        }
+        return differentials;
+    }
+
+    final static double randomSign() {
+        return Math.random() > 0.5 ? 1.0 : -1.0;
+    }
+
+    final static Point perturbPoint(Point point, double maxPerturbDistance) {
+        double x = randomSign() * Math.random() * maxPerturbDistance * point.x;
+        double y = randomSign() * Math.random() * maxPerturbDistance * point.y;
+        double z = randomSign() * Math.random() * maxPerturbDistance * point.z;
+        return new Point(x, y, z);
     }
 
     // constants
