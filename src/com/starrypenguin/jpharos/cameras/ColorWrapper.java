@@ -18,6 +18,8 @@
 
 package com.starrypenguin.jpharos.cameras;
 
+import com.starrypenguin.jpharos.util.Shared;
+
 import java.awt.*;
 
 /**
@@ -32,6 +34,7 @@ public class ColorWrapper {
     public ColorWrapper() {}
 
     public synchronized void update(Color newColor) {
+        Shared.notNull(newColor, "Parameter newColor cannot be null!");
         if (this.color == null) {
             this.color = newColor;
         } else {

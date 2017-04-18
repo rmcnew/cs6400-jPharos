@@ -56,6 +56,7 @@ final public class Ray {
         return "Ray{" +
                 "origin=" + origin +
                 ", direction=" + direction +
+                ", magnitude=" + this.direction.magnitude() +
                 '}';
     }
 }

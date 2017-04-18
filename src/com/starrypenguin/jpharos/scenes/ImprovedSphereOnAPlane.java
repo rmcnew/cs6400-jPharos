@@ -68,7 +68,7 @@ public class ImprovedSphereOnAPlane implements SceneBuilder {
         bodies.add(belowPlane);
 
         // Lights
-        Point lightCenter = new Point(0, 0, 100);
+        Point lightCenter = new Point(40, 0, 100);
         double lightRadius = 10;
         Sphere lightSphere = new Sphere(lightCenter, lightRadius);
         AreaLight areaLight = new AreaLight(lightSphere);

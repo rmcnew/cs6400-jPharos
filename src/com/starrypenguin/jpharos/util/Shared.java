@@ -33,8 +33,8 @@ import java.util.*;
 final public class Shared {
 
     final static int differentialsPerRay = 10;
-    // methods
     final static double lengthPercentage = 2.0;
+    // methods
 
     public static void notNullAndNotEmpty(String str, String errorMessage) {
         if (str == null || str.isEmpty()) {
@@ -169,10 +169,14 @@ final public class Shared {
         // perturb the original vector to get differentials
         Point rayOrigin = ray.origin;
         Point rayEndPoint = rayOrigin.plus(ray.direction);
+        //System.out.println("rayEndPoint is: " + rayEndPoint);
         double perturbRadius = ray.direction.magnitude() * (lengthPercentage / 100.0);
+        //System.out.println("perturbRadius is: " + perturbRadius);
         for (int i = 0; i < differentialsPerRay; i++) {
             Point perturbedEndPoint = perturbPoint(rayEndPoint, perturbRadius);
-            differentials.add(new Ray(rayOrigin, new Vector(rayOrigin, perturbedEndPoint)));
+            //System.out.println("perturbedEndPoint is: " + perturbedEndPoint);
+            Vector differentialVector = new Vector(rayOrigin, perturbedEndPoint);
+            differentials.add(new Ray(rayOrigin, differentialVector));
         }
         return differentials;
     }
@@ -182,9 +186,9 @@ final public class Shared {
     }
 
     final static Point perturbPoint(Point point, double maxPerturbDistance) {
-        double x = randomSign() * Math.random() * maxPerturbDistance * point.x;
-        double y = randomSign() * Math.random() * maxPerturbDistance * point.y;
-        double z = randomSign() * Math.random() * maxPerturbDistance * point.z;
+        double x = randomSign() * Math.random() * maxPerturbDistance + point.x;
+        double y = randomSign() * Math.random() * maxPerturbDistance + point.y;
+        double z = randomSign() * Math.random() * maxPerturbDistance + point.z;
         return new Point(x, y, z);
     }
 
