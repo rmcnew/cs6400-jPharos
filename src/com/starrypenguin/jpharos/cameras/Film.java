@@ -23,6 +23,7 @@ import com.starrypenguin.jpharos.util.Shared;
 import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Queue;
 
 /**
  * Film
@@ -54,20 +55,20 @@ final public class Film {
         return new FilmCoordinate(heightIndex, widthIndex);
     }
 
-    public DevelopedPixel newDevelopedPixel(FilmCoordinate filmCoordinate, Color color) {
-        return new DevelopedPixel(filmCoordinate, color);
+    public DevelopedPixel newDevelopedPixel(FilmCoordinate filmCoordinate, Queue<Color> colors) {
+        return new DevelopedPixel(filmCoordinate, colors);
     }
 
-    public void capture(FilmCoordinate filmCoordinate, Color color) {
+    public void capture(FilmCoordinate filmCoordinate, Queue<Color> colors) {
         Shared.notNull(filmCoordinate, "Parameter filmCoordinate cannot be null!");
-        Shared.notNull(color, "Parameter color cannot be null!");
-        this.colorGrid.put(filmCoordinate.heightIndex, filmCoordinate.widthIndex, color);
+        Shared.notNull(colors, "Parameter colors cannot be null!");
+        this.colorGrid.put(filmCoordinate.heightIndex, filmCoordinate.widthIndex, colors);
         //System.out.println(String.format("Captured pixel at heightIndex=%d, widthIndex=%d as color=%s", filmCoordinate.heightIndex, filmCoordinate.widthIndex, color));
     }
 
     public void capture(DevelopedPixel developedPixel) {
         Shared.notNull(developedPixel, "Parameter developedPixel cannot be null!");
-        this.capture(developedPixel.filmCoordinate, developedPixel.color);
+        this.capture(developedPixel.filmCoordinate, developedPixel.colors);
     }
 
     public boolean readyToDevelop() {
@@ -111,13 +112,13 @@ final public class Film {
     final public class DevelopedPixel {
 
         final public FilmCoordinate filmCoordinate;
-        final public Color color;
+        final public Queue<Color> colors;
 
-        public DevelopedPixel(FilmCoordinate filmCoordinate, Color color) {
+        public DevelopedPixel(FilmCoordinate filmCoordinate, Queue<Color> colors) {
             Shared.notNull(filmCoordinate, "Parameter filmCoordinate cannot be null!");
-            Shared.notNull(color, "Parameter color cannot be null!");
+            Shared.notNull(colors, "Parameter colors cannot be null!");
             this.filmCoordinate = filmCoordinate;
-            this.color = color;
+            this.colors = colors;
         }
 
         @Override
@@ -128,13 +129,13 @@ final public class Film {
             DevelopedPixel that = (DevelopedPixel) o;
 
             if (!filmCoordinate.equals(that.filmCoordinate)) return false;
-            return color.equals(that.color);
+            return colors.equals(that.colors);
         }
 
         @Override
         public int hashCode() {
             int result = filmCoordinate.hashCode();
-            result = 31 * result + color.hashCode();
+            result = 31 * result + colors.hashCode();
             return result;
         }
 
@@ -142,7 +143,7 @@ final public class Film {
         public String toString() {
             return "DevelopedPixel{" +
                     "filmCoordinate=" + filmCoordinate +
-                    ", color=" + color +
+                    ", color=" + colors +
                     '}';
         }
     }

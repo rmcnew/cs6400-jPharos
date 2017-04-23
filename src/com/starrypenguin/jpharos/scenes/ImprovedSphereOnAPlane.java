@@ -68,7 +68,7 @@ public class ImprovedSphereOnAPlane implements SceneBuilder {
         bodies.add(belowPlane);
 
         // Lights
-        Point lightCenter = new Point(40, 0, 100);
+        Point lightCenter = new Point(40, 0, 70);
         double lightRadius = 10;
         Sphere lightSphere = new Sphere(lightCenter, lightRadius);
         AreaLight areaLight = new AreaLight(lightSphere);
@@ -83,7 +83,7 @@ public class ImprovedSphereOnAPlane implements SceneBuilder {
         Vector up = new Vector(0, 0, 1);
         Vector lookAt = new Vector(0, 1, 0);
         Lens lens = new PinholeLens(20);
-        Film film = new Film(0.1, 600, 600, 1);
+        Film film = new Film(0.2, 300, 300, 1);
         Camera camera = new Camera(film, lens, cameraLocation, lookAt, up);
 
         // Put it all in the scene

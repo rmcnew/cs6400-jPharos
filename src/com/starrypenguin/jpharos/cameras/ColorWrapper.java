@@ -21,6 +21,7 @@ package com.starrypenguin.jpharos.cameras;
 import com.starrypenguin.jpharos.util.Shared;
 
 import java.awt.*;
+import java.util.Queue;
 
 /**
  * ColorWrapper
@@ -35,23 +36,16 @@ public class ColorWrapper {
 
     public synchronized void update(Color newColor) {
         Shared.notNull(newColor, "Parameter newColor cannot be null!");
-        if (this.color == null) {
-            this.color = newColor;
-        } else {
-            int currentRed = color.getRed();
-            int currentGreen = color.getGreen();
-            int currentBlue = color.getBlue();
+        this.color = AverageColors.average(this.color, newColor);
+    }
 
-            int newRed = newColor.getRed();
-            int newGreen = newColor.getGreen();
-            int newBlue = newColor.getBlue();
-
-            int updatedRed = (currentRed + newRed) / 2;
-            int updatedGreen = (currentGreen + newGreen) / 2;
-            int updatedBlue = (currentBlue + newBlue) / 2;
-
-            this.color = new Color(updatedRed, updatedGreen, updatedBlue);
+    public void multiUpdate(Queue<Color> multipleColors) {
+        Shared.notNull(multipleColors, "Parameter multipleColors cannot be null!");
+        Color result = null;
+        for (Color color : multipleColors) {
+            result = AverageColors.average(result, color);
         }
+        update(result);
     }
 
     public synchronized Color getColor() {

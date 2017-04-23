@@ -27,6 +27,8 @@ import com.starrypenguin.jpharos.main.jPharos;
 import com.starrypenguin.jpharos.util.Shared;
 
 import java.awt.*;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -46,7 +48,7 @@ public class RefractiveMaterial extends Material {
         this.indexOfRefraction = indexOfRefraction;
     }
 
-    protected static Color calculateRefraction(Intersection intersection) {
+    protected static Queue<Color> calculateRefraction(Intersection intersection) {
         Shared.notNull(intersection, "Parameter intersection cannot be null!");
         // make sure the intersected material is refractive
         if (!(intersection.body.material instanceof RefractiveMaterial)) {
@@ -89,13 +91,16 @@ public class RefractiveMaterial extends Material {
                     e.printStackTrace();
                 }
                 if (maybeIntersection != null) {
-                    return maybeIntersection.body.material.getColor(maybeIntersection).darker().darker();
+                    return maybeIntersection.body.material.getColor(maybeIntersection);
                 }
             } else if (maybeIntersection != null) {
-                return maybeIntersection.body.material.getColor(maybeIntersection).darker().darker();
+                return maybeIntersection.body.material.getColor(maybeIntersection);
             }
         }
-        return Color.DARK_GRAY;
+        // We did not hit anything return the "background" color
+        Queue<Color> colors = new ConcurrentLinkedQueue<>();
+        colors.add(Color.DARK_GRAY);
+        return colors;
     }
 
     private static Ray adjustRayOrigin(Point intersectionPoint, Vector direction) {
@@ -105,7 +110,7 @@ public class RefractiveMaterial extends Material {
     }
 
     @Override
-    public Color getColor(Intersection intersection) {
+    public Queue<Color> getColor(Intersection intersection) {
         return calculateRefraction(intersection);
     }
 

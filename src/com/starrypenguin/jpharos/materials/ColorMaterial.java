@@ -28,6 +28,7 @@ import com.starrypenguin.jpharos.util.Shared;
 import java.awt.*;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
 
 /**
  * ColorMaterial
@@ -50,7 +51,7 @@ public class ColorMaterial extends Material {
     }
 
     @Override
-    public Color getColor(Intersection intersection) {
+    public Queue<Color> getColor(Intersection intersection) {
         return Material.calculateLambertianAndShadow(intersection);
     }
 

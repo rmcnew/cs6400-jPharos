@@ -26,6 +26,8 @@ import com.starrypenguin.jpharos.geometry.Vector;
 import com.starrypenguin.jpharos.main.jPharos;
 
 import java.awt.*;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -43,7 +45,7 @@ public class MirrorMaterial extends Material {
         return v_reflect;
     }
 
-    protected static Color calculateReflection(Intersection intersection) {
+    protected static Queue<Color> calculateReflection(Intersection intersection) {
         Vector v_reflect = calculateReflectedVector(intersection);
         // cast v_reflect to get color of whatever it hits, reduced by some factor
         //System.out.println("Intersection point is: " + intersection.intersectionPoint + ", v_reflect is: " + v_reflect);
@@ -61,10 +63,12 @@ public class MirrorMaterial extends Material {
 
         if (maybeIntersection != null) { // use the color of the reflection
             //System.out.println("Reflected ray: " + maybeIntersection.ray + " hit " + maybeIntersection.body.name + " at intersection point: " + maybeIntersection.intersectionPoint + " and intersection time: " + maybeIntersection.intersectionTime);
-            return maybeIntersection.body.material.getColor(maybeIntersection).darker();
+            return maybeIntersection.body.material.getColor(maybeIntersection);
         }
         // the reflected ray did not hit anything, show the color of the surrounding environment
-        return Color.BLACK.brighter();
+        Queue<Color> colors = new ConcurrentLinkedQueue<>();
+        colors.add(Color.BLACK.brighter());
+        return colors;
     }
 
     private static Ray adjustRayOrigin(Point intersectionPoint, Vector direction) {
@@ -74,7 +78,7 @@ public class MirrorMaterial extends Material {
     }
 
     @Override
-    public Color getColor(Intersection intersection) {
+    public Queue<Color> getColor(Intersection intersection) {
         return calculateReflection(intersection);
     }
 

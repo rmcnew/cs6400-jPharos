@@ -21,6 +21,7 @@ package com.starrypenguin.jpharos.cameras;
 import com.starrypenguin.jpharos.util.Shared;
 
 import java.awt.*;
+import java.util.Queue;
 
 /**
  * ColorGrid
@@ -49,6 +50,11 @@ public class ColorGrid {
     public void put(int heightIndex, int widthIndex, Color color) {
         this.colorGrid[heightIndex][widthIndex].update(color);
     }
+
+    public void put(int heightIndex, int widthIndex, Queue<Color> colors) {
+        this.colorGrid[heightIndex][widthIndex].multiUpdate(colors);
+    }
+
 
     public Color get(int heightIndex, int widthIndex) {
         return this.colorGrid[heightIndex][widthIndex].getColor();

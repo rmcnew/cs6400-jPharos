@@ -21,6 +21,7 @@ package com.starrypenguin.jpharos.materials;
 import com.starrypenguin.jpharos.core.Intersection;
 
 import java.awt.*;
+import java.util.Queue;
 
 /**
  * ChromaticMaterial
@@ -48,7 +49,7 @@ public class ChromaticMaterial extends Material {
     }
 
     @Override
-    public Color getColor(Intersection intersection) {
+    public Queue<Color> getColor(Intersection intersection) {
         return Material.calculateLambertianAndShadow(intersection);
     }
 

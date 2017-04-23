@@ -32,7 +32,7 @@ import java.util.*;
  */
 final public class Shared {
 
-    final static int differentialsPerRay = 10;
+    final static int differentialsPerRay = 4;
     final static double lengthPercentage = 2.0;
     // methods
 
@@ -161,7 +161,7 @@ final public class Shared {
      * @param ray the ray to perturb
      * @return a set of differential Rays, including the original ray
      */
-    final static Set<Ray> perturbRay(Ray ray) {
+    final public static Set<Ray> perturbRay(Ray ray) {
         Shared.notNull(ray, "Parameter ray cannot be null!");
         Set<Ray> differentials = new HashSet<>();
         // add the original vector
@@ -181,11 +181,11 @@ final public class Shared {
         return differentials;
     }
 
-    final static double randomSign() {
+    final public static double randomSign() {
         return Math.random() > 0.5 ? 1.0 : -1.0;
     }
 
-    final static Point perturbPoint(Point point, double maxPerturbDistance) {
+    final public static Point perturbPoint(Point point, double maxPerturbDistance) {
         double x = randomSign() * Math.random() * maxPerturbDistance + point.x;
         double y = randomSign() * Math.random() * maxPerturbDistance + point.y;
         double z = randomSign() * Math.random() * maxPerturbDistance + point.z;

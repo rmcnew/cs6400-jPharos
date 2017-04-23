@@ -23,7 +23,9 @@ import com.starrypenguin.jpharos.main.jPharos;
 import com.starrypenguin.jpharos.util.Shared;
 
 import java.awt.*;
+import java.util.Queue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 
 
@@ -55,7 +57,9 @@ public class CastRayForDevelopedPixel implements Callable<Film.DevelopedPixel> {
             retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, maybeIntersection.body.material.getColor(maybeIntersection));
         } else {
             // ray did not intersect, use background color
-            retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, Color.BLACK);
+            Queue<Color> colors = new ConcurrentLinkedQueue<>();
+            colors.add(Color.BLACK);
+            retVal = jPharos.instance.camera.film.newDevelopedPixel(ray.filmCoordinate, colors);
         }
         //System.out.println("Thread " + Thread.currentThread().getId() + "ran CastRay.call() and generated DevelopedPixel=" + retVal);
         return retVal;
