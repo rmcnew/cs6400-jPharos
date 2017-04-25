@@ -26,6 +26,7 @@ import com.starrypenguin.jpharos.util.Shared;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Camera
@@ -72,7 +73,8 @@ final public class Camera {
                 Point pixelLocation = topLeft.plus(right.scale(film.pixelSize * leftRightIndex)).plus(down.scale(film.pixelSize * upDownIndex));
                 Vector rayDirection = new Vector(cameraLocation, pixelLocation).normalized();
                 Ray currentRay = new Ray(cameraLocation, rayDirection, film.newFilmCoordinate(upDownIndex, leftRightIndex));
-                rays.add(currentRay);
+                Set<Ray> rayDifferentials = Shared.perturbRay(currentRay, film.raysPerPixel, 1.1);
+                rays.addAll(rayDifferentials);
             }
         }
         return rays;

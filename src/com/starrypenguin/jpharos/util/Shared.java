@@ -32,8 +32,8 @@ import java.util.*;
  */
 final public class Shared {
 
-    final static int differentialsPerRay = 50;
-    final static double lengthPercentage = 3.3;
+    final public static int DIFFERENTIALS_PER_RAY = 30;
+    final public static double LENGTH_PERCENTAGE = 3.3;
     // methods
 
     public static void notNullAndNotEmpty(String str, String errorMessage) {
@@ -161,7 +161,7 @@ final public class Shared {
      * @param ray the ray to perturb
      * @return a set of differential Rays, including the original ray
      */
-    final public static Set<Ray> perturbRay(Ray ray) {
+    final public static Set<Ray> perturbRay(Ray ray, int differentialsPerRay, double lengthPercentage) {
         Shared.notNull(ray, "Parameter ray cannot be null!");
         Set<Ray> differentials = new HashSet<>();
         // add the original vector
@@ -176,7 +176,7 @@ final public class Shared {
             Point perturbedEndPoint = perturbPoint(rayEndPoint, perturbRadius);
             //System.out.println("perturbedEndPoint is: " + perturbedEndPoint);
             Vector differentialVector = new Vector(rayOrigin, perturbedEndPoint);
-            differentials.add(new Ray(rayOrigin, differentialVector));
+            differentials.add(new Ray(rayOrigin, differentialVector, ray.filmCoordinate));
         }
         return differentials;
     }

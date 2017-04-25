@@ -52,7 +52,7 @@ public abstract class Material {
         for (Light light : jPharos.instance.scene.lights) {
             Vector directionToLight = new Vector(intersection.intersectionPoint, light.location);
             Ray towardLight = new Ray(intersection.intersectionPoint, directionToLight);
-            Set<Ray> raysTowardLight = Shared.perturbRay(towardLight);
+            Set<Ray> raysTowardLight = Shared.perturbRay(towardLight, Shared.DIFFERENTIALS_PER_RAY, Shared.LENGTH_PERCENTAGE);
             raysTowardLight.stream().forEach((Ray ray) -> {
                 CastRayForIntersection castRayForIntersection = new CastRayForIntersection(ray);
                 Future<Intersection> futureIntersection = jPharos.instance.executor.castRayForFutureIntersection(castRayForIntersection);
