@@ -53,7 +53,7 @@ public abstract class Material {
             Vector directionToLight = new Vector(intersection.intersectionPoint, light.location);
             Ray towardLight = new Ray(intersection.intersectionPoint, directionToLight);
             Set<Ray> raysTowardLight = Shared.perturbRay(towardLight);
-            raysTowardLight.parallelStream().forEach((Ray ray) -> {
+            raysTowardLight.stream().forEach((Ray ray) -> {
                 CastRayForIntersection castRayForIntersection = new CastRayForIntersection(ray);
                 Future<Intersection> futureIntersection = jPharos.instance.executor.castRayForFutureIntersection(castRayForIntersection);
                 Intersection maybeIntersection = null;
@@ -62,8 +62,8 @@ public abstract class Material {
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
-                // *** TODO: Make sure the intersected body is NOT a light; if so, this is not a shadow!!
-                if (maybeIntersection != null && maybeIntersection.body != intersection.body) {  // we hit something, a shadow is here
+                if (maybeIntersection != null && !maybeIntersection.body.emissive &&
+                        maybeIntersection.body != intersection.body) {  // we hit something, a shadow is here
                     intersectionColors.add(Color.BLACK.brighter());
                 } else {
                     double rawLambert = Math.max(intersection.ray.direction.dot(intersection.surfaceNormal), 0.0);

@@ -32,8 +32,8 @@ import java.util.*;
  */
 final public class Shared {
 
-    final static int differentialsPerRay = 4;
-    final static double lengthPercentage = 2.0;
+    final static int differentialsPerRay = 50;
+    final static double lengthPercentage = 3.3;
     // methods
 
     public static void notNullAndNotEmpty(String str, String errorMessage) {

@@ -26,24 +26,30 @@ import com.starrypenguin.jpharos.util.Shared;
 /**
  * Body
  * <p/>
- * A Shape of a given ColorMaterial that is somewhere in a Scene
+ * A Shape with a given Material that is somewhere in a Scene
  */
 public class Body {
     // value class; immutable and cannot be changed after being created
     public final Shape shape;
     public final Material material;
+    public final boolean emissive; // does this body emit light / radiation?
     public final String name; // optional name
 
-    public Body(Shape shape, Material material, String name) {
+    public Body(Shape shape, Material material, String name, boolean emissive) {
         Shared.notNull(shape, "shape cannot be null!");
         Shared.notNull(material, "material cannot be null!");
         this.shape = shape;
         this.material = material;
         this.name = name;
+        this.emissive = emissive;
+    }
+
+    public Body(Shape shape, Material material, String name) {
+        this(shape, material, name, false);
     }
 
     public Body(Shape shape, Material material) {
-        this(shape, material, null);
+        this(shape, material, null, false);
     }
 
     public boolean IntersectsP(Ray ray) {
