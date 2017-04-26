@@ -154,4 +154,24 @@ final public class Sphere extends Shape {
                 "radius=" + radius +
                 "} " + super.toString();
     }
+
+    @Override
+    public Point getSamplePoint() {
+        // theta's range is [0, 2*Pi]
+        double theta = Shared.random.nextDouble() * 2.0 * Math.PI;
+
+        // phi's range is [0, Pi]
+        double phi = Shared.random.nextDouble() * Math.PI;
+
+        // x = r * sin(phi) * cos(theta)
+        double x = this.radius * Math.sin(phi) * Math.cos(theta) + location.x;
+
+        // y = r * sin(phi) * sin(theta)
+        double y = this.radius * Math.sin(phi) * Math.sin(theta) + location.y;
+
+        // z = r * cos(phi)
+        double z = this.radius * Math.cos(phi) + location.z;
+
+        return new Point(x, y, z);
+    }
 }

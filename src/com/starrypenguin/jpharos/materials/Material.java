@@ -50,7 +50,7 @@ public abstract class Material {
         Queue<Color> intersectionColors = new ConcurrentLinkedQueue<>();
         // see if this intersection point is in the shadows:  can we cast rays to a light source?
         for (Light light : jPharos.instance.scene.lights) {
-            Vector directionToLight = new Vector(intersection.intersectionPoint, light.location);
+            Vector directionToLight = new Vector(intersection.intersectionPoint, light.getSamplePoint());
             Ray towardLight = new Ray(intersection.intersectionPoint, directionToLight);
             Set<Ray> raysTowardLight = Shared.perturbRay(towardLight, Shared.DIFFERENTIALS_PER_RAY, Shared.LENGTH_PERCENTAGE);
             raysTowardLight.stream().forEach((Ray ray) -> {

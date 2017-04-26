@@ -22,6 +22,7 @@ import com.starrypenguin.jpharos.core.Body;
 import com.starrypenguin.jpharos.core.Intersection;
 import com.starrypenguin.jpharos.core.Ray;
 import com.starrypenguin.jpharos.geometry.BoundingBox;
+import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.shapes.Shape;
 
 /**
@@ -52,5 +53,10 @@ public class AreaLight extends Light {
 
     public double surfaceArea() {
         return shape.surfaceArea();
+    }
+
+    @Override
+    public Point getSamplePoint() {
+        return shape.getSamplePoint();
     }
 }

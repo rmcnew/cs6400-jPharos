@@ -87,7 +87,7 @@ public class GlassApple implements SceneBuilder {
         Point target = new Point(-0.005, 0, 0);
         Vector up = new Vector(0, 1, 0);
         Vector lookAt = new Vector(cameraLocation, target);
-        Lens lens = new PinholeLens(0.02);
+        Lens lens = new PinholeLens(0.02, cameraLocation);
         Film film = new Film(0.0002, 300, 300, 1);
         Camera camera = new Camera(film, lens, cameraLocation, lookAt, up);
         // Put it all in the scene

@@ -16,40 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.starrypenguin.jpharos.util;
+package com.starrypenguin.jpharos.shapes;
 
-import com.starrypenguin.jpharos.core.Ray;
 import com.starrypenguin.jpharos.geometry.Point;
-import com.starrypenguin.jpharos.geometry.Vector;
 import org.junit.Test;
 
-import java.util.Set;
-
 /**
- * SharedTest
+ * SphereTest
  * <p/>
- * Tests for the Shared utility methods
+ * Tests for Sphere
  */
-public class SharedTest {
+public class SphereTest {
 
     @Test
-    public void perturbRayTest() {
-        // Create a ray
-        Point origin = new Point(0, 0, 0);
-        Vector vector = new Vector(1, 0, 0);
-        Ray ray = new Ray(origin, vector);
-
-        // print it out
-        System.out.println("Original Ray: " + ray);
-
-        // perturb the ray
-        Set<Ray> rays = Shared.perturbRay(ray, 10, 2.0);
-
-        // print out the perturbed rays
-        System.out.println("Perturbed Rays:");
-        for (Ray pRay : rays) {
-            System.out.println(pRay);
-        }
-
+    public void randomPointsOnSphereTest() {
+        Point center = new Point(1, 2, -3);
+        Sphere sphere = new Sphere(center, 10);
+        Point randPoint1 = sphere.getSamplePoint();
+        Point randPoint2 = sphere.getSamplePoint();
+        Point randPoint3 = sphere.getSamplePoint();
+        System.out.println("Random Point 1: " + randPoint1 + " is " + Point.distance(randPoint1, center) + " from the center");
+        System.out.println("Random Point 2: " + randPoint2 + " is " + Point.distance(randPoint2, center) + " from the center");
+        System.out.println("Random Point 3: " + randPoint3 + " is " + Point.distance(randPoint3, center) + " from the center");
     }
 }

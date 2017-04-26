@@ -72,7 +72,7 @@ public class ArmadilloTriangleMesh implements SceneBuilder {
         Point target = new Point(0, 40, 0);
         Vector up = new Vector(0, 1, 0);
         Vector lookAt = new Vector(cameraLocation, target);
-        Lens lens = new PinholeLens(170);
+        Lens lens = new PinholeLens(170, cameraLocation);
         Film film = new Film(1, 300, 300, 1);
         Camera camera = new Camera(film, lens, cameraLocation, lookAt, up);
 

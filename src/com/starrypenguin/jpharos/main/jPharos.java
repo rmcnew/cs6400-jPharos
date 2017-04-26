@@ -25,7 +25,7 @@ import com.starrypenguin.jpharos.core.DevelopPixel;
 import com.starrypenguin.jpharos.core.Ray;
 import com.starrypenguin.jpharos.core.Scene;
 import com.starrypenguin.jpharos.parallel.ParallelExecutor;
-import com.starrypenguin.jpharos.scenes.ImprovedSphereOnAPlane;
+import com.starrypenguin.jpharos.scenes.BeautifulSpheres;
 import com.starrypenguin.jpharos.scenes.SceneBuilder;
 
 import java.util.concurrent.Future;
@@ -63,7 +63,8 @@ final public class jPharos {
         //sceneBuilder = new DragonTriangleMesh();
         //sceneBuilder = new MirrorAndGlassSpheres();
         //sceneBuilder = new GlassApple();
-        sceneBuilder = new ImprovedSphereOnAPlane();
+        //sceneBuilder = new ImprovedSphereOnAPlane();
+        sceneBuilder = new BeautifulSpheres();
 
         instance.scene = sceneBuilder.build();
         instance.camera = instance.scene.camera;
@@ -72,10 +73,22 @@ final public class jPharos {
     }
 
     private void render(String outFilename) {
+        int batchCounter = 0;
         java.util.List<Ray> rays = instance.camera.generateRays();
         for (Ray ray : rays) {
             if (ray != null) {
                 instance.executor.submit(new CastRayForDevelopedPixel(ray));
+                batchCounter++;
+                if (batchCounter == 20000) {
+                    try {
+                        System.out.println("Ray submit pause . . .");
+                        Thread.sleep(30000L); // wait 30 seconds
+                        batchCounter = 0;
+                        System.out.println("Resuming . . .");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
         System.out.println("All initial rays submitted!");

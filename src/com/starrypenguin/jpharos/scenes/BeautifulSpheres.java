@@ -25,9 +25,10 @@ import com.starrypenguin.jpharos.core.Scene;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.geometry.Vector;
 import com.starrypenguin.jpharos.lenses.Lens;
-import com.starrypenguin.jpharos.lenses.PinholeLens;
+import com.starrypenguin.jpharos.lenses.ThinLens;
+import com.starrypenguin.jpharos.lights.AreaLight;
 import com.starrypenguin.jpharos.lights.Light;
-import com.starrypenguin.jpharos.lights.PointLight;
+import com.starrypenguin.jpharos.materials.ChromaticMaterial;
 import com.starrypenguin.jpharos.materials.ColorMaterial;
 import com.starrypenguin.jpharos.materials.MirrorMaterial;
 import com.starrypenguin.jpharos.materials.RefractiveMaterial;
@@ -40,36 +41,38 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * MirrorAndGlassSpheres
+ * BeautifulSpheres
  * <p/>
- * First scene for Assignment 3:
- * <p>
- * Add reflective and refractive materials to your ray tracer.
- * <p>
- * Generate an image showing off your new capabilities.
- * <p>
- * You do not need to have caustics working correctly.
+ * Scene for final assignment
  */
-public class MirrorAndGlassSpheres implements SceneBuilder {
+public class BeautifulSpheres implements SceneBuilder {
 
     public Scene build() {
         // Bodies
         Set<Body> bodies = new HashSet<>();
         // Sphere 1
-        Point sphere1Location = new Point(-25, 0, 0);
-        Sphere sphere1 = new Sphere(sphere1Location, 20);
+        Point sphere1Location = new Point(-25, -25, 0);
+        Sphere sphere1 = new Sphere(sphere1Location, 15);
         MirrorMaterial mirrorMaterial = new MirrorMaterial();
         //ColorMaterial mirrorMaterial = new ColorMaterial(Color.BLUE);
         Body sphere1Body = new Body(sphere1, mirrorMaterial, "Mirrored Sphere");
         bodies.add(sphere1Body);
+
         // Sphere 2
-        Point sphere2Location = new Point(25, 0, 0);
-        Sphere sphere2 = new Sphere(sphere2Location, 20);
+        Point sphere2Location = new Point(0, 0, 0);
+        Sphere sphere2 = new Sphere(sphere2Location, 15);
         RefractiveMaterial refractiveMaterial = new RefractiveMaterial(RefractiveMaterial.RefractionIndices.GLASS);
-        //ColorMaterial glassMaterial = new ColorMaterial(Color.RED);
+        //ColorMaterial refractiveMaterial = new ColorMaterial(Color.RED);
         Body sphere2Body = new Body(sphere2, refractiveMaterial, "Glass Sphere");
         bodies.add(sphere2Body);
-        //System.out.println("Added sphere");
+
+        // Sphere 3
+        Point sphere3Location = new Point(25, 25, 0);
+        Sphere sphere3 = new Sphere(sphere3Location, 15);
+        ChromaticMaterial chromaticMaterial = new ChromaticMaterial();
+        Body sphere3Body = new Body(sphere3, chromaticMaterial, "Chromatic Sphere");
+        bodies.add(sphere3Body);
+
         // Make a plane below the sphere
         Point point1 = new Point(55, 55, -55);
         Point point2 = new Point(-55, 55, -55);
@@ -82,7 +85,7 @@ public class MirrorAndGlassSpheres implements SceneBuilder {
         ColorMaterial white = new ColorMaterial(Color.WHITE);
         Body belowPlane = new Body(belowTriangleMesh, white, "White Lower Plane");
         bodies.add(belowPlane);
-        //System.out.println("Added below plane");
+
         // Make a plane behind the sphere
         Point point9 = new Point(55, 55, 55);
         Point pointA = new Point(-55, 55, 55);
@@ -95,7 +98,7 @@ public class MirrorAndGlassSpheres implements SceneBuilder {
         ColorMaterial orange = new ColorMaterial(Color.ORANGE);
         Body behindPlane = new Body(behindTriangleMesh, orange, "Orange Back Plane");
         bodies.add(behindPlane);
-        //System.out.println("Added behind plane");
+
         // Make a plane to the left of the sphere
         Point pointD = new Point(-55, 55, 55);
         Point pointE = new Point(-55, 55, -55);
@@ -108,7 +111,7 @@ public class MirrorAndGlassSpheres implements SceneBuilder {
         ColorMaterial cyan = new ColorMaterial(Color.CYAN);
         Body leftPlane = new Body(leftTriangleMesh, cyan, "Cyan Left Plane");
         bodies.add(leftPlane);
-        //System.out.println("Added left plane");
+
         // Make a plane to the right of the sphere
         Point pointH = new Point(55, 55, 55);
         Point pointI = new Point(55, 55, -55);
@@ -121,20 +124,26 @@ public class MirrorAndGlassSpheres implements SceneBuilder {
         ColorMaterial magenta = new ColorMaterial(Color.MAGENTA);
         Body rightPlane = new Body(rightTriangleMesh, magenta, "Magenta Right Plane");
         bodies.add(rightPlane);
-        //System.out.println("Added right plane");
+
         // Lights
+        Point lightCenter = new Point(0, 0, 120);
+        double lightRadius = 10;
+        Sphere lightSphere = new Sphere(lightCenter, lightRadius);
+        AreaLight areaLight = new AreaLight(lightSphere);
         Set<Light> lights = new HashSet<>();
-        Light pointLight1 = new PointLight(new Point(0, 0, 120));
-        lights.add(pointLight1);
-        //System.out.println("Added lights");
+        lights.add(areaLight);
+        ColorMaterial lightMaterial = new ColorMaterial(Color.YELLOW);
+        Body areaLightBody = new Body(lightSphere, lightMaterial, "Light", true);
+        bodies.add(areaLightBody);
+
         // Camera
-        Point cameraLocation = new Point(0, -70, 0);
+        Point cameraLocation = new Point(0, -80, 0);
         Vector up = new Vector(0, 0, 1);
         Vector lookAt = new Vector(0, 1, 0);
-        Lens lens = new PinholeLens(20, cameraLocation);
-        Film film = new Film(0.1, 600, 600, 1);
+        Lens lens = new ThinLens(80, cameraLocation, 5.0, lookAt, up);
+        Film film = new Film(0.1, 300, 300, 15);
         Camera camera = new Camera(film, lens, cameraLocation, lookAt, up);
-        //System.out.println("Added camera");
+
         // Put it all in the scene
         return new Scene(camera, lights, bodies);
     }

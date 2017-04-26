@@ -16,40 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.starrypenguin.jpharos.util;
+package com.starrypenguin.jpharos.lenses;
 
-import com.starrypenguin.jpharos.core.Ray;
 import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.geometry.Vector;
 import org.junit.Test;
 
-import java.util.Set;
-
 /**
- * SharedTest
+ * ThinLensTest
  * <p/>
- * Tests for the Shared utility methods
+ * Tests for ThinLens
  */
-public class SharedTest {
+public class ThinLensTest {
 
     @Test
-    public void perturbRayTest() {
-        // Create a ray
-        Point origin = new Point(0, 0, 0);
-        Vector vector = new Vector(1, 0, 0);
-        Ray ray = new Ray(origin, vector);
-
-        // print it out
-        System.out.println("Original Ray: " + ray);
-
-        // perturb the ray
-        Set<Ray> rays = Shared.perturbRay(ray, 10, 2.0);
-
-        // print out the perturbed rays
-        System.out.println("Perturbed Rays:");
-        for (Ray pRay : rays) {
-            System.out.println(pRay);
-        }
-
+    public void TestSampling() {
+        Point loc = new Point(0, -5, 5);
+        Vector lookAt = new Vector(0, 1, 0);
+        Vector up = new Vector(0, 0, 1);
+        ThinLens thinLens = new ThinLens(40, loc, 5, lookAt, up);
+        Point samp1 = thinLens.getSamplePoint();
+        Point samp2 = thinLens.getSamplePoint();
+        Point samp3 = thinLens.getSamplePoint();
+        System.out.println("Sample point 1 is: " + samp1);
+        System.out.println("Sample point 2 is: " + samp2);
+        System.out.println("Sample point 3 is: " + samp3);
     }
 }

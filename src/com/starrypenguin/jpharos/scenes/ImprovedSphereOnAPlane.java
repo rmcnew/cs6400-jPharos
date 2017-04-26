@@ -82,7 +82,7 @@ public class ImprovedSphereOnAPlane implements SceneBuilder {
         Point cameraLocation = new Point(0, -100, 10);
         Vector up = new Vector(0, 0, 1);
         Vector lookAt = new Vector(0, 1, 0);
-        Lens lens = new PinholeLens(20);
+        Lens lens = new PinholeLens(20, cameraLocation);
         Film film = new Film(0.2, 300, 300, 10);
         Camera camera = new Camera(film, lens, cameraLocation, lookAt, up);
 

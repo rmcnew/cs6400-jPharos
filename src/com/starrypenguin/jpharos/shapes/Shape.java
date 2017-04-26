@@ -54,4 +54,8 @@ public abstract class Shape {
                 "location=" + location +
                 '}';
     }
+
+    public Point getSamplePoint() {
+        return location;
+    }
 }

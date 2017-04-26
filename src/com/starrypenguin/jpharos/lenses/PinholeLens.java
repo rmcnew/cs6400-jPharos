@@ -18,6 +18,8 @@
 
 package com.starrypenguin.jpharos.lenses;
 
+import com.starrypenguin.jpharos.geometry.Point;
+
 /**
  * PinholeLens
  * <p/>
@@ -25,7 +27,7 @@ package com.starrypenguin.jpharos.lenses;
  */
 public class PinholeLens extends Lens {
 
-    public PinholeLens(double focalLength) {
-        super(focalLength);
+    public PinholeLens(double focalLength, Point location) {
+        super(focalLength, location);
     }
 }

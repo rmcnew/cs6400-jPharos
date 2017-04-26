@@ -24,14 +24,22 @@ package com.starrypenguin.jpharos.lenses;
  * Changes the directions of Rays entering / exiting the Camera before hitting the Film
  */
 
+import com.starrypenguin.jpharos.geometry.Point;
 import com.starrypenguin.jpharos.util.Shared;
 
 public abstract class Lens {
 
     final public double focalLength;
+    final public Point location;
 
-    public Lens(double focalLength) {
-        Shared.notNaN(focalLength, "focualLength cannot be Not A Number!");
+    public Lens(double focalLength, Point location) {
+        Shared.notNaN(focalLength, "Parameter focalLength cannot be Not A Number!");
+        Shared.notNull(location, "Parameter location cannot be null!");
         this.focalLength = focalLength;
+        this.location = location;
+    }
+
+    public Point getSamplePoint() {
+        return location;
     }
 }

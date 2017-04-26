@@ -92,7 +92,7 @@ public class SphereOnAPlane implements SceneBuilder {
         Point cameraLocation = new Point(60, 0, 25);
         Vector up = new Vector(0, 0, 1);
         Vector lookAt = new Vector(-1, 0, 0);
-        Lens lens = new PinholeLens(60);
+        Lens lens = new PinholeLens(60, cameraLocation);
         Film film = new Film(1, 300, 300, 1);
         Camera camera = new Camera(film, lens, cameraLocation, lookAt, up);
 

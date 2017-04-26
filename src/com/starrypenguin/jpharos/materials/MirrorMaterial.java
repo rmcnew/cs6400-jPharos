@@ -41,8 +41,8 @@ public class MirrorMaterial extends Material {
     private final static double RAY_ADJUST_TIME = 0.01;
 
     protected static Vector calculateReflectedVector(Intersection intersection) {
-        Vector v_reflect = intersection.surfaceNormal.scale(2.0).minus(intersection.ray.direction);
-        return v_reflect;
+        return intersection.surfaceNormal.scale(2.0).minus(intersection.ray.direction);
+
     }
 
     protected static Queue<Color> calculateReflection(Intersection intersection) {

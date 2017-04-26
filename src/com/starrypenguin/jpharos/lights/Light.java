@@ -34,4 +34,8 @@ public abstract class Light {
         Shared.notNull(location, "location cannot be null!");
         this.location = location;
     }
+
+    public Point getSamplePoint() {
+        return location;
+    }
 }
