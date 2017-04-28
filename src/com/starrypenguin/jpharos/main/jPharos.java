@@ -73,21 +73,23 @@ final public class jPharos {
     }
 
     private void render(String outFilename) {
+        int batchNumber = 0;
         int batchCounter = 0;
         java.util.List<Ray> rays = instance.camera.generateRays();
         for (Ray ray : rays) {
             if (ray != null) {
                 instance.executor.submit(new CastRayForDevelopedPixel(ray));
                 batchCounter++;
-                if (batchCounter == 20000) {
+                if (batchCounter == 12000) {
                     try {
-                        System.out.println("Ray submit pause . . .");
+                        System.out.println("Batch " + batchNumber + "completed.  Ray submit pause . . .");
                         Thread.sleep(30000L); // wait 30 seconds
                         batchCounter = 0;
                         System.out.println("Resuming . . .");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    batchNumber++;
                 }
             }
         }

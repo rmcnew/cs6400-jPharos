@@ -36,7 +36,7 @@ public class ParallelExecutor {
     final public AtomicLong taskCount = new AtomicLong(0L);
     final private ConcurrentLinkedQueue<Future<Film.DevelopedPixel>> pixelOutputQueue = new ConcurrentLinkedQueue<>();
     final private ConcurrentLinkedQueue<Future<Intersection>> intersectionOutputQueue = new ConcurrentLinkedQueue<>();
-    final private ExecutorService executor = Executors.newWorkStealingPool(3);
+    final private ExecutorService executor = Executors.newWorkStealingPool();
 
 
     public void submit(Callable<Film.DevelopedPixel> task) {
