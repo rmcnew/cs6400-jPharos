@@ -41,7 +41,6 @@ public class DevelopPixel implements Runnable {
 
     @Override
     public void run() {
-        jPharos.instance.executor.taskCount.incrementAndGet();
         try {
             if (futureDevelopedPixel != null) {
                 Film.DevelopedPixel developedPixel = futureDevelopedPixel.get();
@@ -53,6 +52,5 @@ public class DevelopPixel implements Runnable {
             e.printStackTrace();
             System.exit(1);
         }
-        jPharos.instance.executor.taskCount.decrementAndGet();
     }
 }

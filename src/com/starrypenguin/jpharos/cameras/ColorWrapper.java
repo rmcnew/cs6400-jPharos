@@ -43,9 +43,12 @@ public class ColorWrapper {
         Shared.notNull(multipleColors, "Parameter multipleColors cannot be null!");
         Color result = null;
         for (Color color : multipleColors) {
-            result = AverageColors.average(result, color);
+            if (color != null)
+                result = AverageColors.average(result, color);
         }
-        update(result);
+        if (result != null) {
+            update(result);
+        }
     }
 
     public synchronized Color getColor() {

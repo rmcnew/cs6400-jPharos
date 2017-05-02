@@ -23,7 +23,6 @@ import com.starrypenguin.jpharos.core.Intersection;
 import com.starrypenguin.jpharos.main.jPharos;
 
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * ParallelExecutor
@@ -33,32 +32,33 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ParallelExecutor {
 
     final private static long WAIT_TIME = 2500; // milliseconds
-    final public AtomicLong taskCount = new AtomicLong(0L);
     final private ConcurrentLinkedQueue<Future<Film.DevelopedPixel>> pixelOutputQueue = new ConcurrentLinkedQueue<>();
-    final private ConcurrentLinkedQueue<Future<Intersection>> intersectionOutputQueue = new ConcurrentLinkedQueue<>();
     final private ExecutorService executor = Executors.newWorkStealingPool();
 
 
     public void submit(Callable<Film.DevelopedPixel> task) {
-        taskCount.incrementAndGet();
         pixelOutputQueue.add(executor.submit(task));
     }
 
-    public void castRay(Callable<Intersection> task) {
-        taskCount.incrementAndGet();
-        jPharos.instance.raysCast.incrementAndGet();
-        intersectionOutputQueue.add(executor.submit(task));
-    }
-
     public Future<Intersection> castRayForFutureIntersection(Callable<Intersection> task) {
+        jPharos.instance.raysCast.incrementAndGet();
         return executor.submit(task);
     }
 
     public void finishExecuting() {
-        while ((taskCount.get() > 0L) || (!jPharos.instance.camera.film.readyToDevelop())) {
+        while (!jPharos.instance.camera.film.readyToDevelop()) {
             try {
                 Thread.sleep(WAIT_TIME * 4);
-                System.out.println(String.format("Tasks queued: %d, rays cast: %d, rays hit: %d", taskCount.get(), jPharos.instance.raysCast.get(), jPharos.instance.raysHit.get()));
+                System.out.println(String.format("Rays cast: %d, rays hit: %d", jPharos.instance.raysCast.get(), jPharos.instance.raysHit.get()));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        executor.shutdown();
+        for (int count = 0; !executor.isShutdown() && count < 10; count++) {
+            try {
+                Thread.sleep(WAIT_TIME * 4);
+                System.out.println("Waiting for executor to shutdown. Count is " + count + " of 10 max.");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -70,17 +70,11 @@ public class ParallelExecutor {
     }
 
     public Future<Film.DevelopedPixel> pollPixels() throws InterruptedException {
-        taskCount.decrementAndGet();
         return pixelOutputQueue.poll();
     }
 
-    public Future<Intersection> pollIntersections() throws InterruptedException {
-        taskCount.decrementAndGet();
-        return intersectionOutputQueue.poll();
-    }
-
     public boolean isEmpty() {
-        return pixelOutputQueue.isEmpty() && intersectionOutputQueue.isEmpty();
+        return pixelOutputQueue.isEmpty();
     }
 
 }

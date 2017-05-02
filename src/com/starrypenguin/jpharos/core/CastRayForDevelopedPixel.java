@@ -49,8 +49,7 @@ public class CastRayForDevelopedPixel implements Callable<Film.DevelopedPixel> {
         // see what the ray hits
         //System.out.println("Thread " + Thread.currentThread().getId() + " running CastRay.call() for Ray " + ray);
         CastRayForIntersection castRayForIntersection = new CastRayForIntersection(this.ray);
-        jPharos.instance.executor.castRay(castRayForIntersection);
-        Future<Intersection> futureIntersection = jPharos.instance.executor.pollIntersections();
+        Future<Intersection> futureIntersection = jPharos.instance.executor.castRayForFutureIntersection(castRayForIntersection);
         Intersection maybeIntersection = futureIntersection.get();
         if (maybeIntersection != null) {
             jPharos.instance.raysHit.incrementAndGet();
