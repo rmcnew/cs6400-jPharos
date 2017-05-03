@@ -33,7 +33,7 @@ import java.util.*;
 final public class Shared {
 
     final public static Random random = new Random();
-    final public static int DIFFERENTIALS_PER_RAY = 4;
+    final public static int DIFFERENTIALS_PER_RAY = 2;
     final public static double LENGTH_PERCENTAGE = 3;
     // methods
 

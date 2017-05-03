@@ -137,11 +137,11 @@ public class BeautifulSpheres implements SceneBuilder {
         bodies.add(areaLightBody);
 
         // Camera
-        Point cameraLocation = new Point(0, -80, 0);
+        Point cameraLocation = new Point(0, -200, 0);
         Vector up = new Vector(0, 0, 1);
         Vector lookAt = new Vector(0, 1, 0);
-        Lens lens = new ThinLens(80, cameraLocation, 5.0, lookAt, up);
-        Film film = new Film(0.1, 50, 50, 4);
+        Lens lens = new ThinLens(120, cameraLocation, 2.5, lookAt, up);
+        Film film = new Film(1.0, 70, 70, 3);
         Camera camera = new Camera(film, lens, cameraLocation, lookAt, up);
 
         // Put it all in the scene
